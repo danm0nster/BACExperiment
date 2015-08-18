@@ -68,10 +68,11 @@
     </Compile>
     <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\Course.cs" />
+    <Compile Include="resources\FileHandler.cs" />
     <Compile Include="resources\HIDImports2.cs" />
     <Compile Include="Model\Microphone.cs" />
     <Compile Include="Model\Subject.cs" />
-    <Compile Include="Model\WiimoteStatus.cs" />
+    <Compile Include="Model\WiimoteInfo.cs" />
     <Compile Include="Service\Service.cs" />
     <Compile Include="GUI\StimulyWindow.xaml.cs">
       <DependentUpon>StimulyWindow.xaml</DependentUpon>
@@ -123,7 +124,9 @@
   <ItemGroup>
     <None Include="GUI\App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="README.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,212 @@
+﻿<Window x:Class="BACExperiment.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BACExperiment"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="661.387" Width="965.715" ResizeMode="NoResize">
+    <Grid Margin="0,0,0,6">
+
+        <TabControl x:Name="tabControl"  Margin="0,0,10,23">
+            <TabItem Header="Session recording" Width="150">
+                <Grid>
+                    <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="180" VerticalAlignment="Top" Background="AliceBlue">
+                        <WrapPanel Margin="10,10" Background="AliceBlue">
+                            <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
+                            <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
+                            <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
+                        </WrapPanel>
+                    </GroupBox>
+                    <GroupBox x:Name="groupBox1" Header="Microphone" Margin="10,176,625,10" Background="Aqua">
+                        <StackPanel Margin="10,10">
+                            <WrapPanel Height="35">
+                                <Label Content="Microphone 1 :" Height="25" Width="100"></Label>
+                                <ListBox Width="150" Height="25" Margin="5" ></ListBox>
+                            </WrapPanel>
+                            <WrapPanel Height="35">
+                                <Label Content="Volume :" Height="25" Width="100"></Label>
+                                <Slider Width="154" Margin="5" />
+                            </WrapPanel>
+                            <WrapPanel Height="100">
+                                <Canvas></Canvas>
+                            </WrapPanel>
+                            <WrapPanel Height="35">
+                                <Label Content="Microphone2 :" Height="25" Width="100"></Label>
+                                <ListBox Width="150" Height="25" Margin="5" ></ListBox>
+                            </WrapPanel>
+                            <WrapPanel Height="35">
+                                <Label Content="Volume :" Height="25" Width="100"></Label>
+                                <Slider Width="154" Margin="5" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox x:Name="groupbox2" Header="Camera" Margin="320,176,299,10" Background="Aquamarine" >
+                        <StackPanel Margin="10,10,8,10">
+                            <WrapPanel Height="53">
+
+                            </WrapPanel>
+                            <WrapPanel>
+                                <Image x:Name="image" Height="100"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox x:Name="groupbox3" Header="Controllers" Margin="646,176,10,10" Background="Bisque" >
+                        <StackPanel Margin="10,10"  />
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Video" Width="150">
+            </TabItem>
+            <TabItem Header="Audio" Width="150">
+            </TabItem>
+            <TabItem x:Name="ControllerTab" Header="Controllers" Width="150">
+                <UniformGrid>
+                    <StackPanel Margin="5,5,5,-276">
+                        <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Height="558">
+                            <StackPanel Margin="0,0,0,-1">
+                                <WrapPanel>
+                                    <Label Content="Status :" Width="91"/>
+                                    <Label x:Name="WM1Status_Lbl" Content="No Wii Remote" Width="125"></Label>
+                                    <Label Content="´Device path :" Width="91"/>
+                                    <Label x:Name="WM1_Path_Lbl" Width="125"></Label>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <Label Content="Batterie :" Width="92"/>
+                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="75"/>
+                                </WrapPanel>
+                                <WrapPanel Height="145">
+                                    <TextBox x:Name="Console_Textbox_WM1" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
+                                </WrapPanel>
+                                <StackPanel Height="287">
+                                    <WrapPanel Height="135">
+                                        <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
+                                            <StackPanel Width="205" Margin="0,0,-17,-22">
+                                                <WrapPanel Height="25">
+                                                    <Label Content="X Coordinate :"/>
+                                                    <Label x:Name="WM1_Accel_X" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Y Coordinate :"/>
+                                                    <Label x:Name="WM1_Accel_Y" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Z Coordinate :"/>
+                                                    <Label x:Name="WM1_Accel_Z" Content="0.0"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="IR" Height="115" Margin="10,10,10,10" Width="200">
+                                            <StackPanel Width="205" Margin="0,0,-17,-22">
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR1 :"/>
+                                                    <Label x:Name="WM1_IR1" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR2 :"/>
+                                                    <Label x:Name="WM1_IR2" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR3 :"/>
+                                                    <Label x:Name="WM1_IR3" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR4 :"/>
+                                                    <Label x:Name="WM1_IR4" Content="0.0"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                    </WrapPanel>
+                                    <StackPanel>
+                                        <Image x:Name="AccelImage" Margin="54,10" Height="139"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <WrapPanel Height="63">
+                                    <Button x:Name="WM1_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
+                                    <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
+                                </WrapPanel>
+                            </StackPanel>
+
+                        </GroupBox>
+
+                    </StackPanel>
+                    <StackPanel Margin="5,5,5,-276">
+                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 1" Height="558">
+                            <StackPanel Margin="0,0,0,-1">
+                                <WrapPanel>
+                                    <Label Content="Status :" Width="91"/>
+                                    <Label x:Name="WM2Status_Lbl" Content="No Wii Remote" Width="125"></Label>
+                                    <Label Content="'Device path :" Width="91"/>
+                                    <Label x:Name="WM2_Path_Lbl" Width="125"></Label>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <Label Content="Batterie :" Width="92"/>
+                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="75"/>
+                                </WrapPanel>
+                                <WrapPanel Height="145">
+                                    <TextBox x:Name="Console_Textbox_WM2" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
+                                </WrapPanel>
+                                <StackPanel Height="287">
+                                    <WrapPanel Height="135">
+                                        <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
+                                            <StackPanel Width="205" Margin="0,0,-17,-22">
+                                                <WrapPanel Height="25">
+                                                    <Label Content="X Coordinate :"/>
+                                                    <Label x:Name="WM2_Accel_X" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Y Coordinate :"/>
+                                                    <Label x:Name="WM2_Accel_Y" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Z Coordinate :"/>
+                                                    <Label x:Name="WM2_Accel_Z" Content="0.0"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="IR" Height="115" Margin="10,10,10,10" Width="200">
+                                            <StackPanel Width="205" Margin="0,0,-17,-22">
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR1 :"/>
+                                                    <Label x:Name="WM2_IR1" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR2 :"/>
+                                                    <Label x:Name="WM2_IR2" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR3 :"/>
+                                                    <Label x:Name="WM2_IR3" Content="0.0"/>
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="IR4 :"/>
+                                                    <Label x:Name="WM2_IR4" Content="0.0"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                    </WrapPanel>
+                                    <StackPanel>
+                                        <Image x:Name="AccelImageWM2" Margin="54,10" Height="139"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <WrapPanel Height="63">
+                                    <Button x:Name="WM2_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
+                                    <Button x:Name="WM2_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
+                                </WrapPanel>
+                            </StackPanel>
+
+                        </GroupBox>
+
+                    </StackPanel>
+                </UniformGrid>
+            </TabItem>
+            <TabItem Header="About" Width="150">
+            </TabItem>
+
+        </TabControl>
+        <StatusBar HorizontalAlignment="Left" Height="23" Margin="10,604,0,0" VerticalAlignment="Top" Width="940"/>
+
+
+
+    </Grid>
+</Window>

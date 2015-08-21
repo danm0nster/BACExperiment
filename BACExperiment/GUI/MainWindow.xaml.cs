@@ -14,14 +14,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WiimoteLib;
+using System.Drawing;
+
 
 namespace BACExperiment
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window , IObserver<WiimoteInfo>
+    public partial class MainWindow : Window , IObserver<WiimoteInfo> 
     {
         /* Declare 2 wiimotes for the application to use. The number of remotes can be changed if we need too.
         For now I am keeping in mind the necesity we have . I also add a WiimoteStatus user controll for each 
@@ -36,11 +37,14 @@ namespace BACExperiment
         /* Wiiremotes were moved in the service class for architecturall efficiency issues */
 
         private Service service;
+        private StimulyWindow stimulyWindow;
        
         public MainWindow()
         {
             InitializeComponent();
-            service = new Service();
+            service = new Service(this);
+            Graphics g;
+                   
             
         }
 
@@ -68,6 +72,7 @@ namespace BACExperiment
             try {
                 service.SetUpWiimoteInfo(service.wiimote1_info);
                 Console.WriteLine("WM1_Detect_Click");
+                
             }
             catch (Exception ex)
             {
@@ -110,11 +115,87 @@ namespace BACExperiment
             throw new NotImplementedException();
         }
 
-        public void OnNext(WiimoteInfo value)
+        public void OnNext(WiimoteInfo remote)
         {
-            throw new NotImplementedException();
+
+            bool updated = false;
+
+            //The update method.
+            if (remote == service.wiimote1_info)
+            {
+                Action action = () =>
+                {
+                    WM1Status_Lbl.Content = remote.Astatus.ToString();
+                    WM1_Accel_X.Content = remote.Accelerometer[0].ToString();
+                    WM1_Accel_Y.Content = remote.Accelerometer[1].ToString();
+                    WM1_Accel_Z.Content = remote.Accelerometer[2].ToString();
+                    WM1_IR1.Content = String.Concat(" X = ", remote.IRState[0, 0]/10, "; Y = ", remote.IRState[0, 1]/10, "; Size = ", remote.IRState[0, 2]);
+                    WM1_IR2.Content = String.Concat(" X = ", remote.IRState[1, 0]/10, "; Y = ", remote.IRState[1, 1]/10, "; Size = ", remote.IRState[1, 2]);
+                    WM1_IR3.Content = String.Concat(" X = ", remote.IRState[2, 0]/10, "; Y = ", remote.IRState[2, 1]/10, "; Size = ", remote.IRState[2, 2]);
+                    WM1_IR4.Content = String.Concat(" X = ", remote.IRState[3, 0]/10, "; Y = ", remote.IRState[3, 1]/10, "; Size = ", remote.IRState[3, 2]);
+                    wm1_progressbar.Value = remote.battery;
+                   
+                    Canvas.SetLeft(IRSensor11, remote.IRState[0, 0]); Canvas.SetTop(IRSensor11, remote.IRState[0, 1]);
+                    Canvas.SetLeft(IRSensor12, remote.IRState[1, 0]); Canvas.SetTop(IRSensor12, remote.IRState[1, 1]);
+                    Canvas.SetLeft(IRSensor13, remote.IRState[2, 0]); Canvas.SetTop(IRSensor13, remote.IRState[2, 1]);
+                    Canvas.SetLeft(IRSensor14, remote.IRState[3, 0]); Canvas.SetTop(IRSensor14, remote.IRState[3, 1]);
+                    Canvas.SetLeft(MidPoint1, remote.IRState[4, 0]); Canvas.SetTop(MidPoint1, remote.IRState[4, 1]);
+                   
+                };
+                Dispatcher.Invoke(action);
+                updated = true;
+            }
+            else if ( remote == service.wiimote2_info)
+            {
+                Action action = () =>
+            {
+                WM2Status_Lbl.Content = remote.Astatus.ToString();
+                WM2_Accel_X.Content = remote.Accelerometer[0].ToString();
+                WM2_Accel_Y.Content = remote.Accelerometer[1].ToString();
+                WM2_Accel_Z.Content = remote.Accelerometer[2].ToString();
+                WM2_IR1.Content = String.Concat(" X = ", remote.IRState[0, 0], "; Y = ", remote.IRState[0, 1], "; Size = ", remote.IRState[0, 2]);
+                WM2_IR2.Content = String.Concat(" X = ", remote.IRState[1, 0], "; Y = ", remote.IRState[1, 1], "; Size = ", remote.IRState[1, 2]);
+                WM2_IR3.Content = String.Concat(" X = ", remote.IRState[2, 0], "; Y = ", remote.IRState[2, 1], "; Size = ", remote.IRState[2, 2]);
+                WM2_IR4.Content = String.Concat(" X = ", remote.IRState[3, 0], "; Y = ", remote.IRState[3, 1], "; Size = ", remote.IRState[3, 2]);
+                // WM2_Path_Lbl.Content = remote.path.ToString();
+                Canvas.SetLeft(IRSensor21, remote.IRState[0, 0]); Canvas.SetTop(IRSensor21, remote.IRState[0, 1]);
+                Canvas.SetLeft(IRSensor22, remote.IRState[1, 0]); Canvas.SetTop(IRSensor22, remote.IRState[1, 1]);
+                Canvas.SetLeft(IRSensor23, remote.IRState[2, 0]); Canvas.SetTop(IRSensor23, remote.IRState[2, 1]);
+                Canvas.SetLeft(IRSensor24, remote.IRState[3, 0]); Canvas.SetTop(IRSensor24, remote.IRState[3, 1]);
+                Canvas.SetLeft(MidPoint2, remote.IRState[4, 0]); Canvas.SetTop(MidPoint2, remote.IRState[4, 1]);
+                wm2_progressbar.Value = remote.battery;
+                
+            };
+                Dispatcher.Invoke(action);
+                updated = true;
+            }
+
+            Console.WriteLine(" Updated =" + updated);
+
+            }
+
+        public void DrawSensor(System.Drawing.Color color , double x , double y , int Size )
+        {
+            Ellipse sensor = new Ellipse();
+            sensor.Width = Size + 1;
+            sensor.Height = Size + 1;
+            sensor.Opacity = 100;
+            Canvas.SetTop(sensor , x);
+            //Canvas.SetBottom(sensor , y);
+            Canvas.SetLeft(sensor, y);
+            IRImage.Children.Add(sensor);
+            Console.WriteLine("Point drawn");
+          
         }
 
+        private void IRForm_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
 
+        private void StartBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

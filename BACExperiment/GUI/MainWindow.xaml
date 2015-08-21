@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="661.387" Width="965.715" ResizeMode="NoResize">
+        Title="MainWindow" Height="782.887" Width="965.715" ResizeMode="NoResize" >
     <Grid Margin="0,0,0,6">
 
         <TabControl x:Name="tabControl"  Margin="0,0,10,23">
@@ -13,9 +13,12 @@
                 <Grid>
                     <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="180" VerticalAlignment="Top" Background="AliceBlue">
                         <WrapPanel Margin="10,10" Background="AliceBlue">
+                            <StackPanel Height="140" Orientation="Horizontal" Width="250">
+                                <Button x:Name="StartBtn" Content="Start" Width="138" Click="StartBtn_Click"/>
+                            </StackPanel>
                             <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
                             <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
-                            <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
+                           
                         </WrapPanel>
                     </GroupBox>
                     <GroupBox x:Name="groupBox1" Header="Microphone" Margin="10,176,625,10" Background="Aqua">
@@ -62,23 +65,23 @@
             </TabItem>
             <TabItem x:Name="ControllerTab" Header="Controllers" Width="150">
                 <UniformGrid>
-                    <StackPanel Margin="5,5,5,-276">
-                        <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Height="558">
+                    <StackPanel Margin="5,5,5,-337">
+                        <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Height="675">
                             <StackPanel Margin="0,0,0,-1">
                                 <WrapPanel>
                                     <Label Content="Status :" Width="91"/>
                                     <Label x:Name="WM1Status_Lbl" Content="No Wii Remote" Width="125"></Label>
-                                    <Label Content="´Device path :" Width="91"/>
+                                    <Label Content="'Device path :" Width="91"/>
                                     <Label x:Name="WM1_Path_Lbl" Width="125"></Label>
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Label Content="Batterie :" Width="92"/>
-                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="75"/>
+                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="0"/>
                                 </WrapPanel>
                                 <WrapPanel Height="145">
                                     <TextBox x:Name="Console_Textbox_WM1" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
                                 </WrapPanel>
-                                <StackPanel Height="287">
+                                <StackPanel Height="451">
                                     <WrapPanel Height="135">
                                         <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
                                             <StackPanel Width="205" Margin="0,0,-17,-22">
@@ -117,22 +120,29 @@
                                             </StackPanel>
                                         </GroupBox>
                                     </WrapPanel>
-                                    <StackPanel>
-                                        <Image x:Name="AccelImage" Margin="54,10" Height="139"/>
+                                    <StackPanel Height="207">
+                                        <Canvas x:Name="IRImage"  Height="200" MaxHeight="200" Width="400" Background="Black">
+                                            <Ellipse x:Name="IRSensor11" StrokeThickness="5" Stroke="Blue" Width="5" Height="5"/>
+                                            <Ellipse x:Name="IRSensor12" StrokeThickness="5" Stroke="Yellow" Width="5" Height="5" />
+                                            <Ellipse x:Name="IRSensor13" StrokeThickness="5" Stroke="Red" Width="5" Height="5" />
+                                            <Ellipse x:Name="IRSensor14" StrokeThickness="5" Stroke="Green" Width="5" Height="5" />
+                                            <Ellipse x:Name="MidPoint1"  StrokeThickness="5" Stroke="White" Width="5" Height="5" />
+                                        </Canvas>
                                     </StackPanel>
+                                    <WrapPanel Height="63">
+                                        <Button x:Name="WM1_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
+                                        <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
+                                    </WrapPanel>
                                 </StackPanel>
-                                <WrapPanel Height="63">
-                                    <Button x:Name="WM1_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
-                                    <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
-                                </WrapPanel>
+
                             </StackPanel>
 
                         </GroupBox>
 
                     </StackPanel>
                     <StackPanel Margin="5,5,5,-276">
-                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 1" Height="558">
-                            <StackPanel Margin="0,0,0,-1">
+                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 2" Height="686">
+                            <StackPanel Margin="0,0,0,-78">
                                 <WrapPanel>
                                     <Label Content="Status :" Width="91"/>
                                     <Label x:Name="WM2Status_Lbl" Content="No Wii Remote" Width="125"></Label>
@@ -141,12 +151,12 @@
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Label Content="Batterie :" Width="92"/>
-                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="75"/>
+                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="0"/>
                                 </WrapPanel>
                                 <WrapPanel Height="145">
                                     <TextBox x:Name="Console_Textbox_WM2" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
                                 </WrapPanel>
-                                <StackPanel Height="287">
+                                <StackPanel Height="339">
                                     <WrapPanel Height="135">
                                         <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
                                             <StackPanel Width="205" Margin="0,0,-17,-22">
@@ -186,13 +196,21 @@
                                         </GroupBox>
                                     </WrapPanel>
                                     <StackPanel>
-                                        <Image x:Name="AccelImageWM2" Margin="54,10" Height="139"/>
+                                        <Canvas x:Name="IRImage2"  Height="200" MaxHeight="200" Width="400" Background="Black"  >
+                                            <Ellipse x:Name="IRSensor21" StrokeThickness="5" Stroke="Blue" Width="5" Height="5"  />
+                                            <Ellipse x:Name="IRSensor22" StrokeThickness="5" Stroke="Yellow" Width="5" Height="5"  />
+                                            <Ellipse x:Name="IRSensor23" StrokeThickness="5" Stroke="Red" Width="5" Height="5"  />
+                                            <Ellipse x:Name="IRSensor24" StrokeThickness="5" Stroke="Green" Width="5" Height="5" />
+                                            <Ellipse x:Name="MidPoint2"  StrokeThickness="5" Stroke="White" Width="5" Height="5"/>
+                                        </Canvas>
+
                                     </StackPanel>
                                 </StackPanel>
                                 <WrapPanel Height="63">
-                                    <Button x:Name="WM2_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
+                                    <Button x:Name="WM2_Detect" Content="Detect Wiimote" Margin="15" Click="WM2_Detect_Click"/>
                                     <Button x:Name="WM2_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
                                 </WrapPanel>
+                                
                             </StackPanel>
 
                         </GroupBox>
@@ -204,7 +222,7 @@
             </TabItem>
 
         </TabControl>
-        <StatusBar HorizontalAlignment="Left" Height="23" Margin="10,604,0,0" VerticalAlignment="Top" Width="940"/>
+        <StatusBar Margin="0,731,0,-5"/>
 
 
 

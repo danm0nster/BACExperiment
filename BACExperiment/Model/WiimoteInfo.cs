@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Controls;
 using WiimoteLib;
+using System.Collections.Generic;
 
 namespace BACExperiment
 {
@@ -13,17 +11,17 @@ namespace BACExperiment
      
 
     */
-    public class WiimoteInfo : UserControl
+    public class WiimoteInfo
+
     {
-
-
-
-
-        private Wiimote mWiimote;
+        
+        public WiimoteCollection mWiimotes { get; set; }
         public int count { get; set; }
         public string Astatus ;
         public string Bstatus ;
         public string path ;
+        private Service observer;
+        private string LastAction { get; set; }
         //Status can be seen by anyone , but can only be modified by the owning class. If you want to modify the status it can only be done by the methods in this class.
 
         private string setAStatus { set { this.Astatus = value; } }
@@ -32,22 +30,19 @@ namespace BACExperiment
         private string setBStatus { set { this.Bstatus = value; } }
         public string getBStatus { get { return this.Bstatus; } }
 
-        public Wiimote Wiimote { set { this.mWiimote = value; } } // Quick define of a set function
 
-        // Defining containers for the accelerometer , IR positions 
-        public float[] Accelerometer = new float[3]; 
-       
-        public float[,] IRState = new float[4,3] ;
-       
+        // Defining containers for the accelerometer , IR positions ; Might not be necessary since the Wiimote is sending info through it's Events to the Service listeners.
+        public float[] Accelerometer = new float[3];
+        public float[,] IRState = new float[5, 3];
         public int battery { get; set; }
 
         // Structures to hold the x , y , and sensor size 
-       
 
 
-        public WiimoteInfo(Wiimote wm) 
+        public WiimoteInfo(Service observer) 
         {
-            this.mWiimote = wm;
+            this.mWiimotes = new WiimoteCollection();
+            this.observer = observer;
         }
 
 
@@ -66,33 +61,55 @@ namespace BACExperiment
 
             if (irSensor.Found)
             {
-                IRState[index, 0] = irSensor.RawPosition.X;
-                IRState[index, 1] = irSensor.RawPosition.Y;
+                IRState[index, 0] = irSensor.Position.X/4;
+                IRState[index, 1] = irSensor.Position.Y/4;
                 IRState[index, 2] = irSensor.Size;
             }
         }
 
-        // Accesor to the Disconnect method inside the Wiimote
-        public void Disconnect()
+        private void UpdateIR(Point irSensor, int index)
         {
-            mWiimote.Disconnect();
-            mWiimote = new Wiimote();
+
+            if (irSensor.X != 0 && irSensor.Y !=0)
+            {
+                IRState[index, 0] = irSensor.X / 4;
+                IRState[index, 1] = irSensor.Y / 4;
+                IRState[index, 2] = 5;
+            }
+        }
+
+        // Accesor to the Disconnect method inside the Wiimote
+        public void Disconnect(int i)
+        {
+            mWiimotes[i].Disconnect();
+        }
+
+        public void Connect(int i)
+        {
+            this.mWiimotes.FindAllWiimotes();
+            try {
+                mWiimotes[i].Connect();
+                mWiimotes[i].SetReportType(InputReport.IRAccel, true);
+                if (i == 0)
+                    mWiimotes[i].SetLEDs(true, false, false, false);
+                if (i == 1)
+                    mWiimotes[i].SetLEDs(false, true, false, false);
+                mWiimotes[i].WiimoteChanged += wm_WiimoteChanged;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         //-1 value in the IRState array indicate that the respective sensor can not be found.
-        private void setIRtoNotFoundMode(int index)
-        {
-            IRState[index, 0] = -1;
-            IRState[index, 1] = -1;
-            IRState[index, 2] = -1;
-            IRState[index, 3] = -1;
-        }
+       
 
         public void UpdateState(WiimoteChangedEventArgs args)
         {
             WiimoteInfo.UpdateWiimoteStateDelegate updateWiimoteStateDelegate = new WiimoteInfo.UpdateWiimoteStateDelegate(this.UpdateWiimoteChanged);
             object[] objArray = new object[] { args };
-            //base.BeginInvoke(updateWiimoteStateDelegate, objArray);
+            
         }
 
         private void UpdateWiimoteChanged(WiimoteChangedEventArgs args)
@@ -102,7 +119,7 @@ namespace BACExperiment
             Accelerometer[0] = wiimoteState.AccelState.Values.X;
             Accelerometer[1] = wiimoteState.AccelState.Values.Y;
             Accelerometer[2] = wiimoteState.AccelState.Values.Z;
-
+            
 
             ExtensionType extensionType = wiimoteState.ExtensionType;
             if (extensionType <= (ExtensionType.Nunchuk | ExtensionType.ClassicController | ExtensionType.Guitar | ExtensionType.Drums))
@@ -146,6 +163,13 @@ namespace BACExperiment
             this.UpdateIR(wiimoteState.IRState.IRSensors[2], 2);
             this.UpdateIR(wiimoteState.IRState.IRSensors[3], 3);
 
+            if(wiimoteState.IRState.IRSensors[0].Found && wiimoteState.IRState.IRSensors[1].Found)
+            {
+                this.UpdateIR(wiimoteState.IRState.RawMidpoint, 4);
+
+            }
+
+
             // This if statement makes shure that there are at least 2 IR sensors detected so that the Mid point can be drawn .
             // If we do not have at least 2 IR sensors we run the rist of dividing  0 when we try to determine the middle point.
             // The wii remote can see max 4 sensors but can run with two . For that reasons , if there are not at least two sensors detected ,
@@ -154,21 +178,46 @@ namespace BACExperiment
             {
                 Console.WriteLine("Found 2 sensors");
             }
-          
-            this.battery = (wiimoteState.Battery > 100f ? 100 : (int)wiimoteState.Battery);
-            this.path = string.Concat("Device Path: ", this.mWiimote.HIDDevicePath);
+
+            // this.battery = (wiimoteState.Battery > 100f ? 100 : (int)wiimoteState.Battery);
+            this.battery = (wiimoteState.Battery > 200f ? 200 : (int)wiimoteState.Battery);
+            //this.path = string.Concat("Device Path: ", wiimoteState.HIDDevicePath);
         }
+
+     
+      
 
         private delegate void UpdateExtensionChangedDelegate(WiimoteExtensionChangedEventArgs args);
 
         private delegate void UpdateWiimoteStateDelegate(WiimoteChangedEventArgs args);
 
 
-       
 
-       
-     
+        public void wm_WiimoteChanged(object sender, WiimoteChangedEventArgs args)
+        {
+            // current state information
 
-       
+            Wiimote wm = (Wiimote)sender;
+            UpdateWiimoteChanged(args);
+            observer.informMainWindow(this);
+            
+            
+            
+            //Change If statements from using "==" to use " Equals " method
+
+
+            /*if (wm.ID.Equals(wiimote1_info.getWiimoteID()))
+                observer.OnNext(wiimote1_info);
+            else if (wm.ID.Equals(wiimote2_info.getWiimoteID()))
+                observer.OnNext(wiimote2_info);
+            */
+            Console.WriteLine(String.Concat(args.WiimoteState.AccelState.Values.ToString()));
+
+        }
+
+
+
+
+
     }
 }   

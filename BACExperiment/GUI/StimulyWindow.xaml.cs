@@ -23,5 +23,17 @@ namespace BACExperiment
         {
             InitializeComponent();
         }
+
+        public void moveElipse1ToCoordinate(Point point)
+        {
+            Canvas.SetTop(StimulyEllipse1, point.Y);
+            Canvas.SetLeft(StimulyEllipse1, point.X);
+        }
+
+        public void moveElipse2ToCoordinate(Point point)
+        {
+            Canvas.SetTop(StimulyEllipse2, point.Y);
+            Canvas.SetLeft(StimulyEllipse2, point.X);
+        }
     }
 }

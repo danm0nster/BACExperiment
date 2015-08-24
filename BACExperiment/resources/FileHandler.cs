@@ -45,7 +45,7 @@ namespace BACExperiment.Model
 
         // a .Net stream to read and write from
         private FileStream mStream;
-        private bool found = false;
+       
         private Guid guid;
         private int index = 0;
 

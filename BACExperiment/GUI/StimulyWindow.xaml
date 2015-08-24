@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="StimulyWindow" Height="406.821" Width="693.467">
     <Grid>
-
-    </Grid>
+        <Canvas>
+            <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="100" Canvas.Left="100" Stroke="Salmon" StrokeThickness="3" ></Ellipse>
+            <Ellipse x:Name="StimulyEllipse2" Width="100" Height="100" Canvas.Top="100" Canvas.Left="200" Stroke="BurlyWood" StrokeThickness="3"></Ellipse>
+        </Canvas>
+        </Grid>
 </Window>

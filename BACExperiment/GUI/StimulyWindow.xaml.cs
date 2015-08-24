@@ -19,6 +19,8 @@ namespace BACExperiment
     /// </summary>
     public partial class StimulyWindow : Window
     {
+
+        TranslateTransform moveTo = new TranslateTransform();
         public StimulyWindow()
         {
             InitializeComponent();
@@ -26,14 +28,16 @@ namespace BACExperiment
 
         public void moveElipse1ToCoordinate(Point point)
         {
-            Canvas.SetTop(StimulyEllipse1, point.Y);
-            Canvas.SetLeft(StimulyEllipse1, point.X);
+            moveTo.X = point.X;
+            moveTo.Y = point.Y;
+            StimulyEllipse1.RenderTransform = moveTo;
         }
 
         public void moveElipse2ToCoordinate(Point point)
         {
-            Canvas.SetTop(StimulyEllipse2, point.Y);
-            Canvas.SetLeft(StimulyEllipse2, point.X);
+            moveTo.X = point.X;
+            moveTo.Y = point.Y;
+            StimulyEllipse2.RenderTransform = moveTo;
         }
     }
 }

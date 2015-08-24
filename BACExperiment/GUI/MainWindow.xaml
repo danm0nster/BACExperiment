@@ -121,7 +121,7 @@
                                         </GroupBox>
                                     </WrapPanel>
                                     <StackPanel Height="207">
-                                        <Canvas x:Name="IRImage"  Height="200" MaxHeight="200" Width="400" Background="Black">
+                                        <Canvas x:Name="IRImage"  Height="200" MaxHeight="200" Width="300" Background="Black">
                                             <Ellipse x:Name="IRSensor11" StrokeThickness="5" Stroke="Blue" Width="5" Height="5"/>
                                             <Ellipse x:Name="IRSensor12" StrokeThickness="5" Stroke="Yellow" Width="5" Height="5" />
                                             <Ellipse x:Name="IRSensor13" StrokeThickness="5" Stroke="Red" Width="5" Height="5" />
@@ -196,7 +196,7 @@
                                         </GroupBox>
                                     </WrapPanel>
                                     <StackPanel>
-                                        <Canvas x:Name="IRImage2"  Height="200" MaxHeight="200" Width="400" Background="Black"  >
+                                        <Canvas x:Name="IRImage2"  Height="200" MaxHeight="200" Width="300" Background="Black"  >
                                             <Ellipse x:Name="IRSensor21" StrokeThickness="5" Stroke="Blue" Width="5" Height="5"  />
                                             <Ellipse x:Name="IRSensor22" StrokeThickness="5" Stroke="Yellow" Width="5" Height="5"  />
                                             <Ellipse x:Name="IRSensor23" StrokeThickness="5" Stroke="Red" Width="5" Height="5"  />

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using WiimoteLib;
 
@@ -122,37 +123,9 @@ namespace BACExperiment
                     // Have to find a way to delay execution of this since in the first ever call there are no 
                     try {
 
-                        TranslateTransform moveTo1 = new TranslateTransform();
-                        moveTo1.X = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10; ; moveTo1.Y = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10;
-                        IRSensor21.RenderTransform = moveTo1;
-                        TranslateTransform moveTo2 = new TranslateTransform();
-                        moveTo2.X = wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10; moveTo2.Y = wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10;
-                        IRSensor22.RenderTransform = moveTo2;
-                        TranslateTransform moveTo3 = new TranslateTransform();
-                        moveTo3.X = wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10; moveTo3.Y = wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10;
-                        IRSensor23.RenderTransform = moveTo3;
-                        TranslateTransform moveTo4 = new TranslateTransform();
-                        moveTo4.X = wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10; moveTo4.Y = wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10;
-                        IRSensor24.RenderTransform = moveTo4;
 
-
-                        /*
-                        (IRSensor11.RenderTransform as TranslateTransform).X = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10;
-                        (IRSensor11.RenderTransform as TranslateTransform).Y = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10;
-
-                        (IRSensor12.RenderTransform as TranslateTransform).X = wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10;
-                        (IRSensor12.RenderTransform as TranslateTransform).Y = wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10;
-
-                        (IRSensor13.RenderTransform as TranslateTransform).X = wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10;
-                        (IRSensor13.RenderTransform as TranslateTransform).Y = wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10;
-
-                        (IRSensor14.RenderTransform as TranslateTransform).X = wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10;
-                        (IRSensor14.RenderTransform as TranslateTransform).Y = wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10;
-
-                        (MidPoint1.RenderTransform as TranslateTransform).X = wm.WiimoteState.IRState.RawMidpoint.X / 10;
-                        (MidPoint1.RenderTransform as TranslateTransform).Y = wm.WiimoteState.IRState.RawMidpoint.Y / 10;
-
-                        */
+                   
+                     
 
                         if (stimulyWindow != null)
                         {
@@ -238,18 +211,11 @@ namespace BACExperiment
 
             }
 
-        public void DrawSensor(System.Windows.Media.Color color, double x, double y, int Size)
+        public void AnimateSensor( double x, double y , UIElement sensor)  
         {
-            Ellipse sensor = new Ellipse();
-            sensor.Width = Size + 1;
-            sensor.Height = Size + 1;
-            sensor.Opacity = 100;
-            sensor.Fill = new SolidColorBrush(color);
-            Canvas.SetTop(sensor, x);
-            //Canvas.SetBottom(sensor , y);
-            Canvas.SetLeft(sensor, y);
-            IRImage.Children.Add(sensor);
-            Console.WriteLine("Point drawn");        
+            DoubleAnimation animX = new DoubleAnimation(Canvas.GetTop(sensor) ,x,new Duration(TimeSpan.FromMilliseconds(1000)));
+            DoubleAnimation animY = new DoubleAnimation(Canvas.GetLeft(sensor), y, new Duration(TimeSpan.FromMilliseconds(1000)));
+            sensor.BeginAnimation(, animX);
         }
 
 
@@ -257,6 +223,7 @@ namespace BACExperiment
         {
             stimulyWindow = new StimulyWindow();
             stimulyWindow.Visibility = System.Windows.Visibility.Visible;
+            stimulyWindow.StartCourse();
         }
 
         

@@ -70,8 +70,6 @@
     </Compile>
     <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="resources\FileHandler.cs" />
-    <Compile Include="resources\HIDImports2.cs" />
     <Compile Include="Model\Microphone.cs" />
     <Compile Include="Model\Subject.cs" />
     <Compile Include="Model\WiimoteInfo.cs" />
@@ -128,6 +126,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UpdateLog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Tickets.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

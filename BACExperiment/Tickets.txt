@@ -1,0 +1,7 @@
+﻿
+
+1. "Unable to find an entry point named 'EventSetInformation' in DLL 'advapi32.dll'."  when starting program .  *******FiXED*******
+
+2. Wiimote exception after trying to connect wii remotes. *******FIXED*******
+
+3.moveTo TranslateTransform not rendering.

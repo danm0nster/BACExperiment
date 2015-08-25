@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using WiimoteLib;
 using System.Collections.Generic;
+using System.Timers;
+using System.Threading.Tasks;
 
 namespace BACExperiment
 {
@@ -75,8 +77,9 @@ namespace BACExperiment
         public void Connect(int i)
         {
 
-
+           
             this.mWiimotes.FindAllWiimotes();
+            
             try {
                 mWiimotes[i].Connect(); //first attempt throws null reference exception
 

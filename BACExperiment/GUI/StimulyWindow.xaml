@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="StimulyWindow" Height="406.821" Width="693.467">
+        Title="StimulyWindow" Height="1000" Width="1000">
     <Grid>
-        <Canvas>
-            <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="100" Canvas.Left="100" Stroke="Salmon" StrokeThickness="3" ></Ellipse>
+        <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="1,1">
+            <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="00" Canvas.Left="00" Stroke="Salmon" StrokeThickness="3"  ></Ellipse>
             <Ellipse x:Name="StimulyEllipse2" Width="100" Height="100" Canvas.Top="100" Canvas.Left="200" Stroke="BurlyWood" StrokeThickness="3"></Ellipse>
         </Canvas>
         </Grid>

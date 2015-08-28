@@ -4,4 +4,6 @@
 
 2. Wiimote exception after trying to connect wii remotes. *******FIXED*******
 
-3.moveTo TranslateTransform not rendering.
+3. moveTo TranslateTransform not rendering. *******FIXED*******
+
+4. wiimote ir sensor input has Nan value . Exception is continuousely thrown.

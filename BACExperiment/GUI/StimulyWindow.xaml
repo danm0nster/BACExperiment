@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="StimulyWindow" Height="1000" Width="1000">
+        Title="StimulyWindow" MinHeight="1000" MinWidth="1000" ResizeMode="CanResizeWithGrip" Closed="Window_Closed">
     <Grid>
-        <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="1,1">
-            <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="00" Canvas.Left="00" Stroke="Salmon" StrokeThickness="3"  ></Ellipse>
-            <Ellipse x:Name="StimulyEllipse2" Width="100" Height="100" Canvas.Top="100" Canvas.Left="200" Stroke="BurlyWood" StrokeThickness="3"></Ellipse>
-        </Canvas>
-        </Grid>
+        <Border>
+            <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="0.5,0.5" Width="0" Height="0 " RenderTransform="1 0 0 -1 0 0">
+                
+                <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="-50" Canvas.Left="-50" Stroke="Salmon" StrokeThickness="3"  ></Ellipse>
+            </Canvas>
+        </Border>
+    </Grid>
 </Window>

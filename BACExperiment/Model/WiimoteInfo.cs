@@ -53,6 +53,13 @@ namespace BACExperiment
                 if (irSensor.RawPosition.Y / 4 > maxY)
                     maxY = irSensor.RawPosition.Y / 4;
             }
+            else
+            {
+                IRState[index, 0] = -1;
+                IRState[index, 1] = -1;
+                IRState[index, 2] = -1;
+
+            }
         }
 
         private void UpdateIR(Point irSensor, int index)
@@ -74,16 +81,24 @@ namespace BACExperiment
             count--;
         }
 
+
+
         public void Connect(int i)
         {
 
-           
-            this.mWiimotes.FindAllWiimotes();
-            
-            try {
-                mWiimotes[i].Connect(); //first attempt throws null reference exception
 
+            try {
+                mWiimotes.FindAllWiimotes();
+            }
+            catch (Exception ex) { 
+            Console.WriteLine(ex.ToString());
+            }
+            try {
+              
+                
+                mWiimotes[i].Connect(); //first attempt throws null reference exception
                 mWiimotes[i].SetReportType(InputReport.IRAccel, true);
+
                 if (i == 0)
                     mWiimotes[i].SetLEDs(true, false, false, false);
                 if (i == 1)
@@ -98,13 +113,8 @@ namespace BACExperiment
 
         //-1 value in the IRState array indicate that the respective sensor can not be found.
        
-        /*
-        public void UpdateState(WiimoteChangedEventArgs args)
-        {
-            WiimoteInfo.UpdateWiimoteStateDelegate updateWiimoteStateDelegate = new WiimoteInfo.UpdateWiimoteStateDelegate(this.UpdateWiimoteChanged);
-            object[] objArray = new object[] { args };
-            
-        }*/
+        
+      
 
         private void UpdateWiimoteChanged(WiimoteChangedEventArgs args , object sender)
         {
@@ -113,7 +123,9 @@ namespace BACExperiment
             Accelerometer[1] = wiimoteState.AccelState.Values.Y;
             Accelerometer[2] = wiimoteState.AccelState.Values.Z;
             
+          
             this.UpdateIR(wiimoteState.IRState.IRSensors[0], 0);
+            
             this.UpdateIR(wiimoteState.IRState.IRSensors[1], 1);
             this.UpdateIR(wiimoteState.IRState.IRSensors[2], 2);
             this.UpdateIR(wiimoteState.IRState.IRSensors[3], 3);
@@ -138,7 +150,7 @@ namespace BACExperiment
             this.battery = (wiimoteState.Battery > 200f ? 200 : (int)wiimoteState.Battery);
             //this.path = string.Concat("Device Path: ", wiimoteState.HIDDevicePath);
 
-            observer.informMainWindow(this, (Wiimote)sender );
+             observer.informMainWindow(this, (Wiimote)sender );
         }
 
      

@@ -13,12 +13,33 @@
                 <Grid>
                     <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="180" VerticalAlignment="Top" Background="AliceBlue">
                         <WrapPanel Margin="10,10" Background="AliceBlue">
-                            <StackPanel Height="140" Orientation="Horizontal" Width="250">
-                                <Button x:Name="StartBtn" Content="Start" Width="138" Click="StartBtn_Click"/>
+                            <StackPanel Height="140" Orientation="Vertical" Width="250">
+                                <Button x:Name="OpenBtn" Content="Open Stimuly Window" Click="OpenBtn_Click" Margin="10" Height="40"/>
+                                <Button x:Name="StartBtn" Content="Start stimuly" Click="StartBtn_Click" Margin="10" Height="40"/>
                             </StackPanel>
+                            <GroupBox Header="Stimuly settings" Height="123">
+                                <StackPanel Height="140" Orientation="Vertical" Width="250">
+
+                                    <WrapPanel>
+                                        <Label Content="Course mode :" Width="116"></Label>
+                                        <ComboBox x:Name="ModeSelect" Width="134" />
+                                    </WrapPanel>
+                                    <WrapPanel Height="25" >
+                                        <Label Content="Course Complexity" Height="25" Width="116"></Label>
+                                        <Slider x:Name="complexitySlider" Height="25" Width="133"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1"></Slider>
+                                    </WrapPanel>
+                                    <WrapPanel Height="25">
+                                        <Label Content="Course speed" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="116"></Label>
+                                        <Slider x:Name="SpeedSlider" Height="25" Width="134" TickFrequency="1" Maximum="10" TickPlacement="BottomRight" ></Slider>
+                                    </WrapPanel>
+                                    <WrapPanel Height="25">
+                                        <CheckBox x:Name="RandomCheck" Content="Random values " Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="166"/>
+
+                                    </WrapPanel>
+                                </StackPanel>
+                            </GroupBox>
                             <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
-                            <StackPanel Height="140" Orientation="Horizontal" Width="250"></StackPanel>
-                           
+
                         </WrapPanel>
                     </GroupBox>
                     <GroupBox x:Name="groupBox1" Header="Microphone" Margin="10,176,625,10" Background="Aqua">
@@ -121,13 +142,14 @@
                                         </GroupBox>
                                     </WrapPanel>
                                     <StackPanel Height="207">
-                                        <Canvas x:Name="IRImage"  Height="200" MaxHeight="200" Width="300" Background="Black">
+                                        <Canvas x:Name="IRImage"  Height="200" MaxHeight="200" Width="300" Background="Black"   >
                                             <Ellipse x:Name="IRSensor11" StrokeThickness="5" Stroke="Blue" Width="5" Height="5"/>
                                             <Ellipse x:Name="IRSensor12" StrokeThickness="5" Stroke="Yellow" Width="5" Height="5" />
                                             <Ellipse x:Name="IRSensor13" StrokeThickness="5" Stroke="Red" Width="5" Height="5" />
                                             <Ellipse x:Name="IRSensor14" StrokeThickness="5" Stroke="Green" Width="5" Height="5" />
                                             <Ellipse x:Name="MidPoint1"  StrokeThickness="5" Stroke="White" Width="5" Height="5" />
                                         </Canvas>
+
                                     </StackPanel>
                                     <WrapPanel Height="63">
                                         <Button x:Name="WM1_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
@@ -210,7 +232,7 @@
                                     <Button x:Name="WM2_Detect" Content="Detect Wiimote" Margin="15" Click="WM2_Detect_Click"/>
                                     <Button x:Name="WM2_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
                                 </WrapPanel>
-                                
+
                             </StackPanel>
 
                         </GroupBox>

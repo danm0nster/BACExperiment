@@ -6,7 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-
+using System.Windows.Shapes;
+using System.Drawing;
 namespace BACExperiment
 {
     /// <summary>
@@ -23,6 +24,7 @@ namespace BACExperiment
         private int CourseSpeed;
         private int CourseComplexity;
         private bool random;
+        private bool showTrajectory;
         private Random r = new Random();
 
         public int getCourseMode() { return CourseMode; }
@@ -30,47 +32,101 @@ namespace BACExperiment
         public int getCourseSpeed() { return CourseSpeed; }
         public void setCourseSpeed(int CourseSpeed) { this.CourseSpeed = CourseSpeed; }
         public int getCourseComplexity() { return CourseComplexity; }
-        public void setCourseComplexity(int CourseComplexity) { this.CourseComplexity = CourseComplexity};
+        public void setCourseComplexity(int CourseComplexity) { this.CourseComplexity = CourseComplexity; }
         public bool isRandom() { return random; }
         public void setRandom(bool random) { this.random = random; }
+        public bool isShowTrajectory() { return showTrajectory; }
+        public void setShowTrajectory(bool value) { this.showTrajectory = value; }
 
         public StimulyWindow(MainWindow mainWindow )
         {
             InitializeComponent();
             course = new CourseThread(this);
-            this.queue1 = new AnimationQueue(StimulyEllipse1 , Canvas.TopProperty , Canvas.LeftProperty);
+            this.queue1 = new AnimationQueue(StimulyEllipse1 , Canvas.LeftProperty , Canvas.TopProperty);
             this.mainWindow = mainWindow;
             random = (bool)mainWindow.RandomCheck.IsChecked ;
         }
 
 
-        public void StartCourse()
+        public void buildCourseType1()
         {
 
             // First we check all the info input from the main window such as course speed , complexity etc. If the Random marc is checked then  none of the seetings apply and the course is using random values
 
-            if (isRandom())
-            {
-                setCourseMode(r.Next(3));
-                setCourseSpeed(r.Next(10));
-                setCourseComplexity(r.Next(3));
 
+
+            int i = 1;
+
+            List<System.Windows.Point> coordinates = new List<System.Windows.Point>();
+            if (CourseComplexity == 0)
+            {
+                coordinates = course.firstFuntion();
+            }
+            if (CourseComplexity == 1)
+            {
+               coordinates = course.secondFunction();
+            }
+            if (CourseComplexity == 2)
+            {
+                coordinates = course.thirdFunction();
             }
 
-
-            int i = 0;
-
-            List<Point> coordinates = course.thirdFunction();
-            while (coordinates.Count != i)
+            double lastX = 0;
+            double lastY = 0;
+            while (i != coordinates.Count)
             {
-                queue1.queueAnimation(new DoubleAnimation(coordinates[i].X, new Duration(TimeSpan.FromMilliseconds(100))),
-                                       new DoubleAnimation(coordinates[i].Y, new Duration(TimeSpan.FromMilliseconds(100)))
-                                     );
+
+
+                if (Math.Abs(coordinates[i].X - coordinates[i - 1].X) > 3 || Math.Abs(coordinates[i].Y - coordinates[i - 1].Y) > 3)
+                {
+                    queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed / 3))),
+                                           new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed / 3)))
+                                           );
+
+                    Line  l= new Line();
+                    l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+
+                    if (showTrajectory == true)
+                    {
+                        //Starts the line drawing from where the first coordinate set is
+                        if (lastX == 0 || lastY == 0)
+                        {
+                            lastX = coordinates[i].X;
+                            lastY = coordinates[i].Y;
+                        }
+
+                        //Draw the line 
+                        l.X1 = lastX;
+                        l.X2 = coordinates[i].X;
+                        l.Y1 = lastY;
+                        l.Y2 = coordinates[i].Y;
+
+                        l.StrokeThickness = 2;
+                        StimulyCanvas.Children.Add(l);
+                    }
+                   
+                }
+
+                //Position Ellipse to the begining of the course
+                
+                if ( i == 1)
+                {
+                    Canvas.SetLeft(StimulyEllipse1 , coordinates[i].X -50);
+                    Canvas.SetTop(StimulyEllipse1, coordinates[i].Y -50);
+                }
+
+                lastX = coordinates[i].X;
+                lastY = coordinates[i].Y;
                 i++;
             }
-            queue1.start();
+         
 
         }        
+
+        public void startCourse()
+        {
+            queue1.start();
+        }
 
         private class AnimationQueue
         {
@@ -165,6 +221,9 @@ namespace BACExperiment
         private void Window_Closed(object sender, EventArgs e)
         {
             mainWindow.enableStartBtn();
+            mainWindow.complexitySlider.IsEnabled = true;
+            mainWindow.SpeedSlider.IsEnabled = true;
+            mainWindow.TrajectoryCheck.IsEnabled = true;
         }
     }
 

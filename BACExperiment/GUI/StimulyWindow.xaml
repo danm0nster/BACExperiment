@@ -9,9 +9,11 @@
     <Grid>
         <Border>
             <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="0.5,0.5" Width="0" Height="0 " RenderTransform="1 0 0 -1 0 0">
-                
-                <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="-50" Canvas.Left="-50" Stroke="Salmon" StrokeThickness="3"  ></Ellipse>
+
+                <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="-50" Canvas.Left="-50" Stroke="Salmon" StrokeThickness="3" ClipToBounds="True"  ></Ellipse>
             </Canvas>
         </Border>
+        <Ellipse Fill="Black" Stroke="Black" HorizontalAlignment="Center"/>
+        <Ellipse Fill="Black" Height="1" Stroke="Black" VerticalAlignment="Center" />
     </Grid>
 </Window>

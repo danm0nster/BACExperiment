@@ -73,17 +73,17 @@ namespace BACExperiment
         }
 
 
-        public bool informMainWindow(WiimoteInfo sender, Wiimote wm)
+        public void informMainWindow(WiimoteInfo sender, Wiimote wm)
         {
             try
             {
                 observer.OnNext(sender, wm);
-                return true;
+                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return false;
+               
             }
         }      
     }

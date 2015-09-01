@@ -7,3 +7,5 @@
 3. moveTo TranslateTransform not rendering. *******FIXED*******
 
 4. wiimote ir sensor input has Nan value . Exception is continuousely thrown.
+
+5. First trajectori function starts out far from the center of screen . Small second where the Ellipse moves from starting point.	****FIXED****

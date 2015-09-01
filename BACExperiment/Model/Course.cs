@@ -44,18 +44,25 @@ namespace BACExperiment.Model
             double x, y;
             int a = 5;
             int b = 4;
-            int A = 500; // X Range in which the sfere will run around in
-            int B = 500; // Y Range in which the sfere will run around in
-            int d = (int)(Math.PI / 2*100);
+            int A = 450; // X Range in which the sfere will run around in
+            int B = 450; // Y Range in which the sfere will run around in
+            double d = Math.PI / 2;
             double t;
-            for (int i = 0; i <= 2000; i++)
+            double lastX = 0;
+            double lastY = 0;
+            for (int i = 0; i <= 4000; i++)
             {
                
-                t = 4 * System.Math.PI / 2000 * (double)i;
+                t = 8 * System.Math.PI / 4000 * (double)i;
                 x = A * System.Math.Sin(a * t + d) ;
-                y = B * System.Math.Sin(b * t) ;
-                coordinates.Add(new Point(x, y));
-                
+                y = B * System.Math.Sin(b * t)  ;
+                if (Math.Abs(lastX - x) > 5 || Math.Abs(lastY - y) > 5)
+                {
+                    coordinates.Add(new Point(x, y));
+                    lastX = x;
+                    lastY = y;
+                }
+
             }
 
             return coordinates;
@@ -68,19 +75,26 @@ namespace BACExperiment.Model
             double x, y;
             int a = 9;
             int b = 10;
-            int A = 75; // X Range in which the sfere will run around in
-            int B = 75; // Y Range in which the sfere will run around in
-            int d = (int)(Math.PI / 2 * 100);
+            int A = 100; // X Range in which the sfere will run around in
+            int B = 100; // Y Range in which the sfere will run around in
+            double d = Math.PI / 2;
             int g = 2;
             double f = 1.5;
             double t;
-            for (int i = 0; i <= 2000; i++)
+            double lastX = 0;
+            double lastY = 0;
+            for (int i = 0; i <= 4000; i++)
             {
 
-                t = 4 * System.Math.PI / 2000 * (double)i;
+                t = 8 * System.Math.PI / 4000 * i; // angle of the point relative to the origin
                 x = A * Math.Exp(-g * Math.Cos(3 * b * t)) * Math.Sin(a * t + d);
                 y = B * Math.Exp(-f * Math.Cos(2 * a * t + d)) * Math.Sin(b * t);
-                coordinates.Add(new Point(x, y));
+                if (Math.Abs(lastX - x) > 5 || Math.Abs(lastY - y) > 5)
+                {
+                    coordinates.Add(new Point(x, y));
+                    lastX = x;
+                    lastY = y;
+                }
 
             }
 
@@ -94,20 +108,27 @@ namespace BACExperiment.Model
             double x, y;
             int a = 9;
             int b = 10;
-            int A = 75; // X Range in which the sfere will run around in
-            int B = 75; // Y Range in which the sfere will run around in
-            int d = (int)(Math.PI / 2 * 100);
+            int A = 500; // X Range in which the sfere will run around in
+            int B = 500; // Y Range in which the sfere will run around in
+            double d = Math.PI / 2 ;
             int g = 2;
             double f = 1.5;
             double t;
-            for (int i = 0; i <= 2000; i++)
+            double lastX = 0;
+            double lastY = 0;
+
+            for (int i = 0; i <= 4000; i++)
             {
 
-                t = 4 * System.Math.PI / 2000 * (double)i;
-                x = A * Math.Exp(-g * Math.Pow(Math.Cos(2.1 * b * t) ,2) * Math.Sin(a * t + d)) -50; //-50 for the elipse values
-                y = B * Math.Exp(-f * Math.Pow(Math.Cos(1.9 * a * t + d) ,2) * Math.Sin(b * t)) -50; 
-            coordinates.Add(new Point(x, y));
-
+                t = 8 * System.Math.PI / 4000 * (double)i;
+                x = A * Math.Exp(-g * Math.Pow(Math.Cos(2.1 * b * t) ,2)) * Math.Sin(a * t + d) ; 
+                y = B * Math.Exp(-f * Math.Pow(Math.Cos(1.9 * a * t + d) ,2)) * Math.Sin(b * t) ;
+                if (Math.Abs(lastX - x) > 5 || Math.Abs(lastY - y) > 5)
+                {
+                    coordinates.Add(new Point(x, y));
+                    lastX = x;
+                    lastY = y;
+                }
             }
 
             return coordinates;

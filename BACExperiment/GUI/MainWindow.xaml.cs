@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BACExperiment.GUI;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
@@ -27,8 +29,9 @@ namespace BACExperiment
 
         private Service service;
         private StimulyWindow stimulyWindow;
-        
-               
+        Storyboard storyBoard;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,7 +39,7 @@ namespace BACExperiment
             ModeSelect.Items.Add(new ComboboxItem("Ellipse" , "Ellipse"));
             ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));
             ModeSelect.Items.Add(new ComboboxItem("Pipe", "Pipe"));
-
+            storyBoard = new Storyboard();
         }
 
         
@@ -113,7 +116,7 @@ namespace BACExperiment
         {
 
             //The update method.
-            if (wm.WiimoteState.LEDState.LED1==true)
+            if (wm.ID.Equals(remote.mWiimotes[0].ID))
             {
                 Action action = () =>
             {
@@ -128,24 +131,38 @@ namespace BACExperiment
                     wm1_progressbar.Value = wm.WiimoteState.Battery;
 
 
-                    // Have to find a way to delay execution of this since in the first ever call there are no . Did not delay execution , instead made if statement in animate
-                    // sensor that tests for NaN value .
-
-
-                    AnimateSensor(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X, wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y, IRSensor11);
-                    AnimateSensor(wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10, wm.WiimoteState.IRState.IRSensors[1].RawPosition.Y / 10, IRSensor12);
-                    AnimateSensor(wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10, wm.WiimoteState.IRState.IRSensors[2].RawPosition.Y / 10, IRSensor13);
-                    AnimateSensor(wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10, wm.WiimoteState.IRState.IRSensors[3].RawPosition.Y / 10, IRSensor14);
+                // Have to find a way to delay execution of this since in the first ever call there are no . Did not delay execution , instead made if statement in animate
+                // sensor that tests for NaN value .
 
 
 
 
 
-                };
+                if ( Double.IsNaN(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X) || Double.IsNaN(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X))
+                {
+                    DoubleAnimation animMoveX = new DoubleAnimation();
+                    animMoveX.Duration = new Duration(TimeSpan.FromMilliseconds(10));
+                    animMoveX.To = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10;
+                    Storyboard.SetTarget(animMoveX, IRSensor11);
+                    Storyboard.SetTargetProperty(animMoveX, new PropertyPath(Canvas.LeftProperty));
+
+                    DoubleAnimation animMoveY = new DoubleAnimation();
+                    animMoveY.Duration = new Duration(TimeSpan.FromMilliseconds(10));
+                    animMoveY.To = wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y / 10;
+                    Storyboard.SetTarget(animMoveY, IRSensor11);
+                    Storyboard.SetTargetProperty(animMoveY, new PropertyPath(Canvas.TopProperty));
+
+                    storyBoard.Children.Add(animMoveX);
+                    storyBoard.Children.Add(animMoveY);
+
+                    storyBoard.Begin();
+                }                
+
+            };
 
                 Dispatcher.BeginInvoke(action);             
             }
-            else if (wm.WiimoteState.LEDState.LED2==true)
+            else if (wm.ID.Equals(remote.mWiimotes[1].ID))
             {
                 Action action = () =>
             {
@@ -175,6 +192,7 @@ namespace BACExperiment
 
             }
 
+        //Method freezes the whole GUI .
         public void AnimateSensor(double x, double y, Ellipse sensor)
         {
             if (Double.IsNaN(x) || Double.IsNaN(y))
@@ -202,14 +220,26 @@ namespace BACExperiment
         private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
            
-            stimulyWindow.StartCourse();
+          
             StartBtn.IsEnabled = false;
+            complexitySlider.IsEnabled = false;
+            SpeedSlider.IsEnabled = false;
+            stimulyWindow.startCourse();
+            
         }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
             stimulyWindow = new StimulyWindow(this);
             stimulyWindow.Visibility = System.Windows.Visibility.Visible;
+            stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
+            stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
+            // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
+            StartBtn.IsEnabled = true;
+            stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
+            TrajectoryCheck.IsEnabled = false;
+
+            stimulyWindow.buildCourseType1();
         }
 
         public void enableStartBtn()
@@ -236,5 +266,11 @@ namespace BACExperiment
         }
 
         
+
+        private void prompterOpen_Click(object sender, RoutedEventArgs e)
+        {
+            Prompter prompter = new Prompter();
+            prompter.Visibility = System.Windows.Visibility.Visible ;
+         }
     }
 }

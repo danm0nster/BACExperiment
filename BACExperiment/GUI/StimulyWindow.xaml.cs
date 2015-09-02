@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Drawing;
 namespace BACExperiment
 {
     /// <summary>
@@ -27,6 +26,8 @@ namespace BACExperiment
         private bool showTrajectory;
         private Random r = new Random();
 
+        private static StimulyWindow instance;
+
         public int getCourseMode() { return CourseMode; }
         public void setCourseMode(int CourseMode) { this.CourseMode = CourseMode; }
         public int getCourseSpeed() { return CourseSpeed; }
@@ -37,8 +38,12 @@ namespace BACExperiment
         public void setRandom(bool random) { this.random = random; }
         public bool isShowTrajectory() { return showTrajectory; }
         public void setShowTrajectory(bool value) { this.showTrajectory = value; }
+        public static StimulyWindow getInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
 
-        public StimulyWindow(MainWindow mainWindow )
+
+
+
+        private StimulyWindow(MainWindow mainWindow )
         {
             InitializeComponent();
             course = new CourseThread(this);

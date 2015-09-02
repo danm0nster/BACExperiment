@@ -137,26 +137,32 @@ namespace BACExperiment
 
 
 
+                try {
+                    if (Double.IsNaN(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X) || Double.IsNaN(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X))
+                    {
+                        DoubleAnimation animMoveX = new DoubleAnimation();
+                        animMoveX.Duration = new Duration(TimeSpan.FromMilliseconds(1000));
+                        animMoveX.To = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10;
+                        Storyboard.SetTarget(animMoveX, IRSensor11);
+                        Storyboard.SetTargetProperty(animMoveX, new PropertyPath(Canvas.LeftProperty));
 
-                if ( Double.IsNaN(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X) || Double.IsNaN(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X))
+                        DoubleAnimation animMoveY = new DoubleAnimation();
+                        animMoveY.Duration = new Duration(TimeSpan.FromMilliseconds(10));
+                        animMoveY.To = wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y / 10;
+                        Storyboard.SetTarget(animMoveY, IRSensor11);
+                        Storyboard.SetTargetProperty(animMoveY, new PropertyPath(Canvas.TopProperty));
+
+                        storyBoard.Children.Add(animMoveX);
+                        storyBoard.Children.Add(animMoveY);
+
+                        storyBoard.Begin();
+                    }
+                   
+                }
+                catch(Exception ex)
                 {
-                    DoubleAnimation animMoveX = new DoubleAnimation();
-                    animMoveX.Duration = new Duration(TimeSpan.FromMilliseconds(10));
-                    animMoveX.To = wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10;
-                    Storyboard.SetTarget(animMoveX, IRSensor11);
-                    Storyboard.SetTargetProperty(animMoveX, new PropertyPath(Canvas.LeftProperty));
-
-                    DoubleAnimation animMoveY = new DoubleAnimation();
-                    animMoveY.Duration = new Duration(TimeSpan.FromMilliseconds(10));
-                    animMoveY.To = wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y / 10;
-                    Storyboard.SetTarget(animMoveY, IRSensor11);
-                    Storyboard.SetTargetProperty(animMoveY, new PropertyPath(Canvas.TopProperty));
-
-                    storyBoard.Children.Add(animMoveX);
-                    storyBoard.Children.Add(animMoveY);
-
-                    storyBoard.Begin();
-                }                
+                    Console.WriteLine(ex.ToString());
+                }           
 
             };
 
@@ -230,7 +236,8 @@ namespace BACExperiment
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
-            stimulyWindow = new StimulyWindow(this);
+            this.Cursor = Cursors.Wait;
+            stimulyWindow = StimulyWindow.getInstance(this);
             stimulyWindow.Visibility = System.Windows.Visibility.Visible;
             stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
             stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
@@ -240,6 +247,8 @@ namespace BACExperiment
             TrajectoryCheck.IsEnabled = false;
 
             stimulyWindow.buildCourseType1();
+            this.Cursor = Cursors.Arrow;
+            
         }
 
         public void enableStartBtn()

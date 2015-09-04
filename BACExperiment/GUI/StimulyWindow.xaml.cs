@@ -133,6 +133,30 @@ namespace BACExperiment
             queue1.start();
         }
 
+        public async void movePointer1(int x , int y)
+        {
+            Action action = () =>
+            {
+                Point p = makeToCartezian(x, y);
+                Canvas.SetRight(Pointer1, p.X);
+                Canvas.SetBottom(Pointer1, p.Y);
+            };
+
+            await Dispatcher.BeginInvoke(action);
+        }
+
+        public async void movePointer2(int x , int y)
+        {
+            Action action = () =>
+            {
+                Point p = makeToCartezian(x, y);
+                Canvas.SetRight(Pointer2, p.X * 10);
+                Canvas.SetBottom(Pointer2, p.Y * 10);
+            };
+
+            await Dispatcher.BeginInvoke(action);
+        }
+
         private class AnimationQueue
         {
             private List<DoubleAnimation> animation1 ;
@@ -229,6 +253,32 @@ namespace BACExperiment
             mainWindow.complexitySlider.IsEnabled = true;
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
+        }
+
+        private Point makeToCartezian(int x , int y)
+        {
+            Point p = new Point();
+
+            if(x < 500)
+            {
+                p.X = 0 - 500 + x;
+            }
+
+            else
+            {
+                p.X = x - 500;
+            }
+
+            if(y < 500)
+            {
+                p.Y = 500 - y;
+            }
+            else
+            {
+                p.Y = 0 - (y-500);
+            }
+
+            return p;
         }
     }
 

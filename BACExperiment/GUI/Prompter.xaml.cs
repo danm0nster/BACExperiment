@@ -29,25 +29,33 @@ namespace BACExperiment.GUI
         private string text;
         private Timer myTimer = new Timer();
         private Double scrollPosition = 0;
+        private int textSize;
+        private int speed;
 
         public void setPath(string path) { this.path = path; }
         public string getPath() { return path; }
 
 
-        public Prompter()
+        public Prompter(int speed , int fontSize , string path)
         {
+            this.path = path;
+            this.speed = speed;
+            this.textSize = fontSize;
             InitializeComponent();
             myTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            myTimer.Interval += 100;
-            myTimer.Enabled = true;
+            myTimer.Interval += 100*speed;
+
+          
 
 
             try
             {
                 text = System.IO.File.ReadAllText(path);
                 
-                prompterText.Text = text;
+                prompterText.Text = File.ReadAllText(@path);
+                prompterText.FontSize = textSize;
                 prompterText.TextAlignment = TextAlignment.Left;
+                prompterText.TextWrapping = TextWrapping.Wrap;
             }
             catch (Exception ex)
             {
@@ -58,22 +66,41 @@ namespace BACExperiment.GUI
 
         private void OnTimedEvent(object Sender, ElapsedEventArgs args)
         {
-            start();
-        }
-
-        private void start()
-        {
             this.Dispatcher.Invoke((Action)(() =>
             {
                 scroller.ScrollToVerticalOffset(scrollPosition);
                 scrollPosition += 1;
             }));
-            
         }
 
-        private void stop()
+        public void play()
+        {
+            myTimer.Enabled = true;
+
+            if (myTimer.Interval == 0)
+                myTimer.Interval = speed;
+        }
+
+        public void pause()
+        {
+            myTimer.Interval += 0;
+        }
+
+        public void stop()
         {
             throw new NotImplementedException();
+        }
+
+        public void textSize_Changed(int size)
+        {
+            prompterText.FontSize = size;
+        }
+
+        public void speed_Changed(int speed)
+        {
+            this.speed = speed; 
+            myTimer.Interval += 0;
+            myTimer.Interval += 100 * speed;
         }
     }
 }

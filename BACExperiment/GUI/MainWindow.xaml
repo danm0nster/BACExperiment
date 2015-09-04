@@ -5,54 +5,64 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="782.887" Width="965.715" ResizeMode="NoResize" >
+        Title="MainWindow" Height="811.387" Width="965.715" ResizeMode="NoResize" Loaded="Window_Loaded" >
     <Grid Margin="0,0,0,6">
 
         <TabControl x:Name="tabControl"  Margin="0,0,10,23">
             <TabItem Header="Session recording" Width="150">
                 <Grid>
-                    <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="180" VerticalAlignment="Top" Background="AliceBlue">
-                        <WrapPanel Margin="10,10" Background="AliceBlue">
-                            <StackPanel Height="140" Orientation="Vertical" Width="250">
+                    <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="176" VerticalAlignment="Top" Background="AliceBlue">
+                        <WrapPanel Margin="5,5" Background="AliceBlue">
+                            <StackPanel Orientation="Vertical"  Margin="0">
                                 <Button x:Name="OpenBtn" Content="Open Stimuly Window" Click="OpenBtn_Click" Margin="10" Height="40"/>
                                 <Button x:Name="StartBtn" Content="Start stimuly" Click="StartBtn_Click" Margin="10" Height="40" IsEnabled="False"/>
                             </StackPanel>
-                            <GroupBox Header="Stimuly settings" Height="123">
-                                <StackPanel Height="140" Orientation="Vertical" Width="250">
-
-                                    <WrapPanel>
+                            <GroupBox Header="Stimuly settings" Height="129">
+                                <StackPanel Orientation="Vertical" Width="250" Margin="0,0,0,0">
+                                    <WrapPanel Height="25" Margin="0,0,0,2">
                                         <Label Content="Course mode :" Width="116"></Label>
                                         <ComboBox x:Name="ModeSelect" Width="134" IsEnabled="False" />
                                     </WrapPanel>
-                                    <WrapPanel Height="25" >
+                                    <WrapPanel Height="25" Margin="0,2,0,2">
                                         <Label Content="Course Complexity" Height="25" Width="116"></Label>
                                         <Slider x:Name="complexitySlider" Height="25" Width="133"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1"></Slider>
                                     </WrapPanel>
-                                    <WrapPanel Height="25">
-                                        <Label Content="Course speed" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="116"></Label>
+                                    <WrapPanel Height="25" Margin=" 0,2">
+                                        <Label Content="Course speed :" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="116"></Label>
                                         <Slider x:Name="SpeedSlider" Height="25" Width="134" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" ></Slider>
                                     </WrapPanel>
-                                    <WrapPanel Height="25">
+                                    <WrapPanel Height="25" Margin="0">
                                         <CheckBox x:Name="RandomCheck" Content="Random values " Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="117" IsEnabled="False"/>
                                         <CheckBox x:Name="TrajectoryCheck" Content="Show trajectory" Height="25" Width="132" VerticalAlignment="Center"  />
                                     </WrapPanel>
                                 </StackPanel>
                             </GroupBox>
-                            <StackPanel Height="140" Orientation="Horizontal" Width="250">
-                                <GroupBox Header="Prompter settings " Width="249">
-                                    <StackPanel>
-                                        <WrapPanel Height="25">
-                                            <Label Content="Speed :" Width="102" HorizontalContentAlignment="Center"/>
-                                            <Slider x:Name="prompterSpeed" Width="120" Minimum="1" Maximum="5" TickFrequency="2" TickPlacement="BottomRight"/>
-                                        </WrapPanel>
-                                        <WrapPanel Height="25">
-                                            <Label Content="Path :" Width="101" HorizontalContentAlignment="Center"/> <TextBox Text="resources/prompterText.txt" Width="135" />
-                                        </WrapPanel>
-                                        <WrapPanel Height="25"><Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click"/></WrapPanel>
-                                    </StackPanel>
-                                </GroupBox>
-                            </StackPanel>
 
+                            <GroupBox Header="Prompter settings " Margin="0,0,0,0" Width="299">
+                                <StackPanel Margin="0" >
+                                    <WrapPanel Height="25" Margin="0"  >
+                                        <Label Content="Speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
+                                        <Slider x:Name="prompterSpeed" Width="136" Minimum="1" Maximum="10" TickFrequency="1" TickPlacement="BottomRight" Margin="0" IsSnapToTickEnabled="True"/>
+                                        <TextBox x:Name="prompterSpeedTxt" Text="{Binding ElementName=prompterSpeed,Path=Value}" Width="43" HorizontalContentAlignment="Right" Margin="2" ></TextBox>
+                                    </WrapPanel>
+                                    <WrapPanel Height="25" Margin="0">
+                                        <Label Content="Text size :" HorizontalContentAlignment="Right" Width="101"></Label>
+                                        <Slider x:Name="TextSizeSlider" Width="135" Minimum="1" Maximum="50" TickFrequency="3" Value="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" ValueChanged="TextSizeSlider_ValueChanged" ></Slider>
+                                        <TextBox x:Name="TextSizeTxt" Text="{Binding ElementName=TextSizeSlider,Path=Value}" Width="43" HorizontalContentAlignment="Right" Margin="2" ></TextBox>
+                                    </WrapPanel>
+                                    <WrapPanel Height="25" Margin="0">
+                                        <Label Content="Path :" Width="101" HorizontalContentAlignment="Right"/>
+                                        <TextBox x:Name="pathTxt" Text="resources/prompterText.txt" Width="135" />
+                                        <Button x:Name="BrowseBtn" Content="Browse" Margin="2"  Click="BrowseBtn_Click"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0">
+                                        <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="2" />
+                                        <Button x:Name="prompterPlay" Content="Play"  Click="prompterPlay_Click" Margin="2" IsEnabled="False"/>
+                                        <Button x:Name="prompterPause" Content="Pause" Margin="2"  Click="prompterPause_Click" IsEnabled="False"/>
+                                        <Button x:Name="prompterStop" Content="Stop" Margin="2" Click="prompterStop_Click" IsEnabled="False" />
+                                    </WrapPanel>
+                                </StackPanel>
+                            </GroupBox>
                         </WrapPanel>
                     </GroupBox>
                     <GroupBox x:Name="groupBox1" Header="Microphone" Margin="10,176,625,10" Background="Aqua">
@@ -97,11 +107,11 @@
             </TabItem>
             <TabItem Header="Audio" Width="150">
             </TabItem>
-            <TabItem x:Name="ControllerTab" Header="Controllers" Width="150">
+            <TabItem x:Name="ControllerTab" Header="Controllers" Width="150" Loaded="ControllerTab_Loaded">
                 <UniformGrid>
-                    <StackPanel Margin="5,5,5,-337">
-                        <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Height="675">
-                            <StackPanel Margin="0,0,0,-1">
+                    <StackPanel Margin="5,5,5,-278">
+                        <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Height="615"  >
+                            <StackPanel Margin="0,0,0,-22">
                                 <WrapPanel>
                                     <Label Content="Status :" Width="91"/>
                                     <Label x:Name="WM1Status_Lbl" Content="No Wii Remote" Width="125"></Label>
@@ -113,9 +123,9 @@
                                     <ProgressBar x:Name="wm1_progressbar" Width="320" Value="0"/>
                                 </WrapPanel>
                                 <WrapPanel Height="145">
-                                    <TextBox x:Name="Console_Textbox_WM1" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
+                                    <TextBlock x:Name="Console_Textbox_WM1" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
                                 </WrapPanel>
-                                <StackPanel Height="451">
+                                <StackPanel Height="408">
                                     <WrapPanel Height="135">
                                         <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
                                             <StackPanel Width="205" Margin="0,0,-17,-22">
@@ -165,7 +175,7 @@
 
                                     </StackPanel>
                                     <WrapPanel Height="63">
-                                        <Button x:Name="WM1_Detect" Content="Detect Wiimote" Margin="15" Click="WM1_Detect_Click"/>
+                                        <Button x:Name="WM1_Detect" Content="Connect Wiimote 1" Margin="15" Click="WM1_Detect_Click"/>
                                         <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
                                     </WrapPanel>
                                 </StackPanel>
@@ -175,9 +185,9 @@
                         </GroupBox>
 
                     </StackPanel>
-                    <StackPanel Margin="5,5,5,-276">
-                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 2" Height="686">
-                            <StackPanel Margin="0,0,0,-78">
+                    <StackPanel Margin="5,5,5,-337">
+                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 2" Height="616">
+                            <StackPanel Margin="0,0,0,1">
                                 <WrapPanel>
                                     <Label Content="Status :" Width="91"/>
                                     <Label x:Name="WM2Status_Lbl" Content="No Wii Remote" Width="125"></Label>
@@ -189,7 +199,7 @@
                                     <ProgressBar x:Name="wm2_progressbar" Width="320" Value="0"/>
                                 </WrapPanel>
                                 <WrapPanel Height="145">
-                                    <TextBox x:Name="Console_Textbox_WM2" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
+                                    <TextBlock x:Name="Console_Textbox_WM2" Margin="10,10,10,10" Height="123" Width="426" Background="White"/>
                                 </WrapPanel>
                                 <StackPanel Height="339">
                                     <WrapPanel Height="135">
@@ -241,17 +251,17 @@
 
                                     </StackPanel>
                                 </StackPanel>
-                                <WrapPanel Height="63">
-                                    <Button x:Name="WM2_Detect" Content="Detect Wiimote" Margin="15" Click="WM2_Detect_Click"/>
+                                <WrapPanel Height="67">
+                                    <Button x:Name="WM2_Detect" Content="Connect Wiimote 2" Margin="15" Click="WM2_Detect_Click"/>
                                     <Button x:Name="WM2_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
                                 </WrapPanel>
 
                             </StackPanel>
 
                         </GroupBox>
-
                     </StackPanel>
                 </UniformGrid>
+
             </TabItem>
             <TabItem Header="About" Width="150">
             </TabItem>

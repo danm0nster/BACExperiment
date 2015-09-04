@@ -20,7 +20,8 @@ namespace BACExperiment
         public WiimoteCollection mWiimotes { get; set; }
         public int count { get; set; }  
         private Service observer;
-      
+        private bool searched;
+
         // Defining containers for the accelerometer , IR positions ; Might not be necessary since the Wiimote is sending info through it's Events to the Service listeners.
         public float[] Accelerometer = new float[3];
         public float[,] IRState = new float[5, 3];
@@ -81,24 +82,15 @@ namespace BACExperiment
             count--;
         }
 
-
-
         public void Connect(int i)
         {
-
-
             try {
-                mWiimotes.FindAllWiimotes();
-            }
-            catch (Exception ex) { 
-            Console.WriteLine(ex.ToString());
-            }
-            try {
+
               
-                
+
                 mWiimotes[i].Connect(); //first attempt throws null reference exception
                 mWiimotes[i].SetReportType(InputReport.IRAccel, true);
-
+                
                 if (i == 0)
                     mWiimotes[i].SetLEDs(true, false, false, false);
                 if (i == 1)
@@ -112,11 +104,28 @@ namespace BACExperiment
         }
 
         //-1 value in the IRState array indicate that the respective sensor can not be found.
-       
-        
-      
 
-        private void UpdateWiimoteChanged(WiimoteChangedEventArgs args , object sender)
+        public void searchForWiimotes()
+        {
+            if (!searched)
+            {
+                try
+                {
+                    mWiimotes.FindAllWiimotes();
+                    searched = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("Already Searched");
+            }
+        }
+
+private async Task UpdateWiimoteChanged(WiimoteChangedEventArgs args , object sender)
         {
             WiimoteState wiimoteState = args.WiimoteState;
             Accelerometer[0] = wiimoteState.AccelState.Values.X;
@@ -150,7 +159,7 @@ namespace BACExperiment
             this.battery = (wiimoteState.Battery > 200f ? 200 : (int)wiimoteState.Battery);
             //this.path = string.Concat("Device Path: ", wiimoteState.HIDDevicePath);
 
-             observer.informMainWindow(this, (Wiimote)sender );
+            await observer.informMainWindow(this, (Wiimote)sender );
         }
 
      
@@ -160,10 +169,10 @@ namespace BACExperiment
 
         private delegate void UpdateWiimoteStateDelegate(WiimoteChangedEventArgs args);
 
-        public void wm_WiimoteChanged(object sender, WiimoteChangedEventArgs args)
+        public async void wm_WiimoteChanged(object sender, WiimoteChangedEventArgs args)
         {
-         
-            UpdateWiimoteChanged(args , sender );
+
+            await UpdateWiimoteChanged(args, sender);
 
             Console.WriteLine(String.Concat(args.WiimoteState.AccelState.Values.ToString()));
         }

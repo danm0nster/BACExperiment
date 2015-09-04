@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment.GUI"
         mc:Ignorable="d"
-        Title="Prompter" Height="300" MaxHeight="510" Width="300" MaxWidth="510" ResizeMode="CanResize">
+        Title="Prompter" Height="300"  Width="300" >
     <Grid>
         <Border>
             <ScrollViewer x:Name="scroller" >
-                <TextBlock x:Name="prompterText" Margin="10" />
+                <TextBox x:Name="prompterText" Margin="10" />
             </ScrollViewer>
         </Border>
     </Grid>

@@ -59,6 +59,12 @@ namespace BACExperiment
             wiimote1_info = new WiimoteInfo(this);
         }
 
+        public void DetectWiimotes()
+        {
+            wiimote1_info.searchForWiimotes();
+            Console.WriteLine("Searched for wiimotes;");
+        }
+
         public void ConnectWiimoteToInfo(int i)
         {
             wiimote1_info.Connect(i);
@@ -73,11 +79,11 @@ namespace BACExperiment
         }
 
 
-        public void informMainWindow(WiimoteInfo sender, Wiimote wm)
+        public async Task informMainWindow(WiimoteInfo sender, Wiimote wm)
         {
             try
             {
-                observer.OnNext(sender, wm);
+              await  observer.OnNext(sender, wm);
                 
             }
             catch (Exception e)

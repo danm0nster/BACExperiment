@@ -1,7 +1,10 @@
 ﻿using BACExperiment.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -19,12 +22,19 @@ namespace BACExperiment
         private AnimationQueue queue1;
         private MainWindow mainWindow;
 
+        private coordinateRecorder recorder;
+        private CoordinateHolder holder;
+
+
         private int CourseMode;
         private int CourseSpeed;
         private int CourseComplexity;
         private bool random;
         private bool showTrajectory;
         private Random r = new Random();
+       
+
+        // private Thread t;
 
         private static StimulyWindow instance;
 
@@ -43,13 +53,15 @@ namespace BACExperiment
 
 
 
-        private StimulyWindow(MainWindow mainWindow )
+        private StimulyWindow(MainWindow mainWindow)
         {
             InitializeComponent();
             course = new CourseThread(this);
-            this.queue1 = new AnimationQueue(StimulyEllipse1 , Canvas.LeftProperty , Canvas.TopProperty);
+            this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
-            random = (bool)mainWindow.RandomCheck.IsChecked ;
+            random = (bool)mainWindow.RandomCheck.IsChecked;
+            recorder = coordinateRecorder.getInstance(this);
+            holder = CoordinateHolder.getInstance();
         }
 
 
@@ -69,7 +81,7 @@ namespace BACExperiment
             }
             if (CourseComplexity == 1)
             {
-               coordinates = course.secondFunction();
+                coordinates = course.secondFunction();
             }
             if (CourseComplexity == 2)
             {
@@ -88,7 +100,7 @@ namespace BACExperiment
                                            new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed / 3)))
                                            );
 
-                    Line  l= new Line();
+                    Line l = new Line();
                     l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
 
                     if (showTrajectory == true)
@@ -109,31 +121,31 @@ namespace BACExperiment
                         l.StrokeThickness = 2;
                         StimulyCanvas.Children.Add(l);
                     }
-                   
+
                 }
 
                 //Position Ellipse to the begining of the course
-                
-                if ( i == 1)
+
+                if (i == 1)
                 {
-                    Canvas.SetLeft(StimulyEllipse1 , coordinates[i].X -50);
-                    Canvas.SetTop(StimulyEllipse1, coordinates[i].Y -50);
+                    Canvas.SetLeft(StimulyEllipse1, coordinates[i].X - 50);
+                    Canvas.SetTop(StimulyEllipse1, coordinates[i].Y - 50);
                 }
 
                 lastX = coordinates[i].X;
                 lastY = coordinates[i].Y;
                 i++;
             }
-         
 
-        }        
+
+        }
 
         public void startCourse()
         {
             queue1.start();
         }
 
-        public async void movePointer1(int x , int y)
+        public async void movePointer1(int x, int y)
         {
             Action action = () =>
             {
@@ -145,7 +157,7 @@ namespace BACExperiment
             await Dispatcher.BeginInvoke(action);
         }
 
-        public async void movePointer2(int x , int y)
+        public async void movePointer2(int x, int y)
         {
             Action action = () =>
             {
@@ -159,16 +171,16 @@ namespace BACExperiment
 
         private class AnimationQueue
         {
-            private List<DoubleAnimation> animation1 ;
+            private List<DoubleAnimation> animation1;
             private DependencyProperty property1;
-          
+
             private List<DoubleAnimation> animation2;
             private DependencyProperty property2;
-            
+
             private int curent;
             private UIElement element;
 
-            public AnimationQueue(UIElement element , DependencyProperty property )
+            public AnimationQueue(UIElement element, DependencyProperty property)
             {
                 curent = -1;
                 this.element = element;
@@ -177,7 +189,7 @@ namespace BACExperiment
                 this.property1 = property;
             }
 
-            public AnimationQueue(UIElement element, DependencyProperty property1 , DependencyProperty property2)
+            public AnimationQueue(UIElement element, DependencyProperty property1, DependencyProperty property2)
             {
                 curent = -1;
                 this.element = element;
@@ -211,15 +223,16 @@ namespace BACExperiment
                         if (index2 + 1 < this.animation2.Count)
                         {
                             element.BeginAnimation(property2, this.animation2[index2 + 1]);
+                            
                         }
                     }
                 };
 
 
-                
+
             }
 
-           
+
 
             public void start(int i)
             {
@@ -233,7 +246,7 @@ namespace BACExperiment
                     {
                         element.BeginAnimation(property1, animation1[i]);
                         element.BeginAnimation(property2, animation2[i]);
-                    }; 
+                    };
                 }
             }
 
@@ -242,9 +255,9 @@ namespace BACExperiment
                 curent = 0;
                 element.BeginAnimation(property1, animation1[curent]);
                 element.BeginAnimation(property2, animation2[curent]);
-                             
+
             }
-                
+
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -253,13 +266,14 @@ namespace BACExperiment
             mainWindow.complexitySlider.IsEnabled = true;
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
+            recorder.Stop();
         }
 
-        private Point makeToCartezian(int x , int y)
+        private Point makeToCartezian(int x, int y)
         {
             Point p = new Point();
 
-            if(x < 500)
+            if (x < 500)
             {
                 p.X = 0 - 500 + x;
             }
@@ -269,22 +283,48 @@ namespace BACExperiment
                 p.X = x - 500;
             }
 
-            if(y < 500)
+            if (y < 500)
             {
                 p.Y = 500 - y;
             }
             else
             {
-                p.Y = 0 - (y-500);
+                p.Y = 0 - (y - 500);
             }
 
             return p;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        public void startRecording()
+        {
+            recorder.Run();
+        }
+
+      
+        private void StimulyEllipse1_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //When ellipse datacontext is changed , the info is sent to CoordinateHolder class . Coordinate recorder will take that info and write it in a file.  
+            object oldDataContext = e.OldValue;
+            
+
+            Action action = () =>
+            {
+               
+                holder.setEllipseCoordinates(Canvas.GetLeft(StimulyEllipse1), Canvas.GetTop(StimulyEllipse1));
+                holder.setPointerCoordinates(0, new Point(Canvas.GetLeft(Pointer1), Canvas.GetTop(Pointer1)));
+                holder.setPointerCoordinates(1, new Point(Canvas.GetLeft(Pointer2), Canvas.GetTop(Pointer2)));
+            };
+
+            Dispatcher.BeginInvoke(action);
+        }
     }
 
-
     
 
-   
-    
-}
+
+    }

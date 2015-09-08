@@ -302,14 +302,13 @@ namespace BACExperiment
         }
 
         private void StartBtn_Click(object sender, RoutedEventArgs e)
-        {
-           
-          
+        {     
             StartBtn.IsEnabled = false;
             complexitySlider.IsEnabled = false;
             SpeedSlider.IsEnabled = false;
+            ReqFrequencySlider.IsEnabled = false;
             stimulyWindow.startCourse();
-            
+            stimulyWindow.startRecording();
         }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
@@ -399,7 +398,7 @@ namespace BACExperiment
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".txt";
-            dlg.Filter = "TXT Files (.txt)|*.txt|Word Documents|*.doc;*.docx";
+            dlg.Filter = "TXT Files (.txt)|*.txt";
 
 
             // Display OpenFileDialog by calling ShowDialog method 
@@ -418,7 +417,7 @@ namespace BACExperiment
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             pathTxt.Text = System.IO.Path.GetDirectoryName(
-                             System.Reflection.Assembly.GetExecutingAssembly().Location); ;
+                             System.Reflection.Assembly.GetExecutingAssembly().Location); 
         }
 
         private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -426,9 +425,6 @@ namespace BACExperiment
             if (prompter != null)
                 prompter.textSize_Changed((int)TextSizeSlider.Value);
         }
-
-       
-
         
     }
 }

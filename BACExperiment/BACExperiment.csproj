@@ -77,6 +77,8 @@
     <Compile Include="Model\Microphone.cs" />
     <Compile Include="Model\Subject.cs" />
     <Compile Include="Model\WiimoteInfo.cs" />
+    <Compile Include="Service\CoordinateHolder.cs" />
+    <Compile Include="Service\CoordinateRecorder.cs" />
     <Compile Include="Service\Service.cs" />
     <Compile Include="GUI\StimulyWindow.xaml.cs">
       <DependentUpon>StimulyWindow.xaml</DependentUpon>
@@ -141,7 +143,9 @@
   <ItemGroup>
     <Resource Include="Tickets.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Session Logs\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\prompterText.txt" />
   </ItemGroup>

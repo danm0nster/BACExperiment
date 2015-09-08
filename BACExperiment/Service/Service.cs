@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WiimoteLib;
 using System.Threading;
+using System.Timers;
+using WiimoteLib;
+using System.IO;
+using System.Diagnostics;
 
 // Service class with most major functionality 
 
@@ -17,8 +20,8 @@ namespace BACExperiment
     users to follow and also probably the colision detection .
        Everything that is not a native method of the xaml.cs files will be stored here.
     */
-   public class Service 
-    { 
+    public class Service
+    {
         /* 
 
         I'm not too happy about the current project architecture look. There is a Wii remote class and a graphical interface but the Wii remote class contains elements 
@@ -30,16 +33,16 @@ namespace BACExperiment
 
         // Instance of the service to return for the singleton
 
-      
+
         // So this gives the service acces to the Wiimote methods to retrieve info .
-        private WiimoteInfo wiimote1_info { get; set; } 
+        private WiimoteInfo wiimote1_info { get; set; }
         public static Service instance;
 
 
         //Make two threads to test if that improves the GUI responsiveness of the led points. Theoretically it should as there would be way less calls to the OnNext method . Ideally 
         //it would have a frequence of around 60 to 100 fps. 
 
-     
+
 
         //Made service as a Singleton
 
@@ -52,9 +55,9 @@ namespace BACExperiment
 
         private MainWindow observer;
 
-        private Service (MainWindow observer)
+        private Service(MainWindow observer)
         {
-       
+
             this.observer = observer;
             wiimote1_info = new WiimoteInfo(this);
         }
@@ -72,10 +75,10 @@ namespace BACExperiment
         }
 
         public void DisconnectWiimoteFromInfo(int i)
-        {   
+        {
             wiimote1_info.Disconnect(i);
-            Console.WriteLine(string.Concat("Wiimote", i , " has been disconnected"));
-            
+            Console.WriteLine(string.Concat("Wiimote", i, " has been disconnected"));
+
         }
 
 
@@ -83,16 +86,16 @@ namespace BACExperiment
         {
             try
             {
-              await  observer.OnNext(sender, wm);
-                
+                await observer.OnNext(sender, wm);
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-               
-            }
-        }      
-    }
 
-   
-}
+            }
+        }
+    }
+}   
+
+

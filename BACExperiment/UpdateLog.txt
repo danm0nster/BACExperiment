@@ -1,5 +1,7 @@
 ﻿Update Log :
 
+1.09.09.15 - Recording of Ellipse and pointer coordinates now available in folder Session_Logs  .
+
 1.01.09.15 - Ellipse trajectory now working appropriatelly . Ellipse is following course and the proportions of the trajectory are as specified .
 
 1.24.08.15 - Refactored the code again aliminated unnecesarry parts . Some null reference exceptions and gui responsiveness errors now .	

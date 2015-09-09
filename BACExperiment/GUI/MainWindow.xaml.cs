@@ -308,7 +308,9 @@ namespace BACExperiment
             SpeedSlider.IsEnabled = false;
             ReqFrequencySlider.IsEnabled = false;
             stimulyWindow.startCourse();
+            stimulyWindow.StartSendingInfo();
             stimulyWindow.startRecording();
+
         }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)

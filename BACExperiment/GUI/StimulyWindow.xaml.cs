@@ -17,15 +17,16 @@ namespace BACExperiment
     /// </summary>
     public partial class StimulyWindow : Window
     {
+        //Links
         private CourseThread course;
-
         private AnimationQueue queue1;
         private MainWindow mainWindow;
-
         private coordinateRecorder recorder;
         private CoordinateHolder holder;
+        private System.Timers.Timer t;
 
 
+        //Variables
         private int CourseMode;
         private int CourseSpeed;
         private int CourseComplexity;
@@ -33,9 +34,7 @@ namespace BACExperiment
         private bool showTrajectory;
         private Random r = new Random();
        
-
-        // private Thread t;
-
+  
         private static StimulyWindow instance;
 
         public int getCourseMode() { return CourseMode; }
@@ -61,7 +60,11 @@ namespace BACExperiment
             this.mainWindow = mainWindow;
             random = (bool)mainWindow.RandomCheck.IsChecked;
             recorder = coordinateRecorder.getInstance(this);
-            holder = CoordinateHolder.getInstance();
+            holder = CoordinateHolder.GetInstance();
+
+            t = new System.Timers.Timer();
+            t.Elapsed += new ElapsedEventHandler(SendInfo);
+            t.Interval += 100;
         }
 
 
@@ -267,6 +270,7 @@ namespace BACExperiment
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
             recorder.Stop();
+            t.Stop();
         }
 
         private Point makeToCartezian(int x, int y)
@@ -305,19 +309,22 @@ namespace BACExperiment
             recorder.Run();
         }
 
-      
-        private void StimulyEllipse1_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public void StartSendingInfo()
         {
-            //When ellipse datacontext is changed , the info is sent to CoordinateHolder class . Coordinate recorder will take that info and write it in a file.  
-            object oldDataContext = e.OldValue;
-            
+            t.Start();
+        }
+      
+        private void SendInfo(object sender, ElapsedEventArgs e)
+        {
+            // When the recording starts , the sending of information will also be sent . The only thing left is to make shure that the two timer threads are synched with the CoordinateHolder class 
+            // So that one does not update the numbers , while the
 
             Action action = () =>
             {
                
-                holder.setEllipseCoordinates(Canvas.GetLeft(StimulyEllipse1), Canvas.GetTop(StimulyEllipse1));
-                holder.setPointerCoordinates(0, new Point(Canvas.GetLeft(Pointer1), Canvas.GetTop(Pointer1)));
-                holder.setPointerCoordinates(1, new Point(Canvas.GetLeft(Pointer2), Canvas.GetTop(Pointer2)));
+                holder.SetEllipseCoordinates(Canvas.GetLeft(StimulyEllipse1), Canvas.GetTop(StimulyEllipse1));
+                holder.SetPointerCoordinates(0, new Point(Canvas.GetLeft(Pointer1), Canvas.GetTop(Pointer1)));
+                holder.SetPointerCoordinates(1, new Point(Canvas.GetLeft(Pointer2), Canvas.GetTop(Pointer2)));
             };
 
             Dispatcher.BeginInvoke(action);

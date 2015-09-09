@@ -15,13 +15,12 @@ namespace BACExperiment
     //NEED TO DEBUG
     class coordinateRecorder
     {
-        private StimulyWindow observee;
+       
 
-        private System.Timers.Timer  timer = new System.Timers.Timer();
-        private String directoryPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);// file path for the current sessionLogs
-        private String logName = System.DateTime.Today.ToString();
+        private System.Timers.Timer timer;
+        private String directoryPath;// file path for the current sessionLogs
         private String logPath;
-        private Stopwatch watch = new Stopwatch();
+        private Stopwatch watch;
        
         private static coordinateRecorder instance;
 
@@ -31,26 +30,27 @@ namespace BACExperiment
         public static coordinateRecorder getInstance(StimulyWindow observee)
         {
             if (instance == null)
-                instance = new coordinateRecorder(observee);
+                instance = new coordinateRecorder();
 
             return instance;
         }
 
-        private coordinateRecorder(StimulyWindow observee)
+        private coordinateRecorder()
         {
-            this.observee = observee;
+            holder = CoordinateHolder.GetInstance();
+
+            timer = new System.Timers.Timer();
+            directoryPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            watch = new Stopwatch();
+
+            string fileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt";
+            logPath = System.IO.Path.Combine(SessionLogDirectoryPresent(), fileName);
         }
 
         public void Run()
         {
-
-            sessionLogDirectoryPresent();
-            string fileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss.txt"); // works but ads x at the end of the file
-            logPath = System.IO.Path.Combine(directoryPath, fileName);
-     
-            timer.Interval = 100; // setting the frequency at which the thread will register the current coordinates in the sessionLog
-            timer.Elapsed += new ElapsedEventHandler(record);
-            holder = CoordinateHolder.getInstance();
+            timer.Interval = 175; // setting the frequency at which the thread will register the current coordinates in the sessionLog
+            timer.Elapsed += new ElapsedEventHandler(Record);
 
             timer.Enabled = true;
             watch.Start();
@@ -65,37 +65,40 @@ namespace BACExperiment
 
 
         //Test if there is a session File in the current assembly execution path . If not create a new one entirely.
-        public void sessionLogDirectoryPresent()
+        public string SessionLogDirectoryPresent()
         {
             if (!Directory.Exists(directoryPath + "\\Session Logs"))
             {
                 Directory.CreateDirectory(directoryPath + "\\Session Logs");
             }
 
+            return directoryPath + "\\Session Logs";
+
         }
 
 
-        public void record(object sender, ElapsedEventArgs args)
+        public void Record(object sender, ElapsedEventArgs args)
         {
-
-            // Writes the file but puts every info in a new line , also does not format the session name properly 
-            // Writes a string every time but now it 
+          
             // First attemtp always give exception that current file is being used . Look into that because you can not run 2 times for 1 file since the name is given by the time of the creation which is always different
 
 
-            if (!File.Exists(logPath))
-                File.Create(logPath);
+          
 
             DateTime t = args.SignalTime; // Take the time the tick was done
-            Point ellipseCoordiante = holder.getEllipseCoordinates();  // Parse coordinates from StimulyWindow to service and then to thread where they will be recorded into the log file
-            Point controller1 = holder.getPointerCoordinates(0);
-            Point controller2 = holder.getPointerCoordinates(1);
-            string toWrite = string.Concat( t.Ticks.ToString(), " ", watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString() );
+            Point ellipseCoordiante = holder.GetEllipseCoordinates();  // Parse coordinates from StimulyWindow to service and then to thread where they will be recorded into the log file
+            Point controller1 = holder.GetPointerCoordinates(0);
+            Point controller2 = holder.GetPointerCoordinates(1);
+            string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString()  );
 
 
-            using (FileStream f = new FileStream(logPath, FileMode.Append, FileAccess.Write))
-            using (StreamWriter s = new StreamWriter(f))
-                s.WriteLine(toWrite.ToString());
+
+            using (StreamWriter s = new StreamWriter(logPath, true))
+            {
+                s.WriteLine(toWrite);
+                s.Close();
+            }
+              
 
             
            

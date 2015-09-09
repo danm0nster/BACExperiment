@@ -9,45 +9,42 @@ namespace BACExperiment
 {
     class CoordinateHolder
     {
+
+
         private static CoordinateHolder instance;
 
-        private Point EllipseCoordinates;
+        private Point _ellipseCoordinates;
         private Point[] PointerCoordinates ;
         
 
 
 
-        public static CoordinateHolder getInstance()
-        {
-            if (instance == null)
-                instance = new CoordinateHolder();
-            return instance;
-        }
+        public static CoordinateHolder GetInstance() => instance ?? (instance = new CoordinateHolder());
 
         private CoordinateHolder()
         {
-            EllipseCoordinates = new Point();
+            _ellipseCoordinates = new Point();
             PointerCoordinates = new Point[2];
         }
 
-        public void setEllipseCoordinates(double x , double y)
+        public void SetEllipseCoordinates(double x , double y)
         {
-            EllipseCoordinates.X = x;
-            EllipseCoordinates.Y = y;
+            _ellipseCoordinates.X = x;
+            _ellipseCoordinates.Y = y;
 
         }
          
-        public Point getEllipseCoordinates()
+        public Point GetEllipseCoordinates()
         {
-            return EllipseCoordinates;
+            return _ellipseCoordinates;
         }
 
-        public void setPointerCoordinates(int index , Point p)
+        public void SetPointerCoordinates(int index , Point p)
         {
             PointerCoordinates[index] = p;
         }
 
-        public Point getPointerCoordinates(int index)
+        public Point GetPointerCoordinates(int index)
         {
             return PointerCoordinates[index];
         }

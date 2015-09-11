@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BACExperiment.Model
+namespace BACExperiment.GUI
 {
-    class Microphone
+    class GUIValues
     {
+
+        public bool AxisCheck = false;
+
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
         Title="MainWindow" Height="811.387" Width="965.715" ResizeMode="NoResize" Loaded="Window_Loaded" >
-    <Grid Margin="0,0,0,6">
+    <Grid Margin="0,0,0,0">
 
         <TabControl x:Name="tabControl"  Margin="0,0,10,23">
             <TabItem Header="Session recording" Width="150">
@@ -34,8 +34,9 @@
                                         <Slider x:Name="SpeedSlider" Height="25" Width="134" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" ></Slider>
                                     </WrapPanel>
                                     <WrapPanel Height="25" Margin="0">
-                                        <CheckBox x:Name="RandomCheck" Content="Random values " Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="117" IsEnabled="False"/>
-                                        <CheckBox x:Name="TrajectoryCheck" Content="Show trajectory" Height="25" Width="132" VerticalAlignment="Center"  />
+                                        <CheckBox x:Name="RandomCheck" Content="Random" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="73" IsEnabled="False"/>
+                                        <CheckBox x:Name="TrajectoryCheck" Content="Trajectory" Height="25" Width="76" VerticalAlignment="Center"  />
+                                        <CheckBox x:Name="AxisCheck" Content="Axis" Height="25" Width="43" VerticalAlignment="Center" ></CheckBox>
                                     </WrapPanel>
                                 </StackPanel>
                             </GroupBox>
@@ -122,9 +123,8 @@
             </TabItem>
             <TabItem x:Name="ControllerTab" Header="Controllers" Width="150" Loaded="ControllerTab_Loaded">
                 <UniformGrid>
-                    <StackPanel Margin="5,5,5,-278">
-                        <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Height="615"  >
-                            <StackPanel Margin="0,0,0,-22">
+                    <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Margin="0,0,0,-337"  >
+                            <StackPanel Margin="0,0,0,0">
                                 <WrapPanel>
                                     <Label Content="Status :" Width="91"/>
                                     <Label x:Name="WM1Status_Lbl" Content="No Wii Remote" Width="125"></Label>
@@ -187,9 +187,10 @@
                                         </Canvas>
 
                                     </StackPanel>
-                                    <WrapPanel Height="63">
+                                    <WrapPanel Height="63" >
                                         <Button x:Name="WM1_Detect" Content="Connect Wiimote 1" Margin="15" Click="WM1_Detect_Click"/>
                                         <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
+                                        <Button x:Name="ConnectAll" Content="Connect all" Margin="15" Click="ConnectAll_OnClick"></Button>
                                     </WrapPanel>
                                 </StackPanel>
 
@@ -197,9 +198,9 @@
 
                         </GroupBox>
 
-                    </StackPanel>
-                    <StackPanel Margin="5,5,5,-337">
-                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 2" Height="616">
+                 
+                    
+                        <GroupBox x:Name="WM2_groupbox" Header="Wiimote 2" Margin="0,0,0,-337">
                             <StackPanel Margin="0,0,0,1">
                                 <WrapPanel>
                                     <Label Content="Status :" Width="91"/>
@@ -272,7 +273,7 @@
                             </StackPanel>
 
                         </GroupBox>
-                    </StackPanel>
+                   
                 </UniformGrid>
 
             </TabItem>

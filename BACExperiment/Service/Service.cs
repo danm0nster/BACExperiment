@@ -64,7 +64,7 @@ namespace BACExperiment
 
         public void DetectWiimotes()
         {
-            wiimote1_info.searchForWiimotes();
+            wiimote1_info.SearchForWiimotes();
             Console.WriteLine("Searched for wiimotes;");
         }
 
@@ -94,6 +94,21 @@ namespace BACExperiment
                 Console.WriteLine(e.ToString());
 
             }
+        }
+
+        public void ConnectAllWiimotes()
+        {
+            wiimote1_info.ConnectAll();
+        }
+
+        public void DisconnectAllWiimotes()
+        {
+            wiimote1_info.DisconnectAll();
+        }
+
+        public void SendMessage(int index, string message)
+        {
+            observer.WriteToRemoteMenu(index, message);
         }
     }
 }   

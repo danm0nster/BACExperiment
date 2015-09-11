@@ -85,10 +85,7 @@ namespace BACExperiment
         public void Connect(int i)
         {
             try {
-
-              
-
-                mWiimotes[i].Connect(); //first attempt throws null reference exception
+                mWiimotes[i].Connect();  //first attempt throws null reference exception
                 mWiimotes[i].SetReportType(InputReport.IRAccel, true);
                 
                 if (i == 0)
@@ -100,12 +97,13 @@ namespace BACExperiment
             catch(Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                throw;
             }
         }
 
         //-1 value in the IRState array indicate that the respective sensor can not be found.
 
-        public void searchForWiimotes()
+        public void SearchForWiimotes()
         {
             if (!searched)
             {
@@ -125,7 +123,25 @@ namespace BACExperiment
             }
         }
 
-private async Task UpdateWiimoteChanged(WiimoteChangedEventArgs args , object sender)
+        internal void DisconnectAll()
+        {
+            foreach (var wm in mWiimotes)
+            {
+                wm.Disconnect();
+            }
+        }
+
+        public void ConnectAll()
+        {
+            for(int i = 0 ; i <= mWiimotes.Count-1 ; i++ )
+            {
+                mWiimotes[i].Connect();
+                mWiimotes[i].SetReportType(InputReport.IRAccel, true );
+                mWiimotes[i].SetLEDs(i+1);
+            }
+        }
+
+        private async Task UpdateWiimoteChanged(WiimoteChangedEventArgs args , object sender)
         {
             WiimoteState wiimoteState = args.WiimoteState;
             Accelerometer[0] = wiimoteState.AccelState.Values.X;

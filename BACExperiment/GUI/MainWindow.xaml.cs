@@ -63,8 +63,7 @@ namespace BACExperiment
         private void WM1_Detect_Click(object sender, RoutedEventArgs e)
         {
             try {
-                service.ConnectWiimoteToInfo(0);
-                Console.WriteLine("WM1_Detect_Click");
+                service.ConnectWiimoteToInfo(0);               
                 WM1_Disconect.IsEnabled = true;
                 
             }
@@ -135,12 +134,19 @@ namespace BACExperiment
             }
         }
 
-      
-        
+        // Thinking if should make a class with all the values of the guy where to store them and then just bind the guy values to that data . 
+        public void WriteToRemoteMenu(int index, int message)
+        {
+            if (index == 1)
+                throw NotImplementedException;// append text to console log 1
+                if (index == 2)
+                    // append text to console log 2
+                throw NotImplementedException;
+        }
         
         
 
-
+        
         private async Task updateWM1Labels(Wiimote wm)
         {
             Action action = () =>
@@ -216,19 +222,29 @@ namespace BACExperiment
                 if (stimulyWindow != null)
                 {
                     stimulyWindow.movePointer1(wm.WiimoteState.IRState.RawMidpoint.X, wm.WiimoteState.IRState.RawMidpoint.Y);
+
+
                     stimulyWindow.Pointer1.Visibility = System.Windows.Visibility.Visible;
                 }
                 };
+            try
+            {
+                await Dispatcher.BeginInvoke(action);
+            }
 
-            await Dispatcher.BeginInvoke(action);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
         }
 
-
+       
         private async Task updateWM2Labels(Wiimote wm)
         {
             Action action = () =>
             {
-                stimulyWindow.Pointer2.Visibility = System.Windows.Visibility.Visible;
+                
                 WM2Status_Lbl.Content = wm.WiimoteState.ButtonState.A.ToString();
                 WM2_Accel_X.Content = wm.WiimoteState.AccelState.Values.X.ToString();
                 WM2_Accel_Y.Content = wm.WiimoteState.AccelState.Values.Y.ToString();
@@ -238,11 +254,6 @@ namespace BACExperiment
                 WM2_IR3.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[2].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[2].Size + 1);
                 WM2_IR4.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[3].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[3].Size + 1);
                 wm2_progressbar.Value = wm.WiimoteState.Battery;
-
-
-                // Have to find a way to delay execution of this since in the first ever call there are no . Did not delay execution , instead made if statement in animate
-                // sensor that tests for NaN value .
-
 
 
                 if (wm.WiimoteState.IRState.IRSensors[0].Found)
@@ -297,8 +308,21 @@ namespace BACExperiment
                     MidPoint2.Visibility = System.Windows.Visibility.Hidden;
                 }
             };
-            stimulyWindow.movePointer1(wm.WiimoteState.IRState.RawMidpoint.X / 10, wm.WiimoteState.IRState.RawMidpoint.Y / 10);
-            await Dispatcher.BeginInvoke(action);
+            if (stimulyWindow != null)
+            {
+         
+                stimulyWindow.movePointer1(wm.WiimoteState.IRState.RawMidpoint.X, wm.WiimoteState.IRState.RawMidpoint.Y);
+                stimulyWindow.Pointer1.Visibility = System.Windows.Visibility.Visible;
+            }
+            try
+            {
+                await Dispatcher.BeginInvoke(action);
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private void StartBtn_Click(object sender, RoutedEventArgs e)
@@ -427,6 +451,10 @@ namespace BACExperiment
             if (prompter != null)
                 prompter.textSize_Changed((int)TextSizeSlider.Value);
         }
-        
+
+        private void ConnectAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            service.ConnectAllWiimotes();
+        }
     }
 }

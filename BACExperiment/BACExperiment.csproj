@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,13 +70,12 @@
     <Compile Include="GUI\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\GUIValues.cs" />
     <Compile Include="GUI\Prompter.xaml.cs">
       <DependentUpon>Prompter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="Model\Microphone.cs" />
-    <Compile Include="Model\Subject.cs" />
+    <Compile Include="Model\ErrorLog.cs" />
     <Compile Include="Model\WiimoteInfo.cs" />
     <Compile Include="Service\CoordinateHolder.cs" />
     <Compile Include="Service\CoordinateRecorder.cs" />

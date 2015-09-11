@@ -50,7 +50,7 @@ namespace BACExperiment
         public static StimulyWindow getInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
 
 
-
+        
 
         private StimulyWindow(MainWindow mainWindow)
         {

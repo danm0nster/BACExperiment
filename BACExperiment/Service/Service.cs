@@ -110,6 +110,18 @@ namespace BACExperiment
         {
             observer.WriteToRemoteMenu(index, message);
         }
+        public void SendMessage(string message)
+        {
+            observer.WriteToRemoteMenu(1, message);
+            observer.WriteToRemoteMenu(2, message);
+        }
+
+        public WiimoteInfo GetWiimoteInfo()
+        {
+            return wiimote1_info;            
+        }
+       
+       
     }
 }   
 

@@ -135,13 +135,11 @@ namespace BACExperiment
         }
 
         // Thinking if should make a class with all the values of the guy where to store them and then just bind the guy values to that data . 
-        public void WriteToRemoteMenu(int index, int message)
+        public void WriteToRemoteMenu(int index, string message)
         {
-            if (index == 1)
-                throw NotImplementedException;// append text to console log 1
-                if (index == 2)
-                    // append text to console log 2
-                throw NotImplementedException;
+        
+                Console_TextBox.Inlines.Add(string.Format("Wiimote {0}:{1};/n" , index , message));// append text to console log 1
+          
         }
         
         
@@ -222,9 +220,7 @@ namespace BACExperiment
                 if (stimulyWindow != null)
                 {
                     stimulyWindow.movePointer1(wm.WiimoteState.IRState.RawMidpoint.X, wm.WiimoteState.IRState.RawMidpoint.Y);
-
-
-                    stimulyWindow.Pointer1.Visibility = System.Windows.Visibility.Visible;
+                    stimulyWindow.ShowPointer1();
                 }
                 };
             try
@@ -312,7 +308,7 @@ namespace BACExperiment
             {
          
                 stimulyWindow.movePointer1(wm.WiimoteState.IRState.RawMidpoint.X, wm.WiimoteState.IRState.RawMidpoint.Y);
-                stimulyWindow.Pointer1.Visibility = System.Windows.Visibility.Visible;
+                stimulyWindow.ShowPointer2();
             }
             try
             {
@@ -393,16 +389,12 @@ namespace BACExperiment
         {
             prompter.play();
         }
-
-     
-
        
 
         private void ControllerTab_Loaded(object sender, RoutedEventArgs e)
         {
-            service.DetectWiimotes();
-            WM1_Detect.IsEnabled = true;
-            WM1_Detect.IsEnabled = true;
+           
+     
         }
 
         private void prompterPause_Click(object sender, RoutedEventArgs e)
@@ -455,6 +447,20 @@ namespace BACExperiment
         private void ConnectAll_OnClick(object sender, RoutedEventArgs e)
         {
             service.ConnectAllWiimotes();
+        }
+
+        private void SearchButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Console_TextBox.Inlines.Add("Searching for wii remotes.....");
+            service.DetectWiimotes();
+            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes " , service.GetWiimoteInfo().count));
+        }
+
+        private void ClearButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Console_TextBox.Inlines.Add("Disconecting wii remotes .....");
+            service.DisconnectAllWiimotes();
+            Console_TextBox.Inlines.Add("Wiiremotes disconected;");
         }
     }
 }

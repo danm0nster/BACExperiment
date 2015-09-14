@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.RightsManagement;
 using System.Threading;
 using System.Timers;
 using System.Windows;
@@ -329,7 +330,29 @@ namespace BACExperiment
 
             Dispatcher.BeginInvoke(action);
         }
+
+        public void ShowPointer1()
+        {
+            Action action = () =>
+            {
+                Pointer1.Visibility = System.Windows.Visibility.Visible;
+            };
+
+            Dispatcher.BeginInvoke(action);
+        }
+
+        public void ShowPointer2()
+        {
+            Action action = () =>
+            {
+                Pointer2.Visibility = System.Windows.Visibility.Visible;
+            };
+
+            Dispatcher.BeginInvoke(action);
+        }
+
     }
+
 
     
 

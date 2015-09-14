@@ -80,6 +80,7 @@ namespace BACExperiment
             mWiimotes[i].SetLEDs(false, false, false, false);
             mWiimotes[i].Disconnect();
             count--;
+            observer.SendMessage(i+1 ,"Wii remote disconected ;");
         }
 
         public void Connect(int i)
@@ -87,7 +88,7 @@ namespace BACExperiment
             try {
                 mWiimotes[i].Connect();  //first attempt throws null reference exception
                 mWiimotes[i].SetReportType(InputReport.IRAccel, true);
-                
+                observer.SendMessage(i+1 , "Wii remote connected ;");
                 if (i == 0)
                     mWiimotes[i].SetLEDs(true, false, false, false);
                 if (i == 1)
@@ -97,12 +98,15 @@ namespace BACExperiment
             catch(Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+               // observer.SendMessage(i+1 , "A exception has occoured while connecting : +/n" +"-"+ex.ToString());
                 throw;
             }
         }
 
         //-1 value in the IRState array indicate that the respective sensor can not be found.
 
+
+        //Make applicaton search for remotes after it opened via button .
         public void SearchForWiimotes()
         {
             if (!searched)
@@ -111,6 +115,7 @@ namespace BACExperiment
                 {
                     mWiimotes.FindAllWiimotes();
                     searched = true;
+                    observer.SendMessage(String.Format("There are {0} in the system memory . MAximum 2 can be used ." , mWiimotes.Count) );
                 }
                 catch (Exception ex)
                 {
@@ -125,19 +130,34 @@ namespace BACExperiment
 
         internal void DisconnectAll()
         {
-            foreach (var wm in mWiimotes)
+            try
             {
-                wm.Disconnect();
+                foreach (var wm in mWiimotes)
+                {
+                    wm.Disconnect();
+                    observer.SendMessage(string.Format("Disconnected "));
+                }
+            }
+            catch (Exception ex)
+            {
+                observer.SendMessage(ex.Message.ToString());
             }
         }
 
         public void ConnectAll()
         {
-            for(int i = 0 ; i <= mWiimotes.Count-1 ; i++ )
+            try
             {
-                mWiimotes[i].Connect();
-                mWiimotes[i].SetReportType(InputReport.IRAccel, true );
-                mWiimotes[i].SetLEDs(i+1);
+                for (int i = 0; i <= mWiimotes.Count - 1; i++)
+                {
+                    mWiimotes[i].Connect();
+                    mWiimotes[i].SetReportType(InputReport.IRAccel, true);
+                    mWiimotes[i].SetLEDs(i + 1);
+                }
+            }
+            catch (Exception ex)
+            {
+               observer.SendMessage(ex.Message.ToString());
             }
         }
 

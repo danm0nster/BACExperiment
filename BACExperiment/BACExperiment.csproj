@@ -99,7 +99,9 @@
     </Compile>
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\ErrorLog.cs" />
-    <Compile Include="Model\MicrophoneCostruct.cs" />
+    <Compile Include="Model\MicrophoneCostruct.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Model\MicrophoneHandler.cs" />
     <Compile Include="Model\SampleAggregator.cs" />
     <Compile Include="Model\WiimoteInfo.cs" />

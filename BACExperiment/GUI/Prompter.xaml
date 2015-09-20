@@ -9,7 +9,7 @@
     <Grid>
         <Border>
             <ScrollViewer x:Name="scroller" >
-                <TextBox x:Name="prompterText" Margin="10" />
+                <RichTextBox x:Name="prompterText" Margin="10" />
             </ScrollViewer>
         </Border>
     </Grid>

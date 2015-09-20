@@ -48,7 +48,7 @@ namespace BACExperiment
         public void setRandom(bool random) { this.random = random; }
         public bool isShowTrajectory() { return showTrajectory; }
         public void setShowTrajectory(bool value) { this.showTrajectory = value; }
-        public static StimulyWindow getInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
+        public static StimulyWindow GetInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
 
 
         
@@ -266,12 +266,15 @@ namespace BACExperiment
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            
             mainWindow.enableStartBtn();
             mainWindow.complexitySlider.IsEnabled = true;
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
             recorder.Stop();
             t.Stop();
+
+            instance = null;
         }
 
         private Point makeToCartezian(int x, int y)

@@ -8,6 +8,8 @@ using System.Timers;
 using WiimoteLib;
 using System.IO;
 using System.Diagnostics;
+using BACExperiment.Model;
+using NAudio.Wave;
 
 // Service class with most major functionality 
 
@@ -35,8 +37,11 @@ namespace BACExperiment
 
 
         // So this gives the service acces to the Wiimote methods to retrieve info .
+        // Keep in mind to also add the data recordin to the service instead of having the Stimuly window perform a direct link with teh coordinate recorder
         private WiimoteInfo wiimote1_info { get; set; }
+        private MicrophoneHandler microphones { get; set; }
         public static Service instance;
+
 
 
         //Make two threads to test if that improves the GUI responsiveness of the led points. Theoretically it should as there would be way less calls to the OnNext method . Ideally 
@@ -55,12 +60,20 @@ namespace BACExperiment
 
         private MainWindow observer;
 
+     
         private Service(MainWindow observer)
         {
 
             this.observer = observer;
             wiimote1_info = new WiimoteInfo(this);
+            microphones = new MicrophoneHandler(this);
         }
+
+
+        /// <summary>
+        /// WIIMOTE Handling
+        /// </summary>
+
 
         public void DetectWiimotes()
         {
@@ -121,7 +134,34 @@ namespace BACExperiment
             return wiimote1_info;            
         }
        
-       
+
+        ///MicrophoneHandling
+        /// 
+     
+        public List<WaveInCapabilities> getMicrophoneList()
+        {
+           return microphones.MicrophoneList();
+        }
+     
+        public void ListenToMicrophone(int index , int groupBoxIndex)
+        {
+            microphones.ListenToMicrophone(index , groupBoxIndex);
+        }
+
+        public void UpdateVolumeBar(int v1, float v2)
+        {
+            observer.UpdateVolumeBar( v1,  v2);
+        }
+
+        public void startRecording(int i)
+        {
+            microphones.StartRecording(i);
+        }
+
+        public void stopRecording(int i)
+        {
+            microphones.StopRecording(i);
+        }
     }
 }   
 

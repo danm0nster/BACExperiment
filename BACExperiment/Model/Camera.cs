@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BACExperiment.GUI
+namespace BACExperiment.Model
 {
-    class GUIValues
+    class Camera
     {
-
-        public bool AxisCheck = false;
-
     }
 }

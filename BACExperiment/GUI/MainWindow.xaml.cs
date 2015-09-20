@@ -34,6 +34,8 @@ namespace BACExperiment
         private Task t1;
         private Task t2;
 
+        //Volume bar variables
+       
         public MainWindow()
         {
             InitializeComponent();
@@ -41,7 +43,8 @@ namespace BACExperiment
             ModeSelect.Items.Add(new ComboboxItem("Ellipse" , "Ellipse"));
             ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));
             ModeSelect.Items.Add(new ComboboxItem("Pipe", "Pipe"));
-            
+            Mic1_VolumeBar.DataContext = this;
+            Mic2_VolumeBar.DataContext = this;
 
         }
 
@@ -235,7 +238,8 @@ namespace BACExperiment
 
         }
 
-       
+        
+
         private async Task updateWM2Labels(Wiimote wm)
         {
             Action action = () =>
@@ -331,23 +335,33 @@ namespace BACExperiment
             stimulyWindow.StartSendingInfo();
             stimulyWindow.startRecording();
 
+            StartFullRecording();
+
         }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.Cursor = Cursors.Wait;
-            stimulyWindow = StimulyWindow.getInstance(this);
-            stimulyWindow.Visibility = System.Windows.Visibility.Visible;
-            stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
-            stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
-            // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
-            StartBtn.IsEnabled = true;
-            stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
-            TrajectoryCheck.IsEnabled = false;
+            try
+            {
+                this.Cursor = Cursors.Wait;
+                stimulyWindow = StimulyWindow.GetInstance(this);
+                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
+                stimulyWindow.setCourseComplexity((int) complexitySlider.Value);
+                stimulyWindow.setCourseSpeed((int) SpeedSlider.Value);
+                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
+                StartBtn.IsEnabled = true;
+                stimulyWindow.setShowTrajectory((bool) TrajectoryCheck.IsChecked);
+                TrajectoryCheck.IsEnabled = false;
 
-            stimulyWindow.buildCourseType1();
-            this.Cursor = Cursors.Arrow;
-            
+                stimulyWindow.buildCourseType1();
+                this.Cursor = Cursors.Arrow;
+
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         public void enableStartBtn()
@@ -373,17 +387,25 @@ namespace BACExperiment
             }
         }
 
-        
+
 
         private void prompterOpen_Click(object sender, RoutedEventArgs e)
         {
-            prompter = new Prompter((int)prompterSpeed.Value , (int)TextSizeSlider.Value , pathTxt.Text);
-            prompter.Visibility = System.Windows.Visibility.Visible ;
-            prompterPlay.IsEnabled = true;
-            prompterPause.IsEnabled = true;
-            prompterStop.IsEnabled = true;
-          
-         }
+            if (System.IO.File.Exists(pathTxt.Text))
+            {
+                prompter = new Prompter((int) prompterSpeed.Value, (int) TextSizeSlider.Value, pathTxt.Text);
+                prompter.Visibility = System.Windows.Visibility.Visible;
+                prompterPlay.IsEnabled = true;
+                prompterPause.IsEnabled = true;
+                prompterStop.IsEnabled = true;
+            }
+
+            else
+            {
+                PopUp msg = new PopUp("No file at specified path .");
+                msg.Visibility = System.Windows.Visibility.Visible;
+            }
+    }
 
         private void prompterPlay_Click(object sender, RoutedEventArgs e)
         {
@@ -436,6 +458,15 @@ namespace BACExperiment
         {
             pathTxt.Text = System.IO.Path.GetDirectoryName(
                              System.Reflection.Assembly.GetExecutingAssembly().Location); 
+            
+            foreach(var mic in service.getMicrophoneList())
+            {
+                Microphone1_ComboBox.Items.Add(mic);
+                Microphone2_ComboBox.Items.Add(mic);
+            }
+            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
+            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
+            
         }
 
         private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -462,5 +493,89 @@ namespace BACExperiment
             service.DisconnectAllWiimotes();
             Console_TextBox.Inlines.Add("Wiiremotes disconected;");
         }
+
+
+        // MICROPHONE MENU CODE
+
+        
+
+        private void Microphone1_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            service.ListenToMicrophone( ((ComboBox)sender).SelectedIndex , 1);
+            Mic1_Rec.IsEnabled = true;
+        }
+
+        private void Microphone2_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            service.ListenToMicrophone( ((ComboBox)sender).SelectedIndex , 2);
+        }
+
+
+        internal void UpdateVolumeBar( int v1,  float v2)
+        {
+            if (v1 == 1)
+                Mic1_VolumeBar.Value = v2*100;
+            else if (v1 == 2)
+                Mic2_VolumeBar.Value = v2*100;
+            else
+            {
+                Console.WriteLine(" Volume Bar not available for the current index.");
+            }
+        }
+ 
+
+        private void Mic1_Rec_Click(object sender, RoutedEventArgs e)
+        {
+            service.startRecording(1);
+            Mic1_Rec.IsEnabled = false;
+            Mic1_Stop.IsEnabled = true;
+        }
+
+        private void Mic2_Rec_Click(object sender, RoutedEventArgs e)
+        {
+            service.startRecording(2);
+            Mic2_Rec.IsEnabled = false;
+            Mic2_Stop.IsEnabled = true;
+        }
+
+
+
+        private void Mic1_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            service.stopRecording(1);
+            Mic1_Rec.IsEnabled = true;
+            Mic1_Stop.IsEnabled = false;
+        }
+        
+
+        private void Mic2_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            service.stopRecording(2);
+            Mic2_Rec.IsEnabled = true;
+            Mic2_Stop.IsEnabled = false;
+        }
+
+        private void StartFullRecording()
+        {
+            service.startRecording(1);
+            Mic1_Rec.IsEnabled = false;
+            Mic1_Stop.IsEnabled = true;
+            service.startRecording(2);
+            Mic2_Rec.IsEnabled = false;
+            Mic2_Stop.IsEnabled = true;
+        }
+
+        private void StopFullRecording()
+        {
+            service.stopRecording(1);
+            Mic1_Rec.IsEnabled = true;
+            Mic1_Stop.IsEnabled = false;
+            service.stopRecording(2);
+            Mic2_Rec.IsEnabled = true;
+            Mic2_Stop.IsEnabled = false;
+        }
+
+
+        // MICROPHONE MENU CODE
     }
 }

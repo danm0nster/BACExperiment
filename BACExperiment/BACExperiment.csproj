@@ -73,7 +73,7 @@
     </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WiimoteLib">
-      <HintPath>resources\WiimotLib_1.7\WiimoteLib.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\WiimotLib_1.7\WiimotLib_1.7\WiimoteLib.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -104,7 +104,10 @@
     </Compile>
     <Compile Include="Model\MicrophoneHandler.cs" />
     <Compile Include="Model\SampleAggregator.cs" />
+    <Compile Include="Model\WiimoteConstruct.cs" />
+    <Compile Include="Model\WiimoteHandler.cs" />
     <Compile Include="Model\WiimoteInfo.cs" />
+    <Compile Include="Model\WiimoteSampleAggregator.cs" />
     <Compile Include="Service\CoordinateHolder.cs" />
     <Compile Include="Service\CoordinateRecorder.cs" />
     <Compile Include="Service\Service.cs" />

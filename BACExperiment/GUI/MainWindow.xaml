@@ -86,7 +86,7 @@
                             </WrapPanel>
                             <WrapPanel Height="35">
                                 <Label Content="Volume :" Height="25" Width="100"></Label>
-                                <Slider Width="154" Margin="5" />
+                                <Slider Width="154" Margin="5" IsEnabled="False" />
                             </WrapPanel>
                             <WrapPanel >
                                 <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel1, Mode=OneWay}"  Height="20" Width="265">
@@ -103,7 +103,7 @@
                             </WrapPanel>
                             <WrapPanel Height="35">
                                 <Label Content="Volume :" Height="25" Width="100"></Label>
-                                <Slider Width="154" Margin="5" />
+                                <Slider Width="154" Margin="5" IsEnabled="False"/>
                             </WrapPanel>
                             <WrapPanel>
                                 <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel2, Mode=OneWay}"  Height="20" Width="265" />
@@ -197,8 +197,8 @@
                                     </Canvas>
                                 </WrapPanel>
                                 <WrapPanel Height="63" >
-                                    <Button x:Name="WM1_Detect" Content="Connect Wiimote 1" Margin="15" Click="WM1_Detect_Click"/>
-                                    <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
+                                    <Button x:Name="WM1_Detect" Content="Connect Wiimote 1" Margin="15" Click="WM1_Detect_Click" IsEnabled="False"/>
+                                    <Button x:Name="WM1_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click" IsEnabled="False"/>
                                 </WrapPanel>
                             </StackPanel>
                         </GroupBox>
@@ -266,8 +266,8 @@
                                 </WrapPanel>
 
                                 <WrapPanel Height="67">
-                                    <Button x:Name="WM2_Detect" Content="Connect Wiimote 2" Margin="15" Click="WM2_Detect_Click"/>
-                                    <Button x:Name="WM2_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM1_Disconect_Click"/>
+                                    <Button x:Name="WM2_Detect" Content="Connect Wiimote 2" Margin="15" Click="WM2_Detect_Click" IsEnabled="False"/>
+                                    <Button x:Name="WM2_Disconect" Content="Disconect Wiimote" Margin="15" Click="WM2_Disconect_Click" IsEnabled="False"/>
                                 </WrapPanel>
                             </StackPanel>
                         </GroupBox>

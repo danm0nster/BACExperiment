@@ -89,7 +89,9 @@ namespace BACExperiment
             Point ellipseCoordiante = holder.GetEllipseCoordinates();  // Parse coordinates from StimulyWindow to service and then to thread where they will be recorded into the log file
             Point controller1 = holder.GetPointerCoordinates(0);
             Point controller2 = holder.GetPointerCoordinates(1);
-            string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString()  );
+            double[,] accel = holder.getAccelValues();
+            string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString() , 
+                accel[0,0], accel[0, 1], accel[0, 2], accel[1, 0], accel[1, 1], accel[1, 2]  );
 
 
 

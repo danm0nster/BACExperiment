@@ -44,16 +44,19 @@ namespace BACExperiment.Model
             MicrophoneConstruct mic = new MicrophoneConstruct(selectedDevice, groupBoxIndex);
             mic.aggregator.MaximumCalculated += new EventHandler<MaxSampleEventArgs>(MaximimumCalculated);
 
-            if (!(microphones.Count>1))
+            
+            if ((microphones.Count>2))
             {
                 mic.Listen();
-                microphones.Add(mic);
+                microphones[groupBoxIndex - 1] = mic;
             }
             else
             {
                 mic.Listen();
-                microphones[groupBoxIndex] = mic;
+                microphones.Add(mic);
+               
             }
+            
         }
 
         private void MaximimumCalculated(object sender, MaxSampleEventArgs e)

@@ -154,8 +154,9 @@ namespace BACExperiment
             Action action = () =>
             {
                 Point p = makeToCartezian(x, y);
-                Canvas.SetRight(Pointer1, p.X);
-                Canvas.SetBottom(Pointer1, p.Y);
+                Canvas.SetLeft(Pointer1, p.X);
+                Canvas.SetTop(Pointer1, p.Y);
+                Pointer1.Visibility = System.Windows.Visibility.Visible;
             };
 
             await Dispatcher.BeginInvoke(action);
@@ -166,8 +167,10 @@ namespace BACExperiment
             Action action = () =>
             {
                 Point p = makeToCartezian(x, y);
-                Canvas.SetRight(Pointer2, p.X * 10);
-                Canvas.SetBottom(Pointer2, p.Y * 10);
+                Canvas.SetLeft(Pointer2, p.X);
+                Canvas.SetTop(Pointer2, p.Y);
+                Pointer2.Visibility = System.Windows.Visibility.Visible; // Moving the pointer visibility setter here appears to have improved the speed of the guy dramatically as there is no intermediary thread called just to 
+                //Show the pointer 
             };
 
             await Dispatcher.BeginInvoke(action);
@@ -271,7 +274,9 @@ namespace BACExperiment
             mainWindow.complexitySlider.IsEnabled = true;
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
+            mainWindow.StopFullRecording();
             recorder.Stop();
+            
             t.Stop();
 
             instance = null;
@@ -280,7 +285,9 @@ namespace BACExperiment
         private Point makeToCartezian(int x, int y)
         {
             Point p = new Point();
-
+            p.X = (500 - x);
+            p.Y = (500 - y);
+            /*
             if (x < 500)
             {
                 p.X = 0 - 500 + x;
@@ -299,7 +306,7 @@ namespace BACExperiment
             {
                 p.Y = 0 - (y - 500);
             }
-
+            */
             return p;
         }
 

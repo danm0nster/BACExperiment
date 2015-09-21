@@ -108,6 +108,19 @@ namespace BACExperiment
 
             }
         }
+        public async Task informMainWindow2(WiimoteInfo sender, Wiimote wm)
+        {
+            try
+            {
+                await observer.OnNext2(sender, wm);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+
+            }
+        }
 
         public void ConnectAllWiimotes()
         {

@@ -22,7 +22,7 @@ namespace BACExperiment.Model
             waveIn = new WaveIn();
 
             if(WaveIn.DeviceCount >1)
-            waveIn.DeviceNumber = selectedDevice +1;
+            waveIn.DeviceNumber = selectedDevice ;
 
             waveIn.WaveFormat = new WaveFormat(44100, 2);
 
@@ -88,13 +88,13 @@ namespace BACExperiment.Model
 
         public void waveIn_RecordingStoped(object sender, StoppedEventArgs e)
         {
-
+            /*
             if (waveIn != null)
             {
                 waveIn.Dispose();
                 waveIn = null;
             }
-
+            */
             if (file != null)
             {
                 file.Dispose();

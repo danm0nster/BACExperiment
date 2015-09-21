@@ -15,6 +15,8 @@ namespace BACExperiment
 
         private Point _ellipseCoordinates;
         private Point[] PointerCoordinates ;
+        private Double[,] AccelValues;
+      
         
 
 
@@ -25,6 +27,7 @@ namespace BACExperiment
         {
             _ellipseCoordinates = new Point();
             PointerCoordinates = new Point[2];
+            AccelValues = new Double[2, 3];
         }
 
         public void SetEllipseCoordinates(double x , double y)
@@ -33,7 +36,20 @@ namespace BACExperiment
             _ellipseCoordinates.Y = y;
 
         }
-         
+
+        public void SetAccel(int remoteIndex , int AccelIndex , double value)
+        {
+            
+                AccelValues[remoteIndex , AccelIndex] = value;
+            
+        }
+
+        
+        public double[,] getAccelValues()
+        {
+            return AccelValues;
+        }
+
         public Point GetEllipseCoordinates()
         {
             return _ellipseCoordinates;

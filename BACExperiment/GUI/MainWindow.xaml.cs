@@ -39,6 +39,8 @@ namespace BACExperiment
         public MainWindow()
         {
             InitializeComponent();
+            MainWindowDataContext dataContext = new MainWindowDataContext();
+            pathTxt.DataContext = dataContext;
             service = Service.getInstance(this);
             ModeSelect.Items.Add(new ComboboxItem("Ellipse", "Ellipse"));
             ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));
@@ -47,25 +49,155 @@ namespace BACExperiment
             Mic2_VolumeBar.DataContext = this;
 
         }
+        public class ComboboxItem
+        {
+            public string Text { get; set; }
+            public string Value { get; set; }
 
 
+            public ComboboxItem(string Text , string Value)
+            {
+                this.Text = Text;
+                this.Value = Value;
+            }
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
 
-
-
-        /*
-      In this class will reside most of the code that will have a active roll in the recording and calling of more complex methods.
-      First step is to input the code that will call the FileHandler class and will have a Wiimote instance in memory prepared for use.
-      Because I am making use of litterate programming and explaining the logic behind all this , I will declare the variables and methods 
-      as I explain the thaught process.
-       
-      First thing to do is declare the containers for the wii remotes 
+            foreach(var mic in service.getMicrophoneList())
+            {
+                Microphone1_ComboBox.Items.Add(mic);
+                Microphone2_ComboBox.Items.Add(mic);
+            }
+            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
+            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
             
-            */
+        }
 
+
+
+        #region MainCourseOfActionCode
+        private void StartBtn_Click(object sender, RoutedEventArgs e)
+        {
+            StartBtn.IsEnabled = false;
+            complexitySlider.IsEnabled = false;
+            SpeedSlider.IsEnabled = false;
+            ReqFrequencySlider.IsEnabled = false;
+            stimulyWindow.startCourse();
+            stimulyWindow.StartSendingInfo();
+            stimulyWindow.startRecording();
+
+            StartFullRecording();
+
+        }
+
+        private void OpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.Cursor = Cursors.Wait;
+                stimulyWindow = StimulyWindow.GetInstance(this);
+                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
+                stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
+                stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
+                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
+                StartBtn.IsEnabled = true;
+                stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
+                TrajectoryCheck.IsEnabled = false;
+
+                stimulyWindow.buildCourseType1();
+                this.Cursor = Cursors.Arrow;
+
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public void enableStartBtn()
+        {
+            StartBtn.IsEnabled = true;
+        }
+
+        #endregion
+
+        #region PrompterMenuCode
+        private void prompterOpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (System.IO.File.Exists(pathTxt.Text))
+            {
+                prompter = new Prompter((int)prompterSpeed.Value, (int)TextSizeSlider.Value, pathTxt.Text);
+                prompter.Visibility = System.Windows.Visibility.Visible;
+                prompterPlay.IsEnabled = true;
+                prompterPause.IsEnabled = true;
+                prompterStop.IsEnabled = true;
+            }
+
+            else
+            {
+                PopUp msg = new PopUp("No file at specified path .");
+                msg.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private void prompterPlay_Click(object sender, RoutedEventArgs e)
+        {
+            prompter.play();
+        }
+
+        private void prompterPause_Click(object sender, RoutedEventArgs e)
+        {
+            prompter.pause();
+        }
+
+        private void prompterStop_Click(object sender, RoutedEventArgs e)
+        {
+            prompter.stop();
+        }
+
+        private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (prompter != null)
+                prompter.textSize_Changed((int)TextSizeSlider.Value);
+        }
+
+        private void BrowseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.InitialDirectory = pathTxt.Text;
+
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "TXT Files (.txt)|*.txt";
+
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                string filename = dlg.FileName;
+                pathTxt.Text = filename;
+            }
+        }
+        #endregion
+
+        #region WiiMenuCode
 
         private void WM1_Detect_Click(object sender, RoutedEventArgs e)
         {
-            try {
+            try
+            {
                 service.ConnectWiimoteToInfo(0);
                 WM1_Detect.IsEnabled = false;
                 WM1_Disconect.IsEnabled = true;
@@ -80,7 +212,8 @@ namespace BACExperiment
 
         private void WM1_Disconect_Click(object sender, RoutedEventArgs e)
         {
-            try {
+            try
+            {
                 service.DisconnectWiimoteFromInfo(0);
                 Console.WriteLine("Wiimote 1 has been disconected ;");
                 WM1_Detect.IsEnabled = true;
@@ -95,9 +228,9 @@ namespace BACExperiment
 
         private void WM2_Detect_Click(object sender, RoutedEventArgs e)
         {
-            try {
+            try
+            {
                 service.ConnectWiimoteToInfo(1);
-                Console.WriteLine("WM2_Detect_Click");
                 WM2_Detect.IsEnabled = false;
                 WM2_Disconect.IsEnabled = true;
             }
@@ -107,14 +240,15 @@ namespace BACExperiment
             }
         }
 
-        private void WM2_Disconect_Click(object sender, RoutedEventArgs e)
+        private async void WM2_Disconect_Click(object sender, RoutedEventArgs e)
         {
-            try {
+            try
+            {
                 service.DisconnectWiimoteFromInfo(1);
                 Console.WriteLine("Wiimote 2 has been disconected ;");
                 WM2_Detect.IsEnabled = true;
                 WM2_Disconect.IsEnabled = false;
-                ClearAllLabels(1);
+                await ClearAllLabels(1);
             }
             catch (Exception ex)
             {
@@ -122,24 +256,23 @@ namespace BACExperiment
             }
         }
 
-        // Interface for the Observer pattern
-
-
-
-
         public async Task OnNext(WiimoteInfo remote, Wiimote wm)
         {
 
             //The update method.
-            if (wm.ID.Equals(remote.mWiimotes[0].ID))
+            if (wm.WiimoteState.LEDState.LED1 == true)
             {
                 t1 = updateWM1Labels(wm);
                 await t1;
-
-            }          
+            }
+            else if (wm.WiimoteState.LEDState.LED2 == true)
+            {
+                t2 = updateWM2Labels(wm);
+                await t2;
+            }
         }
 
-        public async Task OnNext2(WiimoteInfo remote , Wiimote wm)
+        public async Task OnNext2(WiimoteInfo remote, Wiimote wm)
         {
             if (wm.ID.Equals(remote.mWiimotes[1].ID))
             {
@@ -148,17 +281,6 @@ namespace BACExperiment
 
             }
         }
-
-        // Thinking if should make a class with all the values of the guy where to store them and then just bind the guy values to that data . 
-        public void WriteToRemoteMenu(int index, string message)
-        {
-
-            Console_TextBox.Inlines.Add(string.Format("Wiimote {0}:{1};/n", index, message));// append text to console log 1
-
-        }
-
-
-
 
         private async Task updateWM1Labels(Wiimote wm)
         {
@@ -250,7 +372,7 @@ namespace BACExperiment
             };
             try
             {
-                await Dispatcher.BeginInvoke(action);
+                Dispatcher.Invoke(action);
             }
 
             catch (Exception ex)
@@ -259,8 +381,6 @@ namespace BACExperiment
             }
 
         }
-
-
 
         private async Task updateWM2Labels(Wiimote wm)
         {
@@ -346,7 +466,7 @@ namespace BACExperiment
 
             try
             {
-                await Dispatcher.BeginInvoke(action);
+                Dispatcher.Invoke(action);
             }
 
             catch (Exception ex)
@@ -357,7 +477,8 @@ namespace BACExperiment
 
         private async Task ClearAllLabels(int i)
         {
-            if (i == 1) {
+            if (i == 1)
+            {
                 Action action = () =>
                 {
 
@@ -389,7 +510,7 @@ namespace BACExperiment
 
             }
 
-            else if(i ==2 )
+            else if (i == 2)
             {
                 Action action = () =>
                 {
@@ -422,157 +543,6 @@ namespace BACExperiment
 
             }
         }
-    
-
-        private void StartBtn_Click(object sender, RoutedEventArgs e)
-        {     
-            StartBtn.IsEnabled = false;
-            complexitySlider.IsEnabled = false;
-            SpeedSlider.IsEnabled = false;
-            ReqFrequencySlider.IsEnabled = false;
-            stimulyWindow.startCourse();
-            stimulyWindow.StartSendingInfo();
-            stimulyWindow.startRecording();
-
-            StartFullRecording();
-
-        }
-
-        private void OpenBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                this.Cursor = Cursors.Wait;
-                stimulyWindow = StimulyWindow.GetInstance(this);
-                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
-                stimulyWindow.setCourseComplexity((int) complexitySlider.Value);
-                stimulyWindow.setCourseSpeed((int) SpeedSlider.Value);
-                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
-                StartBtn.IsEnabled = true;
-                stimulyWindow.setShowTrajectory((bool) TrajectoryCheck.IsChecked);
-                TrajectoryCheck.IsEnabled = false;
-
-                stimulyWindow.buildCourseType1();
-                this.Cursor = Cursors.Arrow;
-
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
-
-        public void enableStartBtn()
-        {
-            StartBtn.IsEnabled = true;
-        }
-
-
-        public class ComboboxItem
-        {
-            public string Text { get; set; }
-            public string Value { get; set; }
-
-
-            public ComboboxItem(string Text , string Value)
-            {
-                this.Text = Text;
-                this.Value = Value;
-            }
-            public override string ToString()
-            {
-                return Text;
-            }
-        }
-
-
-
-        private void prompterOpen_Click(object sender, RoutedEventArgs e)
-        {
-            if (System.IO.File.Exists(pathTxt.Text))
-            {
-                prompter = new Prompter((int) prompterSpeed.Value, (int) TextSizeSlider.Value, pathTxt.Text);
-                prompter.Visibility = System.Windows.Visibility.Visible;
-                prompterPlay.IsEnabled = true;
-                prompterPause.IsEnabled = true;
-                prompterStop.IsEnabled = true;
-            }
-
-            else
-            {
-                PopUp msg = new PopUp("No file at specified path .");
-                msg.Visibility = System.Windows.Visibility.Visible;
-            }
-    }
-
-        private void prompterPlay_Click(object sender, RoutedEventArgs e)
-        {
-            prompter.play();
-        }
-       
-
-        private void ControllerTab_Loaded(object sender, RoutedEventArgs e)
-        {
-           
-     
-        }
-
-        private void prompterPause_Click(object sender, RoutedEventArgs e)
-        {
-            prompter.pause();
-        }
-
-        private void prompterStop_Click(object sender, RoutedEventArgs e)
-        {
-            prompter.stop();
-        }
-
-
-        private void BrowseBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.InitialDirectory = pathTxt.Text;
-
-
-            // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".txt";
-            dlg.Filter = "TXT Files (.txt)|*.txt";
-
-
-            // Display OpenFileDialog by calling ShowDialog method 
-            Nullable<bool> result = dlg.ShowDialog();
-
-
-            // Get the selected file name and display in a TextBox 
-            if (result == true)
-            {
-                // Open document 
-                string filename = dlg.FileName;
-                pathTxt.Text = filename;
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            pathTxt.Text = System.IO.Path.GetDirectoryName(
-                             System.Reflection.Assembly.GetExecutingAssembly().Location); 
-            
-            foreach(var mic in service.getMicrophoneList())
-            {
-                Microphone1_ComboBox.Items.Add(mic);
-                Microphone2_ComboBox.Items.Add(mic);
-            }
-            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
-            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
-            
-        }
-
-        private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (prompter != null)
-                prompter.textSize_Changed((int)TextSizeSlider.Value);
-        }
 
         private void ConnectAll_OnClick(object sender, RoutedEventArgs e)
         {
@@ -585,7 +555,7 @@ namespace BACExperiment
             service.DetectWiimotes();
             WM1_Detect.IsEnabled = true;
             WM2_Detect.IsEnabled = true;
-            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes " , service.GetWiimoteInfo().count));
+            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes ", service.GetWiimoteInfo().count));
         }
 
         private void ClearButton_OnClick(object sender, RoutedEventArgs e)
@@ -595,11 +565,17 @@ namespace BACExperiment
             Console_TextBox.Inlines.Add("Wiiremotes disconected;");
         }
 
+        public void WriteToRemoteMenu(int index, string message)
+        {
 
-        // MICROPHONE MENU CODE
+            Console_TextBox.Inlines.Add(string.Format("Wiimote {0}:{1}; \r\n", index, message));// append text to console log 1
 
-        
 
+        }
+
+        #endregion
+
+        #region MicrophoneCode
         private void Microphone1_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             service.ListenToMicrophone( ((ComboBox)sender).SelectedIndex , 1);
@@ -690,6 +666,12 @@ namespace BACExperiment
         }
 
 
-        // MICROPHONE MENU CODE
+        #endregion
+
+        private void OpenWiimoteWindow_Click(object sender, RoutedEventArgs e)
+        {
+            WiiremoteWindow window = new WiiremoteWindow();
+            window.Visibility = System.Windows.Visibility.Visible;
+        }
     }
 }

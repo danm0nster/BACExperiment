@@ -9,7 +9,7 @@
     <Grid Margin="0,0,0,2">
         <StackPanel>
             <Label x:Name="MessageLabel" Height="117" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
-            <Button Content="OK" Margin="10" Height="25" Width="75"></Button>
+            <Button Content="OK" Margin="10" Height="25" Width="75" Click="Button_Click" ></Button>
         </StackPanel>
 
     </Grid>

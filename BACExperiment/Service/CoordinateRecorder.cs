@@ -15,13 +15,13 @@ namespace BACExperiment
     //NEED TO DEBUG
     class coordinateRecorder
     {
-       
+
 
         private System.Timers.Timer timer;
         private String directoryPath;// file path for the current sessionLogs
         private String logPath;
         private Stopwatch watch;
-       
+
         private static coordinateRecorder instance;
 
         private CoordinateHolder holder;
@@ -79,19 +79,19 @@ namespace BACExperiment
 
         public void Record(object sender, ElapsedEventArgs args)
         {
-          
+
             // First attemtp always give exception that current file is being used . Look into that because you can not run 2 times for 1 file since the name is given by the time of the creation which is always different
 
 
-          
+
 
             DateTime t = args.SignalTime; // Take the time the tick was done
             Point ellipseCoordiante = holder.GetEllipseCoordinates();  // Parse coordinates from StimulyWindow to service and then to thread where they will be recorded into the log file
             Point controller1 = holder.GetPointerCoordinates(0);
             Point controller2 = holder.GetPointerCoordinates(1);
             double[,] accel = holder.getAccelValues();
-            string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString() , 
-                accel[0,0], accel[0, 1], accel[0, 2], accel[1, 0], accel[1, 1], accel[1, 2]  );
+            string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString(),
+                accel[0, 0], accel[0, 1], accel[0, 2], accel[1, 0], accel[1, 1], accel[1, 2]);
 
 
 
@@ -100,10 +100,10 @@ namespace BACExperiment
                 s.WriteLine(toWrite);
                 s.Close();
             }
-              
 
-            
-           
+
+
+
 
 
         }

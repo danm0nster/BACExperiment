@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="820" Width="980" ResizeMode="NoResize" Loaded="Window_Loaded" Background="White" >
+        Title="MainWindow" Height="810" Width="980" ResizeMode="NoResize" Loaded="Window_Loaded" Background="White" >
     <Grid Margin="0,0,0,0">
         <TabControl x:Name="tabControl"  Margin="0,0,10,23">
             <TabItem Header="Session recording" Width="150">
@@ -54,7 +54,7 @@
                                     </WrapPanel>
                                     <WrapPanel Height="30" Margin="0">
                                         <Label Content="Path :" Width="101" HorizontalContentAlignment="Right"/>
-                                        <TextBox x:Name="pathTxt" Text="" Width="135" />
+                                        <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="135" />
                                         <Button x:Name="BrowseBtn" Content="Browse" Margin="2"  Click="BrowseBtn_Click"/>
                                     </WrapPanel>
                                     <WrapPanel Height="30" Margin="0">
@@ -76,8 +76,10 @@
                             </GroupBox>
                         </WrapPanel>
                     </GroupBox>
-                    <GroupBox x:Name="groupBox1" Header="Microphone" Margin="10,176,625,10" Background="Aqua">
-                        <StackPanel Margin="10,10">
+                    <StackPanel>
+                    <GroupBox x:Name="groupBox1" Header="Microphone" Margin="0,176,0,10" Background="Aqua" Height="187">
+                        <WrapPanel Margin="10,10,10,3">
+                                <StackPanel>
                             <WrapPanel Height="35">
                                 <Label Content="Microphone 1 :" Height="25" Width="100"></Label>
                                 <ComboBox x:Name="Microphone1_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone1_ComboBox_SelectionChanged" >
@@ -97,7 +99,9 @@
                                 <Button Content="Pause" Height="25" Width="40" IsEnabled="False" Margin="5"></Button>
                                 <Button x:Name="Mic1_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic1_Stop_Click"></Button>
                             </WrapPanel>
-                            <WrapPanel Height="35">
+                                </StackPanel>
+                                <StackPanel>
+                                <WrapPanel Height="35">
                                 <Label Content="Microphone2 :" Height="25" Width="100"></Label>
                                 <ComboBox x:Name="Microphone2_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone2_ComboBox_SelectionChanged" ></ComboBox>
                             </WrapPanel>
@@ -114,27 +118,18 @@
                                 <Button x:Name="Mic2_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic2_Stop_Click"></Button>
                             </WrapPanel>
                         </StackPanel>
-                    </GroupBox>
-                    <GroupBox x:Name="groupbox2" Header="Camera" Margin="320,176,299,10" Background="Aquamarine" >
-                        <StackPanel Margin="10,10,8,10">
-                            <WrapPanel Height="53">
-
                             </WrapPanel>
-                            <WrapPanel>
-                                <Image x:Name="image" Height="100"/>
-                            </WrapPanel>
-                        </StackPanel>
                     </GroupBox>
-                    <GroupBox x:Name="groupbox3" Header="Controllers" Margin="646,176,10,10" Background="Bisque" >
-                        <StackPanel Margin="10,10"  />
-                    </GroupBox>
+                        <GroupBox x:Name="groupbox3" Header="Controllers" Background="Bisque" Height="350" >
+                            <StackPanel Margin="10,10">
+                                <Button x:Name="OpenWiimoteWindow" Height="25" Width="75" Content="open Window" Click="OpenWiimoteWindow_Click" ></Button>
+                                
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Video" Width="150">
-            </TabItem>
-            <TabItem Header="Audio" Width="150">
-            </TabItem>
-            <TabItem x:Name="ControllerTab" Header="Controllers" Width="150" Loaded="ControllerTab_Loaded">
+            <TabItem x:Name="ControllerTab" Header="Controllers" Width="150" >
                 <StackPanel>
                     <WrapPanel Height="475" Margin="0,0,0,0">
                         <GroupBox x:Name="WM1_groupbox" Header="Wiimote 1" Width="470" BorderBrush="SteelBlue" BorderThickness="2">
@@ -254,15 +249,14 @@
                                         </StackPanel>
                                     </GroupBox>
                                 </WrapPanel>
-                                <WrapPanel Margin="79,0">
-                                    <Canvas x:Name="IRImage2"  Height="200" MaxHeight="200" Width="300" Background="Black"  >
-                                        <Ellipse x:Name="IRSensor21" StrokeThickness="5" Stroke="Blue" Width="5" Height="5"  />
-                                        <Ellipse x:Name="IRSensor22" StrokeThickness="5" Stroke="Yellow" Width="5" Height="5"  />
-                                        <Ellipse x:Name="IRSensor23" StrokeThickness="5" Stroke="Red" Width="5" Height="5"  />
-                                        <Ellipse x:Name="IRSensor24" StrokeThickness="5" Stroke="Green" Width="5" Height="5" />
-                                        <Ellipse x:Name="MidPoint2"  StrokeThickness="5" Stroke="White" Width="5" Height="5"/>
+                                <WrapPanel HorizontalAlignment="Center">
+                                    <Canvas x:Name="IRImage2"  Height="200" MaxHeight="200" Width="300" Background="Black"   Margin="74,0"   >
+                                        <Ellipse x:Name="IRSensor21" StrokeThickness="5" Stroke="Blue"   Width="5" Fill="Blue" Height="5"/>
+                                        <Ellipse x:Name="IRSensor22" StrokeThickness="5" Stroke="Yellow" Width="5" Fill="Yellow" Height="5" />
+                                        <Ellipse x:Name="IRSensor23" StrokeThickness="5" Stroke="Red"    Width="5" Height="5"   Fill="Red" />
+                                        <Ellipse x:Name="IRSensor24" StrokeThickness="5" Stroke="Green"  Width="5" Height="5" Fill="Green" />
+                                        <Ellipse x:Name="MidPoint2"  StrokeThickness="5" Stroke="White"  Width="5" Height="5" Fill="White" />
                                     </Canvas>
-
                                 </WrapPanel>
 
                                 <WrapPanel Height="67">
@@ -286,8 +280,6 @@
 
                 </StackPanel>
 
-            </TabItem>
-            <TabItem Header="About" Width="150">
             </TabItem>
 
         </TabControl>

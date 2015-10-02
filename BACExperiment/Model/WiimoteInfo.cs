@@ -122,7 +122,7 @@ namespace BACExperiment
                 {
                     mWiimotes.FindAllWiimotes();
                     searched = true;
-                    observer.SendMessage(String.Format("There are {0} in the system memory . MAximum 2 can be used ." , mWiimotes.Count) );
+                    observer.SendMessage(String.Format("There are {0} in the system memory . Maximum 2 can be used ." , mWiimotes.Count) );
                 }
                 catch (Exception ex)
                 {

@@ -91,20 +91,25 @@
     <Compile Include="GUI\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\MainWindowDataContext.cs" />
     <Compile Include="GUI\PopUp.xaml.cs">
       <DependentUpon>PopUp.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Prompter.xaml.cs">
       <DependentUpon>Prompter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\WiiremoteWindow.xaml.cs">
+      <DependentUpon>WiiremoteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\CoordinatesProcesedEventArgs.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="Model\ErrorLog.cs" />
+    <Compile Include="Model\DebugerStepThroughAttribute.cs" />
     <Compile Include="Model\MicrophoneCostruct.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Model\MicrophoneHandler.cs" />
     <Compile Include="Model\SampleAggregator.cs" />
-    <Compile Include="Model\WiimoteConstruct.cs" />
+    <Compile Include="Model\WiimoteCoordinate.cs" />
     <Compile Include="Model\WiimoteHandler.cs" />
     <Compile Include="Model\WiimoteInfo.cs" />
     <Compile Include="Model\WiimoteSampleAggregator.cs" />
@@ -139,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\StimulyWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\WiiremoteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

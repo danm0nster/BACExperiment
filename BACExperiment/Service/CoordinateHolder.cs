@@ -14,10 +14,10 @@ namespace BACExperiment
         private static CoordinateHolder instance;
 
         private Point _ellipseCoordinates;
-        private Point[] PointerCoordinates ;
+        private Point[] PointerCoordinates;
         private Double[,] AccelValues;
-      
-        
+
+
 
 
 
@@ -30,21 +30,21 @@ namespace BACExperiment
             AccelValues = new Double[2, 3];
         }
 
-        public void SetEllipseCoordinates(double x , double y)
+        public void SetEllipseCoordinates(double x, double y)
         {
             _ellipseCoordinates.X = x;
             _ellipseCoordinates.Y = y;
 
         }
 
-        public void SetAccel(int remoteIndex , int AccelIndex , double value)
+        public void SetAccel(int remoteIndex, int AccelIndex, double value)
         {
-            
-                AccelValues[remoteIndex , AccelIndex] = value;
-            
+
+            AccelValues[remoteIndex, AccelIndex] = value;
+
         }
 
-        
+
         public double[,] getAccelValues()
         {
             return AccelValues;
@@ -55,7 +55,7 @@ namespace BACExperiment
             return _ellipseCoordinates;
         }
 
-        public void SetPointerCoordinates(int index , Point p)
+        public void SetPointerCoordinates(int index, Point p)
         {
             PointerCoordinates[index] = p;
         }

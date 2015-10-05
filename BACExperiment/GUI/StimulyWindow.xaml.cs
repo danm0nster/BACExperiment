@@ -30,6 +30,9 @@ namespace BACExperiment
         private bool showTrajectory;
         private Random r = new Random();
        
+
+        // 
+
   
         private static StimulyWindow instance;
 
@@ -45,7 +48,7 @@ namespace BACExperiment
         public void setShowTrajectory(bool value) { this.showTrajectory = value; }
         public static StimulyWindow GetInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
 
-
+        
         
 
         private StimulyWindow(MainWindow mainWindow)

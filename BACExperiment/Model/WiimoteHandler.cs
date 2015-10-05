@@ -22,7 +22,7 @@ namespace BACExperiment.Model
         // Structures to hold the x , y , and sensor size 
 
 
-        public WiimoteHandler(Service observer)
+        public WiimoteHandler()
         {
             this.mWiimotes = new WiimoteCollection();
             aggregators = new WiimoteSampleAggregator[2];
@@ -92,7 +92,7 @@ namespace BACExperiment.Model
             {
               await coordinateSet[0].setCoordinates(e);
             }
-            else
+            else if(((WiimoteSampleAggregator)sender).Wiimote.WiimoteState.LEDState.LED2 == true)
               await coordinateSet[1].setCoordinates(e);
             {
 

@@ -10,6 +10,7 @@ using System.IO;
 using System.Diagnostics;
 using BACExperiment.Model;
 using NAudio.Wave;
+using System.ComponentModel;
 
 // Service class with most major functionality 
 
@@ -40,6 +41,8 @@ namespace BACExperiment
         // Keep in mind to also add the data recordin to the service instead of having the Stimuly window perform a direct link with teh coordinate recorder
         private WiimoteInfo wiimote1_info { get; set; }
         private MicrophoneHandler microphones { get; set; }
+
+        private WiimoteHandler WMHandler { get; set;}
         public static Service instance;
 
 
@@ -67,6 +70,24 @@ namespace BACExperiment
             this.observer = observer;
             wiimote1_info = new WiimoteInfo(this);
             microphones = new MicrophoneHandler(this);
+            WMHandler = new WiimoteHandler();
+
+            WMHandler.coordinateSet[0].PropertyChanged += TellStimulyWindow;
+        }
+
+        private void TellStimulyWindow(object sender , PropertyChangedEventArgs e)
+        {
+            if( ((WiimoteCoordinate)sender).Equals(WMHandler.coordinateSet[0]) )
+            {
+                // Modify first ellipse 
+
+                
+            }
+
+            if (((WiimoteCoordinate)sender).Equals(WMHandler.coordinateSet[1]))
+            {
+                //Modify second ellipse;
+            }
         }
 
 

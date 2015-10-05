@@ -101,9 +101,7 @@
     <Compile Include="GUI\WiiremoteWindow.xaml.cs">
       <DependentUpon>WiiremoteWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\CoordinatesProcesedEventArgs.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="Model\DebugerStepThroughAttribute.cs" />
     <Compile Include="Model\MicrophoneCostruct.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

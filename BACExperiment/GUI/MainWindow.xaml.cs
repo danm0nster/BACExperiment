@@ -282,7 +282,8 @@ namespace BACExperiment
             }
         }
 
-        private async Task updateWM1Labels(Wiimote wm)
+        private async Task 
+            updateWM1Labels(Wiimote wm)
         {
             Action action = () =>
             {

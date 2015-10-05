@@ -67,10 +67,12 @@ namespace BACExperiment.Model
             public float[] AccelCoordinates { get; private set; }
             public Point[] IRCoordinates { get; private set; }
             public int battery;
-            [DebugerStepThrough]
+
+        
             public CoordinatesProcessedEventArgs(float[] AccelState , Point[] IRState)
             {
-
+            AccelCoordinates = AccelState;
+            IRCoordinates = IRState;
             }
 
             

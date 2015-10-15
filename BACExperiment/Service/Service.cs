@@ -11,6 +11,7 @@ using System.Diagnostics;
 using BACExperiment.Model;
 using NAudio.Wave;
 using System.ComponentModel;
+using BACExperiment.GUI;
 
 // Service class with most major functionality 
 
@@ -25,25 +26,20 @@ namespace BACExperiment
     */
     public class Service
     {
-        /* 
-
-        I'm not too happy about the current project architecture look. There is a Wii remote class and a graphical interface but the Wii remote class contains elements 
-        of gui and also the gui contains instances of the WiimoteStatus classes which are in the model . This is not very efficient and organized architectural whise.
-        What i will do now is add the Wii remote instances here in the service and will give the mainframe a instance of the service since it will need the complicated methods anyway .
-        I will use the singleton pattern also for the service so we are shure that there will be no way of opening multiple services at once and running the risk of having different sources of input .
-
-        */
-
-        // Instance of the service to return for the singleton
-
-
-        // So this gives the service acces to the Wiimote methods to retrieve info .
-        // Keep in mind to also add the data recordin to the service instead of having the Stimuly window perform a direct link with teh coordinate recorder
-        private WiimoteInfo wiimote1_info { get; set; }
-        private MicrophoneHandler microphones { get; set; }
-
-        private WiimoteHandler WMHandler { get; set;}
         public static Service instance;
+
+     
+        #region Handlers
+        private MicrophoneHandler microphones { get; set; }
+        private WiimoteHandler WMHandler { get; set;}
+        #endregion
+
+        #region Links
+        private StimulyWindowViewModel stimuly_data_context {get; set ;}
+        public Wiimote1DataContext wm1_data_context;
+        public Wiimote1DataContext wm2_data_context;
+         
+        #endregion
 
 
 
@@ -68,25 +64,33 @@ namespace BACExperiment
         {
 
             this.observer = observer;
-            wiimote1_info = new WiimoteInfo(this);
             microphones = new MicrophoneHandler(this);
             WMHandler = new WiimoteHandler();
+            stimuly_data_context = StimulyWindowViewModel.GetInstance();
+            wm1_data_context = new Wiimote1DataContext();
+            wm2_data_context = new Wiimote1DataContext();
 
-            WMHandler.coordinateSet[0].PropertyChanged += TellStimulyWindow;
+         
+         
         }
 
-        private void TellStimulyWindow(object sender , PropertyChangedEventArgs e)
+        public void TellStimulyWindow(object sender , PropertyChangedEventArgs e)
         {
-            if( ((WiimoteCoordinate)sender).Equals(WMHandler.coordinateSet[0]) )
+            if (((WiimoteCoordinate)sender).Equals(WMHandler.coordinateSet[0]))
             {
                 // Modify first ellipse 
+                stimuly_data_context.Pointer1X = ((WiimoteCoordinate)sender).MidPoint.X;
+                stimuly_data_context.Pointer1Y = ((WiimoteCoordinate)sender).MidPoint.Y;
+                wm1_data_context.Update(sender , e);
 
-                
             }
 
             if (((WiimoteCoordinate)sender).Equals(WMHandler.coordinateSet[1]))
             {
                 //Modify second ellipse;
+                stimuly_data_context.Pointer2X = ((WiimoteCoordinate)sender).MidPoint.X;
+                stimuly_data_context.Pointer2Y = ((WiimoteCoordinate)sender).MidPoint.Y;
+                wm2_data_context.Update(sender, e);
             }
         }
 
@@ -98,59 +102,32 @@ namespace BACExperiment
 
         public void DetectWiimotes()
         {
-            wiimote1_info.SearchForWiimotes();
+            WMHandler.SearchForWiimotes();
             Console.WriteLine("Searched for wiimotes;");
         }
 
         public void ConnectWiimoteToInfo(int i)
         {
-            wiimote1_info.Connect(i);
-            Console.WriteLine(string.Concat("Wiimote", i, " has been connected"));
+            WMHandler.Connect(i);
+            WMHandler.coordinateSet[i].PropertyChanged += TellStimulyWindow;
+            Console.WriteLine(string.Concat("Wiimote ", i, " has been connected"));
         }
 
         public void DisconnectWiimoteFromInfo(int i)
         {
-            wiimote1_info.Disconnect(i);
-            Console.WriteLine(string.Concat("Wiimote", i, " has been disconnected"));
+            WMHandler.Disconnect(i);
+            Console.WriteLine(string.Concat("Wiimote ", i, " has been disconnected/r/n"));
 
         }
-
-
-        public async Task informMainWindow(WiimoteInfo sender, Wiimote wm)
-        {
-            try
-            {
-                await observer.OnNext(sender, wm);
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-
-            }
-        }
-        public async Task informMainWindow2(WiimoteInfo sender, Wiimote wm)
-        {
-            try
-            {
-                await observer.OnNext2(sender, wm);
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-
-            }
-        }
-
+          
         public void ConnectAllWiimotes()
         {
-            wiimote1_info.ConnectAll();
+            WMHandler.ConnectAll();
         }
 
         public void DisconnectAllWiimotes()
         {
-            wiimote1_info.DisconnectAll();
+            WMHandler.DisconnectAll();
         }
 
         public void SendMessage(int index, string message)
@@ -163,15 +140,14 @@ namespace BACExperiment
             observer.WriteToRemoteMenu(2, message);
         }
 
-        public WiimoteInfo GetWiimoteInfo()
+        public int GetRemoteCount()
         {
-            return wiimote1_info;            
+           return WMHandler.mWiimotes.Count;
         }
-       
 
-        ///MicrophoneHandling
-        /// 
-     
+
+
+        #region Microphone
         public List<WaveInCapabilities> getMicrophoneList()
         {
            return microphones.MicrophoneList();
@@ -196,6 +172,8 @@ namespace BACExperiment
         {
             microphones.StopRecording(i);
         }
+#endregion Microphone
+
     }
 }   
 

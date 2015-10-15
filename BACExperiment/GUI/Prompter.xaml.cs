@@ -137,12 +137,12 @@ namespace BACExperiment.GUI
             private List<DoubleAnimation> animation2;
             private DependencyProperty property2;
 
-            private int curent;
+           // private int curent;
             private UIElement element;
 
             public AnimationQueue(UIElement element, DependencyProperty property)
             {
-                curent = -1;
+           //   curent = -1;
                 this.element = element;
                 animation1 = new List<DoubleAnimation>();
                 animation2 = new List<DoubleAnimation>();
@@ -151,7 +151,7 @@ namespace BACExperiment.GUI
 
             public AnimationQueue(UIElement element, DependencyProperty property1, DependencyProperty property2)
             {
-                curent = -1;
+           //   curent = -1;
                 this.element = element;
                 animation1 = new List<DoubleAnimation>();
                 animation2 = new List<DoubleAnimation>();

@@ -39,15 +39,21 @@ namespace BACExperiment.Model
         public void Connect(int i)
         {
             mWiimotes[i].Connect();
-            mWiimotes[i].WiimoteChanged += wm_WiimoteChanged;
             mWiimotes[i].SetReportType(InputReport.IRAccel, true);
-            mWiimotes[i].SetLEDs(i);
+            mWiimotes[i].SetLEDs(i+1);
+            aggregators[i] = new WiimoteSampleAggregator();
+            coordinateSet[i] = new WiimoteCoordinate();
             aggregators[i].Wiimote = mWiimotes[i];
             aggregators[i].Processed += SendToWiimoteCoordinate;
+            mWiimotes[i].WiimoteChanged += wm_WiimoteChanged;
         }
 
         public void Disconnect(int i)
         {
+            aggregators[i] = null;
+            coordinateSet[i] = null;
+            mWiimotes[i].SetLEDs(false, false, false, false);
+            mWiimotes[i].Disconnect();
             mWiimotes[i].Dispose();
             
             
@@ -81,21 +87,23 @@ namespace BACExperiment.Model
         {
             foreach(var aggregator in aggregators)
             {
-                if (aggregator.Wiimote == (Wiimote)sender)
-                   await aggregator.ProcessSample(sender, e);
+                if (aggregator != null)
+                {
+                    if (aggregator.Wiimote == (Wiimote)sender)
+                      await aggregator.ProcessSample(sender, e);
+                }
             }
         }
 
-        private async void SendToWiimoteCoordinate(object sender, CoordinatesProcessedEventArgs e)
+        private void SendToWiimoteCoordinate(object sender, CoordinatesProcessedEventArgs e)
         {
             if (((WiimoteSampleAggregator)sender).Wiimote.WiimoteState.LEDState.LED1 == true)
             {
-              await coordinateSet[0].setCoordinates(e);
+               coordinateSet[0].setCoordinates(e);
             }
             else if(((WiimoteSampleAggregator)sender).Wiimote.WiimoteState.LEDState.LED2 == true)
-              await coordinateSet[1].setCoordinates(e);
-            {
-
+            { 
+                coordinateSet[1].setCoordinates(e);
             }
 
         }

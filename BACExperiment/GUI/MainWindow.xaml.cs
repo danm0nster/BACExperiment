@@ -31,22 +31,22 @@ namespace BACExperiment
         private Service service;
         private StimulyWindow stimulyWindow;
         private Prompter prompter;
-        private Task t1;
-        private Task t2;
+       
 
         //Volume bar variables
 
         public MainWindow()
         {
             InitializeComponent();
-            MainWindowDataContext dataContext = new MainWindowDataContext();
-            pathTxt.DataContext = dataContext;
             service = Service.getInstance(this);
             ModeSelect.Items.Add(new ComboboxItem("Ellipse", "Ellipse"));
             ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));
             ModeSelect.Items.Add(new ComboboxItem("Pipe", "Pipe"));
             Mic1_VolumeBar.DataContext = this;
             Mic2_VolumeBar.DataContext = this;
+
+            WM1_groupbox.DataContext = service.wm1_data_context;
+            WM2_groupbox.DataContext = service.wm2_data_context;
 
         }
         public class ComboboxItem
@@ -218,7 +218,6 @@ namespace BACExperiment
                 Console.WriteLine("Wiimote 1 has been disconected ;");
                 WM1_Detect.IsEnabled = true;
                 WM1_Disconect.IsEnabled = false;
-                ClearAllLabels(1);
             }
             catch (Exception ex)
             {
@@ -240,7 +239,7 @@ namespace BACExperiment
             }
         }
 
-        private async void WM2_Disconect_Click(object sender, RoutedEventArgs e)
+        private void WM2_Disconect_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -248,300 +247,10 @@ namespace BACExperiment
                 Console.WriteLine("Wiimote 2 has been disconected ;");
                 WM2_Detect.IsEnabled = true;
                 WM2_Disconect.IsEnabled = false;
-                await ClearAllLabels(1);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-            }
-        }
-
-        public async Task OnNext(WiimoteInfo remote, Wiimote wm)
-        {
-
-            //The update method.
-            if (wm.WiimoteState.LEDState.LED1 == true)
-            {
-                t1 = updateWM1Labels(wm);
-                await t1;
-            }
-            else if (wm.WiimoteState.LEDState.LED2 == true)
-            {
-                t2 = updateWM2Labels(wm);
-                await t2;
-            }
-        }
-
-        public async Task OnNext2(WiimoteInfo remote, Wiimote wm)
-        {
-            if (wm.ID.Equals(remote.mWiimotes[1].ID))
-            {
-                t2 = updateWM2Labels(wm);
-                await t2;
-
-            }
-        }
-
-        private async Task 
-            updateWM1Labels(Wiimote wm)
-        {
-            Action action = () =>
-            {
-
-
-                WM1Status_Lbl.Content = wm.WiimoteState.ButtonState.A.ToString();
-                WM1_Accel_X.Content = wm.WiimoteState.AccelState.Values.X.ToString();
-                WM1_Accel_Y.Content = wm.WiimoteState.AccelState.Values.Y.ToString();
-                WM1_Accel_Z.Content = wm.WiimoteState.AccelState.Values.Z.ToString();
-                WM1_IR1.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[0].Size + 1);
-                WM1_IR2.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[1].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[1].Size + 1);
-                WM1_IR3.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[2].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[2].Size + 1);
-                WM1_IR4.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[3].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[3].Size + 1);
-                wm1_progressbar.Value = wm.WiimoteState.Battery;
-
-
-                // Have to find a way to delay execution of this since in the first ever call there are no . Did not delay execution , instead made if statement in animate
-                // sensor that tests for NaN value .
-
-
-
-                if (wm.WiimoteState.IRState.IRSensors[0].Found)
-                {
-                    IRSensor11.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor11, wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10 * 3);
-                    Canvas.SetTop(IRSensor11, wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y / 5);
-                    IRSensor11.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor11.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[1].Found)
-                {
-                    IRSensor12.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor12, wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10 * 3);
-                    Canvas.SetTop(IRSensor12, wm.WiimoteState.IRState.IRSensors[1].RawPosition.Y / 5);
-                    IRSensor12.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor12.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[2].Found)
-                {
-                    IRSensor13.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor13, wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10 * 3);
-                    Canvas.SetTop(IRSensor13, wm.WiimoteState.IRState.IRSensors[2].RawPosition.Y / 5);
-                    IRSensor13.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor13.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[3].Found)
-                {
-                    IRSensor14.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor14, wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10 * 3);
-                    Canvas.SetTop(IRSensor14, wm.WiimoteState.IRState.IRSensors[3].RawPosition.Y / 5);
-                    IRSensor14.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor14.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[0].Found && wm.WiimoteState.IRState.IRSensors[1].Found)
-                {
-                    MidPoint1.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(MidPoint1, wm.WiimoteState.IRState.RawMidpoint.X / 10 * 3);
-                    Canvas.SetTop(MidPoint1, wm.WiimoteState.IRState.RawMidpoint.Y / 5);
-                    MidPoint1.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    MidPoint1.Visibility = System.Windows.Visibility.Hidden;
-                }
-
-                if (stimulyWindow != null)
-                {
-                    if (wm.WiimoteState.IRState.IRSensors[0].Found && wm.WiimoteState.IRState.IRSensors[1].Found)
-                    {
-                        stimulyWindow.movePointer1(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X, wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y);
-                        stimulyWindow.ShowPointer1();
-                    }
-
-                }
-            };
-            try
-            {
-                Dispatcher.Invoke(action);
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-        }
-
-        private async Task updateWM2Labels(Wiimote wm)
-        {
-            Action action = () =>
-            {
-
-                WM2Status_Lbl.Content = wm.WiimoteState.ButtonState.A.ToString();
-                WM2_Accel_X.Content = wm.WiimoteState.AccelState.Values.X.ToString();
-                WM2_Accel_Y.Content = wm.WiimoteState.AccelState.Values.Y.ToString();
-                WM2_Accel_Z.Content = wm.WiimoteState.AccelState.Values.Z.ToString();
-                WM2_IR1.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[0].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[0].Size + 1);
-                WM2_IR2.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[1].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[1].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[1].Size + 1);
-                WM2_IR3.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[2].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[2].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[2].Size + 1);
-                WM2_IR4.Content = String.Concat(" X = ", wm.WiimoteState.IRState.IRSensors[3].RawPosition.X / 10, "; Y = ", wm.WiimoteState.IRState.IRSensors[3].RawPosition.Y / 10, "; Size = ", wm.WiimoteState.IRState.IRSensors[3].Size + 1);
-                wm2_progressbar.Value = wm.WiimoteState.Battery;
-
-
-                if (wm.WiimoteState.IRState.IRSensors[0].Found)
-                {
-                    IRSensor21.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor21, wm.WiimoteState.IRState.IRSensors[0].RawPosition.X);
-                    Canvas.SetTop(IRSensor21, wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y);
-                    IRSensor21.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor21.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[1].Found)
-                {
-                    IRSensor22.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor22, wm.WiimoteState.IRState.IRSensors[1].RawPosition.X);
-                    Canvas.SetTop(IRSensor22, wm.WiimoteState.IRState.IRSensors[1].RawPosition.Y);
-                    IRSensor22.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor22.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[2].Found)
-                {
-                    IRSensor23.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor23, wm.WiimoteState.IRState.IRSensors[2].RawPosition.X);
-                    Canvas.SetTop(IRSensor23, wm.WiimoteState.IRState.IRSensors[2].RawPosition.Y);
-                    IRSensor23.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor23.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (wm.WiimoteState.IRState.IRSensors[3].Found)
-                {
-                    IRSensor24.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(IRSensor24, wm.WiimoteState.IRState.IRSensors[3].RawPosition.X);
-                    Canvas.SetTop(IRSensor24, wm.WiimoteState.IRState.IRSensors[3].RawPosition.Y);
-                    IRSensor24.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    IRSensor24.Visibility = System.Windows.Visibility.Hidden;
-                }
-
-                if (wm.WiimoteState.IRState.IRSensors[0].Found && wm.WiimoteState.IRState.IRSensors[1].Found)
-                {
-                    MidPoint2.Visibility = System.Windows.Visibility.Visible;
-                    Canvas.SetRight(MidPoint2, wm.WiimoteState.IRState.RawMidpoint.X / 10 * 3);
-                    Canvas.SetTop(MidPoint2, wm.WiimoteState.IRState.RawMidpoint.Y / 5);
-                }
-                else
-                {
-                    MidPoint2.Visibility = System.Windows.Visibility.Hidden;
-                }
-                if (stimulyWindow != null)
-                {
-                    if (wm.WiimoteState.IRState.IRSensors[0].Found && wm.WiimoteState.IRState.IRSensors[1].Found)
-                    {
-                        stimulyWindow.movePointer2(wm.WiimoteState.IRState.IRSensors[0].RawPosition.X, wm.WiimoteState.IRState.IRSensors[0].RawPosition.Y);
-                        stimulyWindow.ShowPointer2();
-                    }
-
-                }
-            };
-
-            try
-            {
-                Dispatcher.Invoke(action);
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
-
-        private async Task ClearAllLabels(int i)
-        {
-            if (i == 1)
-            {
-                Action action = () =>
-                {
-
-
-                    WM1Status_Lbl.Content = "";
-                    WM1_Accel_X.Content = "";
-                    WM1_Accel_Y.Content = "";
-                    WM1_Accel_Z.Content = "";
-                    WM1_IR1.Content = "";
-                    WM1_IR2.Content = "";
-                    WM1_IR3.Content = "";
-                    WM1_IR4.Content = "";
-                    wm1_progressbar.Value = 0;
-
-
-                    // Have to find a way to delay execution of this since in the first ever call there are no . Did not delay execution , instead made if statement in animate
-                    // sensor that tests for NaN value 
-
-                };
-                try
-                {
-                    await Dispatcher.BeginInvoke(action);
-                }
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-
-            }
-
-            else if (i == 2)
-            {
-                Action action = () =>
-                {
-
-
-                    WM2Status_Lbl.Content = "";
-                    WM2_Accel_X.Content = "";
-                    WM2_Accel_Y.Content = "";
-                    WM2_Accel_Z.Content = "";
-                    WM2_IR1.Content = "";
-                    WM2_IR2.Content = "";
-                    WM2_IR3.Content = "";
-                    WM2_IR4.Content = "";
-                    wm2_progressbar.Value = 0;
-
-
-                    // Have to find a way to delay execution of this since in the first ever call there are no . Did not delay execution , instead made if statement in animate
-                    // sensor that tests for NaN value 
-
-                };
-                try
-                {
-                    await Dispatcher.BeginInvoke(action);
-                }
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-
             }
         }
 
@@ -556,7 +265,7 @@ namespace BACExperiment
             service.DetectWiimotes();
             WM1_Detect.IsEnabled = true;
             WM2_Detect.IsEnabled = true;
-            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes ", service.GetWiimoteInfo().count));
+            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes /r/n ", service.GetRemoteCount()));
         }
 
         private void ClearButton_OnClick(object sender, RoutedEventArgs e)
@@ -669,10 +378,6 @@ namespace BACExperiment
 
         #endregion
 
-        private void OpenWiimoteWindow_Click(object sender, RoutedEventArgs e)
-        {
-            WiiremoteWindow window = new WiiremoteWindow();
-            window.Visibility = System.Windows.Visibility.Visible;
-        }
+        
     }
 }

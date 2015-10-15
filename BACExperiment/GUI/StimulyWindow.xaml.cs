@@ -1,9 +1,12 @@
-﻿using BACExperiment.Model;
+﻿using BACExperiment.GUI;
+using BACExperiment.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 namespace BACExperiment
@@ -13,14 +16,15 @@ namespace BACExperiment
     /// </summary>
     public partial class StimulyWindow : Window
     {
+
         //Links
         private CourseThread course;
         private AnimationQueue queue1;
-        private MainWindow mainWindow;
         private coordinateRecorder recorder;
         private CoordinateHolder holder;
         private System.Timers.Timer t;
-
+        private MainWindow mainWindow;
+        private StimulyWindowViewModel model = StimulyWindowViewModel.GetInstance();
 
         //Variables
         private int CourseMode;
@@ -29,12 +33,14 @@ namespace BACExperiment
         private bool random;
         private bool showTrajectory;
         private Random r = new Random();
-       
+
 
         // 
 
-  
+
         private static StimulyWindow instance;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public int getCourseMode() { return CourseMode; }
         public void setCourseMode(int CourseMode) { this.CourseMode = CourseMode; }
@@ -48,12 +54,20 @@ namespace BACExperiment
         public void setShowTrajectory(bool value) { this.showTrajectory = value; }
         public static StimulyWindow GetInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
 
-        
-        
+
+
 
         private StimulyWindow(MainWindow mainWindow)
         {
+
+            this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.TwoWay });
+            this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.TwoWay });
+          
             InitializeComponent();
+            Pointer1.DataContext = model;
+            Pointer2.DataContext = model;
+          
+            
             course = new CourseThread(this);
             this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
@@ -228,7 +242,7 @@ namespace BACExperiment
                         if (index2 + 1 < this.animation2.Count)
                         {
                             element.BeginAnimation(property2, this.animation2[index2 + 1]);
-                            
+
                         }
                     }
                 };
@@ -267,14 +281,14 @@ namespace BACExperiment
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            
+
             mainWindow.enableStartBtn();
             mainWindow.complexitySlider.IsEnabled = true;
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
             mainWindow.StopFullRecording();
             recorder.Stop();
-            
+
             t.Stop();
 
             instance = null;
@@ -285,32 +299,12 @@ namespace BACExperiment
             Point p = new Point();
             p.X = (500 - x);
             p.Y = (500 - y);
-            /*
-            if (x < 500)
-            {
-                p.X = 0 - 500 + x;
-            }
-
-            else
-            {
-                p.X = x - 500;
-            }
-
-            if (y < 500)
-            {
-                p.Y = 500 - y;
-            }
-            else
-            {
-                p.Y = 0 - (y - 500);
-            }
-            */
             return p;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         public void startRecording()
@@ -322,7 +316,7 @@ namespace BACExperiment
         {
             t.Start();
         }
-      
+
         private void SendInfo(object sender, ElapsedEventArgs e)
         {
             // When the recording starts , the sending of information will also be sent . The only thing left is to make shure that the two timer threads are synched with the CoordinateHolder class 
@@ -330,7 +324,7 @@ namespace BACExperiment
 
             Action action = () =>
             {
-               
+
                 holder.SetEllipseCoordinates(Canvas.GetLeft(StimulyEllipse1), Canvas.GetTop(StimulyEllipse1));
                 holder.SetPointerCoordinates(0, new Point(Canvas.GetLeft(Pointer1), Canvas.GetTop(Pointer1)));
                 holder.SetPointerCoordinates(1, new Point(Canvas.GetLeft(Pointer2), Canvas.GetTop(Pointer2)));
@@ -359,10 +353,20 @@ namespace BACExperiment
             Dispatcher.BeginInvoke(action);
         }
 
+
+
+        #region INotifyPropertyChangedImplementation
+
+        protected void Notify(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+
     }
-
-
-    
-
-
-    }
+}

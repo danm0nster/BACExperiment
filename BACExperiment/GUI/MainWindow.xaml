@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="810" Width="980" ResizeMode="NoResize" Loaded="Window_Loaded" Background="White" >
+        Title="MainWindow" Height="815" Width="980" ResizeMode="NoResize" Loaded="Window_Loaded" Background="White" >
     <Grid Margin="0,0,0,0">
         <TabControl x:Name="tabControl"  Margin="0,0,10,23">
             <TabItem Header="Session recording" Width="150">
@@ -121,10 +121,7 @@
                             </WrapPanel>
                     </GroupBox>
                         <GroupBox x:Name="groupbox3" Header="Controllers" Background="Bisque" Height="350" >
-                            <StackPanel Margin="10,10">
-                                <Button x:Name="OpenWiimoteWindow" Height="25" Width="75" Content="open Window" Click="OpenWiimoteWindow_Click" ></Button>
-                                
-                            </StackPanel>
+                            <StackPanel Margin="10,10"/>
                         </GroupBox>
                     </StackPanel>
                 </Grid>
@@ -138,11 +135,11 @@
                                     <Label Content="Status :" Width="91"/>
                                     <Label x:Name="WM1Status_Lbl" Content="No Wii Remote" Width="125"></Label>
                                     <Label Content="'Device path :" Width="91"/>
-                                    <Label x:Name="WM1_Path_Lbl" Width="125"></Label>
+                                    <Label x:Name="WM1_Path_Lbl" Width="125" Content="{Binding Path=ID , Mode=OneWay}"></Label>
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Label Content="Batterie :" Width="92"/>
-                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="0"/>
+                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="{Binding Path=Battery , Mode=TwoWay}"/>
                                 </WrapPanel>
                                 <WrapPanel Height="135">
                                     <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
@@ -183,12 +180,12 @@
                                     </GroupBox>
                                 </WrapPanel>
                                 <WrapPanel HorizontalAlignment="Center">
-                                    <Canvas x:Name="IRImage"  Height="200" MaxHeight="200" Width="300" Background="Black"   Margin="74,0"   >
-                                        <Ellipse x:Name="IRSensor11" StrokeThickness="5" Stroke="Blue"   Width="5" Fill="Blue" Height="5"/>
-                                        <Ellipse x:Name="IRSensor12" StrokeThickness="5" Stroke="Yellow" Width="5" Fill="Yellow" Height="5" />
-                                        <Ellipse x:Name="IRSensor13" StrokeThickness="5" Stroke="Red"    Width="5" Height="5"   Fill="Red" />
-                                        <Ellipse x:Name="IRSensor14" StrokeThickness="5" Stroke="Green"  Width="5" Height="5" Fill="Green" />
-                                        <Ellipse x:Name="MidPoint1"  StrokeThickness="5" Stroke="White"  Width="5" Height="5" Fill="White" />
+                                    <Canvas x:Name="IRImage"  Height="{Binding Path=ScaleY, Mode=TwoWay}" MaxHeight="200" Width="{Binding Path=ScaleX, Mode=TwoWay}" Background="Black"   Margin="74,0"   >
+                                        <Ellipse x:Name="IRSensor11" StrokeThickness="5" Stroke="Blue"   Width="5" Fill="Blue" Height="5" Canvas.Top="{Binding IR1_y}" Canvas.Left="{Binding IR1_x}"/>
+                                        <Ellipse x:Name="IRSensor12" StrokeThickness="5" Stroke="Yellow" Width="5" Fill="Yellow" Height="5" Canvas.Top="{Binding IR2_y}" Canvas.Left="{Binding IR2_x}" />
+                                        <Ellipse x:Name="IRSensor13" StrokeThickness="5" Stroke="Red"    Width="5" Height="5"   Fill="Red" Canvas.Top="{Binding IR3_y}" Canvas.Left="{Binding IR3_x}"/>
+                                        <Ellipse x:Name="IRSensor14" StrokeThickness="5" Stroke="Green"  Width="5" Height="5" Fill="Green" Canvas.Top="{Binding IR4_y}" Canvas.Left="{Binding IR4_x}"/>
+                                        <Ellipse x:Name="MidPoint1"  StrokeThickness="5" Stroke="White"  Width="5" Height="5" Fill="White" Canvas.Top="{Binding MidPoint_y}" Canvas.Left="{Binding MidPoint_x}"/>
                                     </Canvas>
                                 </WrapPanel>
                                 <WrapPanel Height="63" >
@@ -208,7 +205,7 @@
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Label Content="Batterie :" Width="92"/>
-                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="0"/>
+                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="{Binding Path=Battery , Mode=TwoWay}"/>
                                 </WrapPanel>
 
                                 <WrapPanel Height="135">
@@ -250,12 +247,12 @@
                                     </GroupBox>
                                 </WrapPanel>
                                 <WrapPanel HorizontalAlignment="Center">
-                                    <Canvas x:Name="IRImage2"  Height="200" MaxHeight="200" Width="300" Background="Black"   Margin="74,0"   >
-                                        <Ellipse x:Name="IRSensor21" StrokeThickness="5" Stroke="Blue"   Width="5" Fill="Blue" Height="5"/>
-                                        <Ellipse x:Name="IRSensor22" StrokeThickness="5" Stroke="Yellow" Width="5" Fill="Yellow" Height="5" />
-                                        <Ellipse x:Name="IRSensor23" StrokeThickness="5" Stroke="Red"    Width="5" Height="5"   Fill="Red" />
-                                        <Ellipse x:Name="IRSensor24" StrokeThickness="5" Stroke="Green"  Width="5" Height="5" Fill="Green" />
-                                        <Ellipse x:Name="MidPoint2"  StrokeThickness="5" Stroke="White"  Width="5" Height="5" Fill="White" />
+                                    <Canvas x:Name="IRImage2"  Height="195" MaxHeight="200" Width="300" Background="Black"   Margin="74,0"   >
+                                        <Ellipse x:Name="IRSensor21" StrokeThickness="5" Stroke="Blue"   Canvas.Top="{Binding IR1_y, Mode=TwoWay}"  Canvas.Left="{Binding IR1_x, Mode=TwoWay}" Fill="Blue"/>
+                                        <Ellipse x:Name="IRSensor22" StrokeThickness="5" Stroke="Yellow" Canvas.Top="{Binding IR2_y, Mode=TwoWay}" Canvas.Left="{Binding IR2_x, Mode=TwoWay}" Fill="Yellow"/>
+                                        <Ellipse x:Name="IRSensor23" StrokeThickness="5" Stroke="Red"    Canvas.Top="{Binding IR3_y, Mode=TwoWay}" Canvas.Left="{Binding IR3_x, Mode=TwoWay}" Fill="Red" />
+                                        <Ellipse x:Name="IRSensor24" StrokeThickness="5" Stroke="Green"  Canvas.Top="{Binding IR4_y, Mode=TwoWay}" Canvas.Left="{Binding IR4_x, Mode=TwoWay}" Fill="Green" />
+                                        <Ellipse x:Name="MidPoint2"  StrokeThickness="5" Stroke="White"  Canvas.Top="{Binding MidPoint_y, Mode=TwoWay}" Canvas.Left="{Binding MidPoint_x, Mode=TwoWay}" Fill="White" />
                                     </Canvas>
                                 </WrapPanel>
 

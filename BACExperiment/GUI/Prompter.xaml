@@ -7,13 +7,9 @@
         mc:Ignorable="d"
         Title="Prompter" Height="700"  Width="1000" ResizeMode="NoResize" >
     <Grid>
-        
-            <Canvas x:Name="canvas" Margin="10,15"  >
-                <Rectangle x:Name="Pointer" Height="25" Width="75" Canvas.Top ="0" Canvas.Left ="0" Fill="SkyBlue" Stroke="Blue" ></Rectangle>
-            </Canvas>
        
         <ScrollViewer x:Name="scroller" Margin="0">
-            <Label x:Name="prompterText" Margin="10" />
+            <TextBox x:Name="prompterText" Margin="10" />
         </ScrollViewer>
     </Grid>
 </Window>

@@ -47,15 +47,20 @@ namespace BACExperiment.GUI
                 this.speed = speed;
                 this.textSize = fontSize;
                 InitializeComponent();
-                myTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                myTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent2);
                 myTimer.Interval = 100/speed;
 
                 text = System.IO.File.ReadAllText(path);
-                prompterText.Content = File.ReadAllText(@path);
+                prompterText.AppendText(File.ReadAllText(@path));
                 prompterText.FontSize = textSize;
                 prompterText.HorizontalAlignment = HorizontalAlignment.Center;
-                Pointer.Height = fontSize+10;
-                Pointer.Width = 75;
+                prompterText.Focus();
+
+                prompterText.SelectionStart = 0;
+                prompterText.SelectionLength = 20;
+                prompterText.SelectionBrush = System.Windows.Media.Brushes.Blue;
+
+              
 
             }
             catch (Exception ex)
@@ -65,37 +70,17 @@ namespace BACExperiment.GUI
         }
 
 
-        private void OnTimedEvent(object Sender, ElapsedEventArgs args)
+        private void OnTimedEvent2(object Sender, ElapsedEventArgs args)
         {
             this.Dispatcher.Invoke((Action)(() =>
-            {   /*
-                scroller.ScrollToVerticalOffset(scrollPosition);
-                scrollPosition += 1;
-                Canvas.SetTop(Pointer, scrollPosition+10);
-                */
-                
-
-                if(Canvas.GetLeft(Pointer)+Pointer.ActualWidth == canvas.ActualWidth)
-                {
-                    if (Canvas.GetTop(Pointer) <= 350)
-                    {
-                        scroller.ScrollToVerticalOffset(scrollPosition);
-                        scrollPosition += FontSize;
-                        Canvas.SetLeft(Pointer, 0);
-                        Canvas.SetTop(Pointer, Canvas.GetTop(Pointer) + FontSize);
-                    }
-                    else
-                    {
-                        scroller.ScrollToVerticalOffset(scrollPosition);
-                        scrollPosition += FontSize;
-                        Canvas.SetLeft(Pointer, 0);
-                    }
-                
-                }
-                else
-                    Canvas.SetLeft(Pointer, Canvas.GetLeft(Pointer) + 1);
+            {
+                prompterText.Focus();
+                prompterText.SelectionStart++;
             }));
         }
+
+
+        
 
         public void play()
         {

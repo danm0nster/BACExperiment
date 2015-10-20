@@ -52,16 +52,14 @@ namespace BACExperiment
         public void setRandom(bool random) { this.random = random; }
         public bool isShowTrajectory() { return showTrajectory; }
         public void setShowTrajectory(bool value) { this.showTrajectory = value; }
-        public static StimulyWindow GetInstance(MainWindow observer) { if (instance == null) { instance = new StimulyWindow(observer); } return instance; }
-
-
+        public static StimulyWindow GetInstance(MainWindow observer) { if(instance == null){ instance = new StimulyWindow(observer);} return instance; }
+         
 
 
         private StimulyWindow(MainWindow mainWindow)
         {
 
-            this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.TwoWay });
-            this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.TwoWay });
+           
           
             InitializeComponent();
             Pointer1.DataContext = model;
@@ -78,6 +76,10 @@ namespace BACExperiment
             t = new System.Timers.Timer();
             t.Elapsed += new ElapsedEventHandler(SendInfo);
             t.Interval += 100;
+
+            this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.TwoWay });
+            this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.TwoWay });
+            
         }
 
 

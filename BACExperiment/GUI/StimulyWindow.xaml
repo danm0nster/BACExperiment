@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="StimulyWindow" ResizeMode="CanResizeWithGrip" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="StimulyWindow" ResizeMode="CanResize" Closed="Window_Closed" Loaded="Window_Loaded" >
     <Grid>
         <Border>
-            <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="0.5,0.5" Width="0" Height="0 " RenderTransform="1 0 0 -1 0 0"  >
+            <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="0.5,0.5" Width="0" Height="0" RenderTransform="1 0 0 -1 0 0"  >
                 <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="-50" Canvas.Left="-50" Stroke="Salmon" StrokeThickness="3" ClipToBounds="True"  ></Ellipse>
                 <Ellipse x:Name="Pointer1" Width="15" Height="15" Canvas.Top="{Binding Path=Pointer1Y , Mode=TwoWay}" Canvas.Left="{Binding Path=Pointer1X , Mode=TwoWay}"  Stroke="CadetBlue" StrokeThickness="8" Visibility="Visible"/>
                 <Ellipse x:Name="Pointer2" Width="15" Height="15" Canvas.Top="{Binding Path=Pointer2Y , Mode=TwoWay}" Canvas.Left="{Binding Path=Pointer2X , Mode=TwoWay}"  Stroke="DarkBlue" StrokeThickness="8" Visibility="Visible"/>
             </Canvas>
         </Border>
         <Ellipse Fill="Black" Stroke="Black" HorizontalAlignment="Center"/>
-        <Ellipse Fill="Black" Height="1" Stroke="Black" VerticalAlignment="Center" />
+        <Ellipse Fill="Black" Stroke="Black" VerticalAlignment="Center" />
     </Grid>
 </Window>

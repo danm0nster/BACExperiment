@@ -57,12 +57,11 @@ namespace BACExperiment.Model
                     try {
                         AccelState[0] = e.WiimoteState.AccelState.RawValues.X;
                         AccelState[1] = e.WiimoteState.AccelState.RawValues.Y;
-
                         AccelState[2] = e.WiimoteState.AccelState.RawValues.Z;
                         IRState = stabilizer.Update(e);
-              
+                        MidPoint = stabilizer.MidPoint;
                         battery = (e.WiimoteState.Battery > 200f ? 200 : (int)e.WiimoteState.Battery);
-                        MidPoint = stabilizer.CalculateMidPoint();
+                        
 
                         Notify(new CoordinatesProcessedEventArgs(((Wiimote)sender).HIDDevicePath, AccelState, IRState, battery, MidPoint));
                         Reset();
@@ -113,7 +112,8 @@ namespace BACExperiment.Model
         PointF[] prev_IRState = new PointF[4];
         PointF[] current_IRState = new PointF[4];
         PointF[] updated_IRState = new PointF[4];
-        PointF MidPoint = new PointF();
+        public PointF MidPoint = new PointF();
+        private bool calibrated = false;
 
         public Stabilizer()
         {
@@ -122,20 +122,21 @@ namespace BACExperiment.Model
 
         public void Add(WiimoteChangedEventArgs e)
         {
-            if (CheckForArrayNull(prev_IRState))
+            if (CheckForArrayNull(current_IRState))
             {
-                prev_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
-                prev_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
-                prev_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
-                prev_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
+                current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
+                current_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
+                current_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
+                current_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
             }
 
             else
             {
-                prev_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
-                prev_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
-                prev_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
-                prev_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
+                prev_IRState = current_IRState;
+                current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
+                current_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
+                current_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
+                current_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
             }
         } 
 
@@ -146,15 +147,18 @@ namespace BACExperiment.Model
 
             for(int i = 0; i < 4; i++)
             {
-                if (e.WiimoteState.IRState.IRSensors[i].Found)
-                    updated_IRState[i] = e.WiimoteState.IRState.IRSensors[i].Position;
+                if (!Double.IsNaN(current_IRState[i].X) && !Double.IsNaN(current_IRState[i].Y))
+                {
+                    updated_IRState[i].X = current_IRState[i].X;
+                    updated_IRState[i].Y = current_IRState[i].Y;
+                }
                 else
                 {
                     updated_IRState[i].X = prev_IRState[i].X + delta.X;
                     updated_IRState[i].Y = prev_IRState[i].Y + delta.Y;
                 }     
             }
-
+            MidPoint = e.WiimoteState.IRState.Midpoint;
             return updated_IRState;
         }
 
@@ -174,8 +178,8 @@ namespace BACExperiment.Model
         public PointF Stabilize(WiimoteState e)
         {
             PointF delta;
-            delta.X = -1;
-            delta.Y = -1;
+            delta.X = 0;
+            delta.Y = 0;
 
 
             int increment = 0;
@@ -190,15 +194,16 @@ namespace BACExperiment.Model
                 }
             }
 
+            
             if(delta.X!=-1 && delta.Y!=-1)
             {
                 delta.X = delta.X / increment;
                 delta.Y = delta.Y / increment;
             }
-
             return delta;
 
         }
+
 
         public PointF CalculateMidPoint()
         {

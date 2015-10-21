@@ -265,7 +265,7 @@ namespace BACExperiment
             service.DetectWiimotes();
             WM1_Detect.IsEnabled = true;
             WM2_Detect.IsEnabled = true;
-            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes /r/n ", service.GetRemoteCount()));
+            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes", service.GetRemoteCount()));
         }
 
         private void ClearButton_OnClick(object sender, RoutedEventArgs e)

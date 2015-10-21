@@ -63,8 +63,15 @@ namespace BACExperiment.Model
         {
             foreach (var wm in mWiimotes)
             {
-                wm.SetLEDs(0);
-                wm.Disconnect();
+                try {
+                    wm.SetLEDs(0);
+                    wm.Disconnect();
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
         }
 

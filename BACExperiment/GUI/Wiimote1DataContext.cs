@@ -74,8 +74,8 @@ namespace BACExperiment
             IR3_y = wm.IRCoordinates[2].Y *ScaleY;
             IR4_x = wm.IRCoordinates[3].X *ScaleX;
             IR4_y = wm.IRCoordinates[3].Y *ScaleY;
-            MidPoint_x = wm.MidPoint.X;
-            MidPoint_y = wm.MidPoint.Y;
+            MidPoint_x = wm.MidPoint.X *ScaleX;
+            MidPoint_y = wm.MidPoint.Y *ScaleY;
             ID = wm.ID;
 
 

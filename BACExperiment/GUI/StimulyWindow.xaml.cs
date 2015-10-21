@@ -77,7 +77,7 @@ namespace BACExperiment
             t.Elapsed += new ElapsedEventHandler(SendInfo);
             t.Interval += 100;
 
-            this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.TwoWay });
+            this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.OneWayToSource });
             this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.TwoWay });
             
         }

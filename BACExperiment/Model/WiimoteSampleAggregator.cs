@@ -19,7 +19,7 @@ namespace BACExperiment.Model
         public int coordinateSet = -1;
         public int NotificationCount { get; set; }
         private float[] AccelState = new float[3];
-        private PointF[] IRState = new PointF[4];
+        private PointF[] IRState = new PointF[5];
         private int battery = 0;
         private PointF MidPoint = new PointF();
 
@@ -59,11 +59,10 @@ namespace BACExperiment.Model
                         AccelState[1] = e.WiimoteState.AccelState.RawValues.Y;
                         AccelState[2] = e.WiimoteState.AccelState.RawValues.Z;
                         IRState = stabilizer.Update(e);
-                        MidPoint = stabilizer.MidPoint;
                         battery = (e.WiimoteState.Battery > 200f ? 200 : (int)e.WiimoteState.Battery);
                         
 
-                        Notify(new CoordinatesProcessedEventArgs(((Wiimote)sender).HIDDevicePath, AccelState, IRState, battery, MidPoint));
+                        Notify(new CoordinatesProcessedEventArgs(((Wiimote)sender).HIDDevicePath, AccelState, IRState, battery, IRState[4]));
                         Reset();
                     }
 
@@ -109,11 +108,12 @@ namespace BACExperiment.Model
 
     public class Stabilizer
     {
-        PointF[] prev_IRState = new PointF[4];
-        PointF[] current_IRState = new PointF[4];
-        PointF[] updated_IRState = new PointF[4];
+        // Made the Point Array of 5 values so that the mid point is stored and returned with the point simultanousely 
+        PointF[] prev_IRState = new PointF[5];
+        PointF[] current_IRState = new PointF[5];
+        PointF[] updated_IRState = new PointF[5];
         public PointF MidPoint = new PointF();
-        private bool calibrated = false;
+        private bool calibrated = true;
 
         public Stabilizer()
         {
@@ -128,15 +128,17 @@ namespace BACExperiment.Model
                 current_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
                 current_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
                 current_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
+              
             }
 
             else
             {
-                prev_IRState = current_IRState;
+                prev_IRState = updated_IRState;
                 current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
                 current_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
                 current_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
                 current_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
+               
             }
         } 
 
@@ -156,9 +158,21 @@ namespace BACExperiment.Model
                 {
                     updated_IRState[i].X = prev_IRState[i].X + delta.X;
                     updated_IRState[i].Y = prev_IRState[i].Y + delta.Y;
-                }     
+                }
+
+                calibrated = calibrated && e.WiimoteState.IRState.IRSensors[i].Found;
             }
-            MidPoint = e.WiimoteState.IRState.Midpoint;
+
+            if (calibrated)
+            {
+                updated_IRState[4] = e.WiimoteState.IRState.Midpoint;
+            }
+            else
+            {
+                updated_IRState[4].X = prev_IRState[4].X + delta.X ;
+                updated_IRState[4].Y = prev_IRState[4].Y + delta.Y ;
+            }
+            calibrated = false;
             return updated_IRState;
         }
 
@@ -170,37 +184,51 @@ namespace BACExperiment.Model
                 if (x.X != 0 && x.Y !=0)
                     i++;
 
-            if(i <0)
+            if(i<0)
             return false;
             return true;
         }
 
         public PointF Stabilize(WiimoteState e)
         {
-            PointF delta;
-            delta.X = 0;
-            delta.Y = 0;
-
+            PointF AvgDelta;
+            AvgDelta.X = 0;
+            AvgDelta.Y = 0;
+            PointF[] delta = new PointF[4];
 
             int increment = 0;
 
-            foreach(var sensor in e.IRState.IRSensors)
+            for(int i = 0; i < 4; i++)
             {
-                if(sensor.Found)
+                if (e.IRState.IRSensors[i].Found)
                 {
-                    delta.X += sensor.Position.X;
-                    delta.Y += sensor.Position.Y;
-                    increment++;
+                    delta[i].X = e.IRState.IRSensors[i].Position.X - prev_IRState[i].X;
+                    delta[i].Y = e.IRState.IRSensors[i].Position.Y - prev_IRState[i].Y;
+                }
+                else
+                {
+                    delta[i].X = float.NaN;
+                    delta[i].Y = float.NaN;
                 }
             }
 
-            
-            if(delta.X!=-1 && delta.Y!=-1)
+            foreach(var D in delta)
             {
-                delta.X = delta.X / increment;
-                delta.Y = delta.Y / increment;
+                if( !Double.IsNaN(D.X)&&!Double.IsNaN(D.Y))
+                    {
+
+                    {
+                        AvgDelta.X += D.X;
+                        AvgDelta.Y += D.Y;
+                    }
+                        increment++;
+                    }
             }
-            return delta;
+
+            AvgDelta.X = AvgDelta.X / increment;
+            AvgDelta.Y = AvgDelta.Y / increment;
+            
+            return AvgDelta;
 
         }
 

@@ -122,30 +122,34 @@ namespace BACExperiment.Model
 
         public void Add(WiimoteChangedEventArgs e)
         {
-            if (CheckForArrayNull(current_IRState))
+            if (!CheckForArrayNull(current_IRState))
             {
-                current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
-                current_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
-                current_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
-                current_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
-              
+                prev_IRState = updated_IRState;          
             }
 
-            else
-            {
-                prev_IRState = updated_IRState;
+            if (e.WiimoteState.IRState.IRSensors[0].Found)
                 current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
+            else { current_IRState[0].X = float.NaN; current_IRState[0].Y = float.NaN; }
+
+            if (e.WiimoteState.IRState.IRSensors[1].Found)
                 current_IRState[1] = e.WiimoteState.IRState.IRSensors[1].Position;
+            else { current_IRState[1].X = float.NaN; current_IRState[1].Y = float.NaN; }
+
+            if (e.WiimoteState.IRState.IRSensors[2].Found)
                 current_IRState[2] = e.WiimoteState.IRState.IRSensors[2].Position;
+            else { current_IRState[2].X = float.NaN; current_IRState[2].Y = float.NaN; }
+
+            if (e.WiimoteState.IRState.IRSensors[3].Found)
                 current_IRState[3] = e.WiimoteState.IRState.IRSensors[3].Position;
-               
-            }
-        } 
+            else { current_IRState[3].X = float.NaN; current_IRState[3].Y = float.NaN; }
+
+        }
 
         public PointF[] Update( WiimoteChangedEventArgs e)
         {
             Add(e);
             PointF delta = Stabilize(e.WiimoteState);
+            Boolean all4 = true;
 
             for(int i = 0; i < 4; i++)
             {
@@ -160,32 +164,29 @@ namespace BACExperiment.Model
                     updated_IRState[i].Y = prev_IRState[i].Y + delta.Y;
                 }
 
-                calibrated = calibrated && e.WiimoteState.IRState.IRSensors[i].Found;
+                all4 = all4 && e.WiimoteState.IRState.IRSensors[i].Found;
             }
 
-            if (calibrated)
+            if (all4 == true && calibrated == false)
             {
                 updated_IRState[4] = e.WiimoteState.IRState.Midpoint;
+                calibrated = true;
             }
             else
             {
                 updated_IRState[4].X = prev_IRState[4].X + delta.X ;
                 updated_IRState[4].Y = prev_IRState[4].Y + delta.Y ;
             }
-            calibrated = false;
             return updated_IRState;
         }
 
 
         public bool CheckForArrayNull(PointF[] array)
         {
-            int i = 0;
+           
             foreach (var x in array)
-                if (x.X != 0 && x.Y !=0)
-                    i++;
-
-            if(i<0)
-            return false;
+                if (x.X != 0 && x.Y != 0)
+                    return false;
             return true;
         }
 

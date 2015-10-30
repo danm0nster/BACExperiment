@@ -7,9 +7,6 @@
         mc:Ignorable="d"
         Title="Prompter" Height="700"  Width="1000" ResizeMode="NoResize" >
     <Grid>
-       
-        <ScrollViewer x:Name="scroller" Margin="0">
-            <TextBox x:Name="prompterText" Margin="10" />
-        </ScrollViewer>
+        <RichTextBox IsReadOnly="True" x:Name="prompterText" Margin="10" />
     </Grid>
 </Window>

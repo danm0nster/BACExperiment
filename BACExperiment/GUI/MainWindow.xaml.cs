@@ -127,16 +127,20 @@ namespace BACExperiment
 
         #endregion
 
+        
         #region PrompterMenuCode
         private void prompterOpen_Click(object sender, RoutedEventArgs e)
         {
             if (System.IO.File.Exists(pathTxt.Text))
             {
-                prompter = new Prompter((int)prompterSpeed.Value, (int)TextSizeSlider.Value, pathTxt.Text);
+                if (Sync_RBtn.IsChecked == true)
+                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text , 1);
+                if(Async_RBtn.IsChecked == true)
+                prompter = new Prompter((int)prompterSpeed.Value,(int)Switch_Frequency_Slider.Value , (int)TextSizeSlider.Value, pathTxt.Text, 2);
                 prompter.Visibility = System.Windows.Visibility.Visible;
                 prompterPlay.IsEnabled = true;
-                prompterPause.IsEnabled = true;
-                prompterStop.IsEnabled = true;
+               // prompterPause.IsEnabled = true;
+               // prompterStop.IsEnabled = true;
             }
 
             else
@@ -146,25 +150,29 @@ namespace BACExperiment
             }
         }
 
+
+
         private void prompterPlay_Click(object sender, RoutedEventArgs e)
         {
             prompter.play();
         }
 
-        private void prompterPause_Click(object sender, RoutedEventArgs e)
-        {
-            prompter.pause();
-        }
-
-        private void prompterStop_Click(object sender, RoutedEventArgs e)
-        {
-            prompter.stop();
-        }
+        
 
         private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (prompter != null)
                 prompter.textSize_Changed((int)TextSizeSlider.Value);
+        }
+
+        private void Sync_RBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            prompterOpen.IsEnabled = true;
+        }
+
+        private void Async_RBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            prompterOpen.IsEnabled = true;
         }
 
         private void BrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -375,9 +383,25 @@ namespace BACExperiment
             }
         }
 
+        private void Microphone_refresh_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Microphone1_ComboBox.Items.Clear();
+            Microphone2_ComboBox.Items.Clear();
+            foreach (var mic in service.getMicrophoneList())
+            {
+                Microphone1_ComboBox.Items.Add(mic);
+                Microphone2_ComboBox.Items.Add(mic);
+            }
+            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
+            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
+        }
+
+
+
+
 
         #endregion
 
-        
+       
     }
 }

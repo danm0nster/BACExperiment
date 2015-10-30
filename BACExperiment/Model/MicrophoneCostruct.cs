@@ -30,7 +30,7 @@ namespace BACExperiment.Model
             waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStoped);
 
             aggregator = new SampleAggregator();
-            aggregator.NotificationCount = 100; // How often we update the volume bar value;
+            aggregator.NotificationCount = 10; // How often we update the volume bar value;
         }
 
         public void Listen()

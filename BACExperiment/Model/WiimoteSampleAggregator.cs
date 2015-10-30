@@ -113,7 +113,6 @@ namespace BACExperiment.Model
         PointF[] current_IRState = new PointF[5];
         PointF[] updated_IRState = new PointF[5];
         public PointF MidPoint = new PointF();
-        private bool calibrated = true;
 
         public Stabilizer()
         {
@@ -122,10 +121,8 @@ namespace BACExperiment.Model
 
         public void Add(WiimoteChangedEventArgs e)
         {
-            if (!CheckForArrayNull(current_IRState))
-            {
-                prev_IRState = updated_IRState;          
-            }
+
+           
 
             if (e.WiimoteState.IRState.IRSensors[0].Found)
                 current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
@@ -153,29 +150,49 @@ namespace BACExperiment.Model
 
             for(int i = 0; i < 4; i++)
             {
-                if (!Double.IsNaN(current_IRState[i].X) && !Double.IsNaN(current_IRState[i].Y))
-                {
-                    updated_IRState[i].X = current_IRState[i].X;
-                    updated_IRState[i].Y = current_IRState[i].Y;
-                }
-                else
+                if (float.IsNaN(current_IRState[i].X) || float.IsNaN(current_IRState[i].Y))
                 {
                     updated_IRState[i].X = prev_IRState[i].X + delta.X;
                     updated_IRState[i].Y = prev_IRState[i].Y + delta.Y;
+                   
+                }
+                else
+                {
+                    updated_IRState[i].X = current_IRState[i].X;
+                    updated_IRState[i].Y = current_IRState[i].Y;
+
                 }
 
                 all4 = all4 && e.WiimoteState.IRState.IRSensors[i].Found;
             }
 
-            if (all4 == true && calibrated == false)
+            if (all4 == true)
             {
                 updated_IRState[4] = e.WiimoteState.IRState.Midpoint;
-                calibrated = true;
             }
             else
             {
-                updated_IRState[4].X = prev_IRState[4].X + delta.X ;
-                updated_IRState[4].Y = prev_IRState[4].Y + delta.Y ;
+                float x = prev_IRState[4].X + delta.X;
+                float y = prev_IRState[4].Y + delta.Y;
+
+                if (!float.IsNaN(x) && !float.IsNaN(y))
+                {
+                    updated_IRState[4].X = x;
+                    updated_IRState[4].Y = y;
+                }
+
+            }
+
+            if (float.IsNaN(updated_IRState[4].X) || float.IsNaN(updated_IRState[4].Y))
+            {
+                prev_IRState[0] = updated_IRState[0];
+                prev_IRState[1] = updated_IRState[1];
+                prev_IRState[2] = updated_IRState[2];
+                prev_IRState[3] = updated_IRState[3];
+            }
+            else
+            {
+                prev_IRState = updated_IRState;
             }
             return updated_IRState;
         }
@@ -213,17 +230,14 @@ namespace BACExperiment.Model
                 }
             }
 
-            foreach(var D in delta)
+            foreach (var D in delta)
             {
-                if( !Double.IsNaN(D.X)&&!Double.IsNaN(D.Y))
-                    {
-
-                    {
-                        AvgDelta.X += D.X;
-                        AvgDelta.Y += D.Y;
-                    }
-                        increment++;
-                    }
+                if (!float.IsNaN(D.X) && !float.IsNaN(D.Y))
+                {
+                    AvgDelta.X += D.X;
+                    AvgDelta.Y += D.Y;
+                    increment++;
+                }
             }
 
             AvgDelta.X = AvgDelta.X / increment;
@@ -236,16 +250,18 @@ namespace BACExperiment.Model
 
         public PointF CalculateMidPoint()
         {
-            foreach( var sensor in updated_IRState)
+            PointF point = new PointF(); 
+
+            for(int i=0; i < 4; i++)
             {
-                MidPoint.X = MidPoint.X + sensor.X;
-                MidPoint.Y = MidPoint.Y + sensor.Y;
+                point.X = point.X + updated_IRState[i].X;
+                point.Y = point.Y + updated_IRState[i].Y;
             }
 
-            MidPoint.X = MidPoint.X / 4;
-            MidPoint.Y = MidPoint.Y / 4;
+            point.X = point.X / 4;
+            point.Y = point.Y / 4;
 
-            return MidPoint;
+            return point;
         }
 
     }

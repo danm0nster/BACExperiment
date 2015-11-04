@@ -10,9 +10,6 @@ namespace BACExperiment
 {
    public class Wiimote1DataContext :INotifyPropertyChanged
     {
-
-      
- 
         private string _AxCoord;
         private string _AyCoord;
         private string _AzCoord;

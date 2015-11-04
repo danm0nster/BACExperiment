@@ -1,4 +1,5 @@
 ﻿using BACExperiment.GUI;
+using NAudio.Wave;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -322,14 +323,14 @@ namespace BACExperiment
 
         private void Mic1_Rec_Click(object sender, RoutedEventArgs e)
         {
-            service.startRecording(1);
+            service.startRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
             Mic1_Rec.IsEnabled = false;
             Mic1_Stop.IsEnabled = true;
         }
 
         private void Mic2_Rec_Click(object sender, RoutedEventArgs e)
         {
-            service.startRecording(2);
+            service.startRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
             Mic2_Rec.IsEnabled = false;
             Mic2_Stop.IsEnabled = true;
         }
@@ -338,7 +339,7 @@ namespace BACExperiment
 
         private void Mic1_Stop_Click(object sender, RoutedEventArgs e)
         {
-            service.stopRecording(1);
+            service.stopRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
             Mic1_Rec.IsEnabled = true;
             Mic1_Stop.IsEnabled = false;
         }
@@ -346,7 +347,7 @@ namespace BACExperiment
 
         private void Mic2_Stop_Click(object sender, RoutedEventArgs e)
         {
-            service.stopRecording(2);
+            service.stopRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
             Mic2_Rec.IsEnabled = true;
             Mic2_Stop.IsEnabled = false;
         }
@@ -355,13 +356,13 @@ namespace BACExperiment
         {
             if (Microphone1_ComboBox.SelectedIndex != -1)
             {
-                service.startRecording(1);
+                service.startRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
                 Mic1_Rec.IsEnabled = false;
                 Mic1_Stop.IsEnabled = true;
             }
             if (Microphone2_ComboBox.SelectedIndex != -1)
             {
-                service.startRecording(2);
+                service.startRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
                 Mic2_Rec.IsEnabled = false;
                 Mic2_Stop.IsEnabled = true;
             }
@@ -371,13 +372,13 @@ namespace BACExperiment
         {
             if (Microphone1_ComboBox.SelectedIndex != -1)
             {
-                service.stopRecording(1);
+                service.stopRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
                 Mic1_Rec.IsEnabled = true;
                 Mic1_Stop.IsEnabled = false;
             }
             if (Microphone2_ComboBox.SelectedIndex != -1)
             {
-                service.stopRecording(2);
+                service.stopRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
                 Mic2_Rec.IsEnabled = true;
                 Mic2_Stop.IsEnabled = false;
             }
@@ -396,9 +397,7 @@ namespace BACExperiment
             Microphone2_ComboBox.DisplayMemberPath = "ProductName";
         }
 
-
-
-
+       
 
         #endregion
 

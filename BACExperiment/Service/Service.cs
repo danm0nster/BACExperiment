@@ -69,7 +69,7 @@ namespace BACExperiment
             stimuly_data_context = StimulyWindowViewModel.GetInstance();
             wm1_data_context = new Wiimote1DataContext();
             wm2_data_context = new Wiimote1DataContext();
-
+                    
          
          
         }
@@ -163,12 +163,12 @@ namespace BACExperiment
             observer.UpdateVolumeBar( v1,  v2);
         }
 
-        public void startRecording(int i)
+        public void startRecording(WaveInCapabilities i)
         {
             microphones.StartRecording(i);
         }
 
-        public void stopRecording(int i)
+        public void stopRecording(WaveInCapabilities i)
         {
             microphones.StopRecording(i);
         }

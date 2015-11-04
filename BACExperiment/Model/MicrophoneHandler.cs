@@ -32,7 +32,7 @@ namespace BACExperiment.Model
             {
                 WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(WaveInDevice);
                 ToReturn.Add(deviceInfo);
-
+                        
             }
 
             return ToReturn;
@@ -91,14 +91,30 @@ namespace BACExperiment.Model
             converter.WaitForExit();
         }
 
-        internal void StartRecording(int i)
+        internal void StartRecording(WaveInCapabilities i)
         {
-            microphones[i-1].Record();
+           foreach(MicrophoneConstruct mic in microphones)
+            {
+                WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
+
+                if(deviceInfo.Equals(i))
+                {
+                    mic.Record();
+                }
+            }
         }
 
-        internal void StopRecording(int i)
+        internal void StopRecording(WaveInCapabilities i)
         {
-            microphones[i-1].Stop();
+            foreach (MicrophoneConstruct mic in microphones)
+            {
+                WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
+
+                if (deviceInfo.Equals(i))
+                {
+                    mic.Stop();
+                }
+            }
         }
     }
 }

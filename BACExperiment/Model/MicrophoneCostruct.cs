@@ -11,10 +11,12 @@ namespace BACExperiment.Model
     public class MicrophoneConstruct
     {
         private WaveIn waveIn = null;
-        public  SampleAggregator aggregator { get; set; }
+        public SampleAggregator aggregator { get; set; }
         private WaveFileWriter file = null;
         private int sampleCount = 0;
         public int groupBoxIndex { get; set; }
+
+        public WaveIn get_WaveIn(){ return this.waveIn; }
 
         public MicrophoneConstruct(int selectedDevice, int groupBoxIndex)
         {
@@ -102,7 +104,6 @@ namespace BACExperiment.Model
             }
 
         }
-
 
     }
 }

@@ -101,12 +101,12 @@
                                         <Slider Width="154" Margin="5" IsEnabled="False" />
                                     </WrapPanel>
                                     <WrapPanel >
-                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel1, Mode=OneWay}"  Height="20" Width="265">
+                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel1, Mode=OneWay}"  Height="20" Width="265"
+                                                     Style="{StaticResource VolumeBar}">
                                         </ProgressBar>
                                     </WrapPanel>
                                     <WrapPanel>
                                         <Button x:Name="Mic1_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic1_Rec_Click" ></Button>
-                                        <Button Content="Pause" Height="25" Width="40" IsEnabled="False" Margin="5"></Button>
                                         <Button x:Name="Mic1_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic1_Stop_Click"></Button>
                                     </WrapPanel>
                                 </StackPanel>
@@ -120,11 +120,11 @@
                                         <Slider Width="154" Margin="5" IsEnabled="False"/>
                                     </WrapPanel>
                                     <WrapPanel>
-                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel2, Mode=OneWay}"  Height="20" Width="265" />
+                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel2, Mode=OneWay}"  Height="20" Width="265" 
+                                                     Style="{StaticResource VolumeBar}"/>
                                     </WrapPanel>
                                     <WrapPanel>
                                         <Button x:Name="Mic2_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic2_Rec_Click" ></Button>
-                                        <Button Content="Pause" Height="25" Width="40" IsEnabled="False" Margin="5"></Button>
                                         <Button x:Name="Mic2_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic2_Stop_Click"></Button>
                                     </WrapPanel>
                                 </StackPanel>

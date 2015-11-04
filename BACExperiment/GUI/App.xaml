@@ -2,8 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BACExperiment"
-             StartupUri="GUI/MainWindow.xaml">
+             StartupUri="/GUI/MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="/GUI/Themes.xaml" />
     </Application.Resources>
 </Application>

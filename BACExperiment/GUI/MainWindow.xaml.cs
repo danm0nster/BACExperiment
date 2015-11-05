@@ -41,6 +41,13 @@ namespace BACExperiment
         public MainWindow()
         {
             InitializeComponent();
+
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
+
             service = Service.getInstance(this);
             ModeSelect.Items.Add(new ComboboxItem("Ellipse", "Ellipse"));
             ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));

@@ -172,6 +172,11 @@ namespace BACExperiment
         {
             microphones.StopRecording(i);
         }
+
+        public void setVolume(int value , int i)
+        {
+            microphones.SetVolume(value , i);
+        }
 #endregion Microphone
 
     }

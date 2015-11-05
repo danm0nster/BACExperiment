@@ -53,10 +53,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio">
-      <HintPath>C:\Users\Labadmin\Downloads\NAudio-Release\NAudio.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="NAudio.WindowsMediaFormat">
-      <HintPath>C:\Users\Labadmin\Downloads\NAudio-Release\NAudio.WindowsMediaFormat.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\NAudio.WindowsMediaFormat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

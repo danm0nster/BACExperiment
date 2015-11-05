@@ -1,4 +1,5 @@
 ﻿using BACExperiment.GUI;
+using NAudio.Mixer;
 using NAudio.Wave;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using WiimoteLib;
+
 
 namespace BACExperiment
 {
@@ -32,7 +34,7 @@ namespace BACExperiment
         private Service service;
         private StimulyWindow stimulyWindow;
         private Prompter prompter;
-       
+     
 
         //Volume bar variables
 
@@ -311,7 +313,7 @@ namespace BACExperiment
         internal void UpdateVolumeBar( int v1,  float v2)
         {
             if (v1 == 1)
-                Mic1_VolumeBar.Value = v2*100;
+                Mic1_VolumeBar.Value = v1*100;
             else if (v1 == 2)
                 Mic2_VolumeBar.Value = v2*100;
             else
@@ -397,10 +399,27 @@ namespace BACExperiment
             Microphone2_ComboBox.DisplayMemberPath = "ProductName";
         }
 
-       
+
+        private void VolumeSlider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            service.setVolume((int)e.NewValue , 1);
+        }
+
+        private void VolumeSlider2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            service.setVolume((int)e.NewValue , 2);  
+        }
+
+
+
+
+
+
+
+
 
         #endregion
 
-       
+        
     }
 }

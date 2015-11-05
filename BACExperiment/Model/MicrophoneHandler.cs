@@ -7,6 +7,7 @@ using NAudio;
 using NAudio.Wave;
 using System.IO;
 using System.Diagnostics;
+using NAudio.Mixer;
 
 namespace BACExperiment.Model
 {
@@ -15,7 +16,8 @@ namespace BACExperiment.Model
 
       
         private List<MicrophoneConstruct> microphones = new List<MicrophoneConstruct>();
-      
+        private UnsignedMixerControl volumeControl1;
+        private UnsignedMixerControl volumeControl2;
         private Service observer;
 
         public MicrophoneHandler(Service observer)
@@ -39,7 +41,7 @@ namespace BACExperiment.Model
         }
 
 
-        public void ListenToMicrophone(int selectedDevice , int groupBoxIndex)
+        public bool ListenToMicrophone(int selectedDevice , int groupBoxIndex)
         {
             MicrophoneConstruct mic = new MicrophoneConstruct(selectedDevice, groupBoxIndex);
             mic.aggregator.MaximumCalculated += new EventHandler<MaxSampleEventArgs>(MaximimumCalculated);
@@ -56,7 +58,9 @@ namespace BACExperiment.Model
                 microphones.Add(mic);
                
             }
-            
+
+            TryGetVolumeControl(selectedDevice , groupBoxIndex);
+            return mic.Active();
         }
 
         private void MaximimumCalculated(object sender, MaxSampleEventArgs e)
@@ -115,6 +119,36 @@ namespace BACExperiment.Model
                     mic.Stop();
                 }
             }
+        }
+
+        private void TryGetVolumeControl(int deviceNumber , int i)
+        {
+            int waveInDeviceNumber = deviceNumber;
+            var mixerLine = new MixerLine((IntPtr)waveInDeviceNumber,
+                                           0, MixerFlags.WaveIn);
+            foreach (var control in mixerLine.Controls)
+            {
+                if (control.ControlType == MixerControlType.Volume)
+                {
+                    if(i == 1)
+                    volumeControl1 = control as UnsignedMixerControl;
+                   
+                    if(i == 2)
+                    volumeControl2 = control as UnsignedMixerControl;
+
+                    break;
+
+                }
+            }
+        }
+
+        public void SetVolume( int value , int i)
+        {
+            if (i == 1)
+                volumeControl1.Percent = value;
+
+            if (i == 2)
+                volumeControl2.Percent = value;
         }
     }
 }

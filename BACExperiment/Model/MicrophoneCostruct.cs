@@ -14,7 +14,15 @@ namespace BACExperiment.Model
         public SampleAggregator aggregator { get; set; }
         private WaveFileWriter file = null;
         private int sampleCount = 0;
+        private bool active = false;
+
+        public bool Active()
+        {
+            return active;
+        }
+
         public int groupBoxIndex { get; set; }
+
 
         public WaveIn get_WaveIn(){ return this.waveIn; }
 
@@ -60,6 +68,8 @@ namespace BACExperiment.Model
 
         public void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
+            active = true;
+            
             if (file != null)
             {
                 file.Write(e.Buffer, 0, e.BytesRecorded);

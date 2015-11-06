@@ -332,7 +332,7 @@ namespace BACExperiment
             {
                 if (((ComboBox)sender).SelectedIndex > -1)
                 {
-                    if(mic1PrevVal != null) service.stopRecording(WaveIn.GetCapabilities(mic2PrevVal.get_WaveIn().DeviceNumber));
+                    if(mic2PrevVal != null) service.stopRecording(WaveIn.GetCapabilities(mic2PrevVal.get_WaveIn().DeviceNumber));
                     bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 2);
                     Mic2_Rec.IsEnabled = true;
                 }

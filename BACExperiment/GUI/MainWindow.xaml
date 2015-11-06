@@ -103,7 +103,7 @@
                                         <Slider x:Name="VolumeSlider1" Width="154" Margin="5" Maximum="100" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel1}" ValueChanged="VolumeSlider1_ValueChanged"/>
                                     </WrapPanel>
                                     <WrapPanel >
-                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputlevel1, Mode=OneWay}"  Height="20" Width="265"
+                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="265"
                         					Style="{StaticResource VolumeBar}"/>
                                     </WrapPanel>
                                     <WrapPanel>
@@ -121,7 +121,7 @@
                                         <Slider x:Name="VolumeSlider2" Width="154" Margin="5" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel2}" ValueChanged="VolumeSlider2_ValueChanged"/>
                                     </WrapPanel>
                                     <WrapPanel>
-                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputlevel2, Mode=OneWay}"  Height="20" Width="265" 
+                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputLevel2, Mode=TwoWay}"  Height="20" Width="265" 
                         					Style="{StaticResource VolumeBar}"/>
                                     </WrapPanel>
                                     <WrapPanel>

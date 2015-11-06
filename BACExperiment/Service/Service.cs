@@ -38,7 +38,7 @@ namespace BACExperiment
         private StimulyWindowViewModel stimuly_data_context {get; set ;}
         public Wiimote1DataContext wm1_data_context;
         public Wiimote1DataContext wm2_data_context;
-        public MicViewModel mic_data_context = new MicViewModel();
+        public MicViewModel mic_data_context;
         #endregion
 
 
@@ -178,7 +178,7 @@ namespace BACExperiment
 
         public void setVolume(int value , int i)
         {
-//            microphones.SetVolume(value , i);
+            //microphones.SetVolume(value , i);
         }
 #endregion Microphone
 

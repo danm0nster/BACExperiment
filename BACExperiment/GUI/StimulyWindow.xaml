@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="StimulyWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Normal" WindowStyle="ThreeDBorderWindow" 
-        Closed="Window_Closed" Loaded="Window_Loaded" >
+        Title="StimulyWindow" ResizeMode="NoResize" WindowStartupLocation="Manual" WindowState="Maximized" WindowStyle="ThreeDBorderWindow" 
+        Closed="Window_Closed" Loaded="Window_Loaded"  >
     <Grid>
         <Border>
             <Canvas x:Name="StimulyCanvas" RenderTransformOrigin="0.5,0.5" Width="0" Height="0" RenderTransform="1 0 0 -1 0 0"  >

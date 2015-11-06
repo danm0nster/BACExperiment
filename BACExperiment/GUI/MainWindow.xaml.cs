@@ -1,4 +1,5 @@
 ﻿using BACExperiment.GUI;
+using BACExperiment.Model;
 using NAudio.Mixer;
 using NAudio.Wave;
 using System;
@@ -48,9 +49,13 @@ namespace BACExperiment
             Mic1_VolumeBar.DataContext = this;
             Mic2_VolumeBar.DataContext = this;
 
+            service.getMicrophoneList();
             WM1_groupbox.DataContext = service.wm1_data_context;
             WM2_groupbox.DataContext = service.wm2_data_context;
+            groupBox1.DataContext = service.mic_data_context;
 
+            Microphone1_ComboBox.ItemsSource = service.mic_data_context.Mics;
+            Microphone2_ComboBox.ItemsSource = service.mic_data_context.Mics;
         }
         public class ComboboxItem
         {
@@ -69,16 +74,7 @@ namespace BACExperiment
             }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            foreach(var mic in service.getMicrophoneList())
-            {
-                Microphone1_ComboBox.Items.Add(mic);
-                Microphone2_ComboBox.Items.Add(mic);
-            }
-            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
-            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
-            
+        {  
         }
 
 
@@ -297,31 +293,55 @@ namespace BACExperiment
         #endregion
 
         #region MicrophoneCode
+
+        MicrophoneConstruct mic1PrevVal = null;
+        MicrophoneConstruct mic2PrevVal = null;
+
         private void Microphone1_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            service.ListenToMicrophone( ((ComboBox)sender).SelectedIndex , 1);
-            Mic1_Rec.IsEnabled = true;
+            try
+            {
+
+                if (((ComboBox)sender).SelectedIndex > -1)
+                {
+                    if(mic1PrevVal!= null) service.stopRecording(WaveIn.GetCapabilities(mic1PrevVal.get_WaveIn().DeviceNumber));
+
+                    bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 1);
+                    Mic1_Rec.IsEnabled = true;
+                    mic1PrevVal = (MicrophoneConstruct)((ComboBox)sender).SelectedValue;
+                }
+                   
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+                Microphone1_ComboBox.SelectedIndex = -1;
+            }
         }
 
         private void Microphone2_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            service.ListenToMicrophone( ((ComboBox)sender).SelectedIndex , 2);
-            Mic2_Rec.IsEnabled = true;
-        }
-
-
-        internal void UpdateVolumeBar( int v1,  float v2)
-        {
-            if (v1 == 1)
-                Mic1_VolumeBar.Value = v1*100;
-            else if (v1 == 2)
-                Mic2_VolumeBar.Value = v2*100;
-            else
+            try
             {
-                Console.WriteLine(" Volume Bar not available for the current index.");
+                if (((ComboBox)sender).SelectedIndex > -1)
+                {
+                    if(mic1PrevVal != null) service.stopRecording(WaveIn.GetCapabilities(mic2PrevVal.get_WaveIn().DeviceNumber));
+                    bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 2);
+                    Mic2_Rec.IsEnabled = true;
+                }
+
+                if (mic2PrevVal == null)
+                    mic2PrevVal =(MicrophoneConstruct)((ComboBox)sender).SelectedValue;
+           }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+                Microphone2_ComboBox.SelectedIndex = -1;
             }
         }
- 
+
+
+        
 
         private void Mic1_Rec_Click(object sender, RoutedEventArgs e)
         {
@@ -387,7 +407,7 @@ namespace BACExperiment
         }
 
         private void Microphone_refresh_btn_Click(object sender, RoutedEventArgs e)
-        {
+        { /*
             Microphone1_ComboBox.Items.Clear();
             Microphone2_ComboBox.Items.Clear();
             foreach (var mic in service.getMicrophoneList())
@@ -397,7 +417,9 @@ namespace BACExperiment
             }
             Microphone1_ComboBox.DisplayMemberPath = "ProductName";
             Microphone2_ComboBox.DisplayMemberPath = "ProductName";
-        }
+         */
+            service.getMicrophoneList();
+            }
 
 
         private void VolumeSlider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -47,15 +47,17 @@ namespace BACExperiment.Model
             int A = 450; // X Range in which the sfere will run around in
             int B = 450; // Y Range in which the sfere will run around in
             double d = Math.PI / 2;
+            float f = 3 / 2;
+            float o = 2 / 7;
             double t;
             double lastX = 0;
             double lastY = 0;
             for (int i = 0; i <= 4000; i++)
             {
                
-                t = 8 * System.Math.PI / 4000 * (double)i;
-                x = A * System.Math.Sin(a * t + d) ;
-                y = B * System.Math.Sin(b * t)  ;
+                t = 16 * System.Math.PI / 4000 * (double)i;
+                x = Math.Cos(o * t)*A*Math.Sin(a*t+ d) + Math.Sin(o*t)*B*Math.Sin(b*t); //A * System.Math.Sin(a * t + d); //cos(o*t)*A*sin(a*t+d)+sin(o*t)*B*sin(b*t)
+                y = -Math.Sin(o * t) * A * Math.Sin(a * t + d) + Math.Cos(o * t) * B * Math.Sin(b * t); // B * System.Math.Sin(b * t); // -sin(o*t)*A*sin(a*t+d)+cos(o*t)*B*sin(b*t)
                 if (Math.Abs(lastX - x) > 5 || Math.Abs(lastY - y) > 5)
                 {
                     coordinates.Add(new Point(x, y));

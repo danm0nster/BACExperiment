@@ -95,14 +95,15 @@
                                 <StackPanel>
                                     <WrapPanel Height="35">
                                         <Label Content="Microphone 1 :" Height="25" Width="100"/>
-                                        <ComboBox x:Name="Microphone1_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone1_ComboBox_SelectionChanged" />
+                                        <ComboBox x:Name="Microphone1_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone1_ComboBox_SelectionChanged" ItemsSource ="{Binding Path=Mics}" 
+                                              />
                                     </WrapPanel>
                                     <WrapPanel Height="35">
                                         <Label Content="Volume :" Height="25" Width="100"/>
                                         <Slider x:Name="VolumeSlider1" Width="154" Margin="5" Maximum="100" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel1}" ValueChanged="VolumeSlider1_ValueChanged"/>
                                     </WrapPanel>
                                     <WrapPanel >
-                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel1, Mode=OneWay}"  Height="20" Width="265"
+                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputlevel1, Mode=OneWay}"  Height="20" Width="265"
                         					Style="{StaticResource VolumeBar}"/>
                                     </WrapPanel>
                                     <WrapPanel>
@@ -113,14 +114,14 @@
                                 <StackPanel>
                                     <WrapPanel Height="35">
                                         <Label Content="Microphone2 :" Height="25" Width="100"/>
-                                        <ComboBox x:Name="Microphone2_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone2_ComboBox_SelectionChanged" />
+                                        <ComboBox x:Name="Microphone2_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone2_ComboBox_SelectionChanged" ItemsSource="{Binding Path=Mics}" DisplayMemberPath="{Binding Path = Active}"  />
                                     </WrapPanel>
                                     <WrapPanel Height="35">
                                         <Label Content="Volume :" Height="25" Width="100"/>
                                         <Slider x:Name="VolumeSlider2" Width="154" Margin="5" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel2}" ValueChanged="VolumeSlider2_ValueChanged"/>
                                     </WrapPanel>
                                     <WrapPanel>
-                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputlevel2, Mode=OneWay}"  Height="20" Width="265" 
+                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputlevel2, Mode=OneWay}"  Height="20" Width="265" 
                         					Style="{StaticResource VolumeBar}"/>
                                     </WrapPanel>
                                     <WrapPanel>

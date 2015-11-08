@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,21 +9,38 @@ using System.Threading.Tasks;
 
 namespace BACExperiment.Model
 {
-    public class MicrophoneConstruct
+    public class MicrophoneConstruct : INotifyPropertyChanged
+
     {
+        #region INotifyPropertyChangedImplementation
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Notify(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
         private WaveIn waveIn = null;
         public SampleAggregator aggregator { get; set; }
         private WaveFileWriter file = null;
         private int sampleCount = 0;
-        private bool active = false;
+        public bool active = false;
 
-        public bool Active()
-        {
-            return active;
-        }
+        public bool Active { get { return active;} set { active = value; if (PropertyChanged != null) Notify("Active"); } } 
+       
 
         public int groupBoxIndex { get; set; }
 
+        public override string ToString()
+        {
+            WaveInCapabilities wav = WaveIn.GetCapabilities(waveIn.DeviceNumber);
+            return wav.ProductName;
+        }
 
         public WaveIn get_WaveIn(){ return this.waveIn; }
 
@@ -33,6 +51,22 @@ namespace BACExperiment.Model
 
             if(WaveIn.DeviceCount >1)
             waveIn.DeviceNumber = selectedDevice ;
+
+            waveIn.WaveFormat = new WaveFormat(44100, 1);
+
+            waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
+            waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStoped);
+
+            aggregator = new SampleAggregator();
+            aggregator.NotificationCount = 10; // How often we update the volume bar value;
+        }
+
+        public MicrophoneConstruct(int selectedDevice)
+        {
+            waveIn = new WaveIn();
+
+            if (WaveIn.DeviceCount > 1)
+                waveIn.DeviceNumber = selectedDevice;
 
             waveIn.WaveFormat = new WaveFormat(44100, 1);
 
@@ -100,13 +134,7 @@ namespace BACExperiment.Model
 
         public void waveIn_RecordingStoped(object sender, StoppedEventArgs e)
         {
-            /*
-            if (waveIn != null)
-            {
-                waveIn.Dispose();
-                waveIn = null;
-            }
-            */
+           
             if (file != null)
             {
                 file.Dispose();

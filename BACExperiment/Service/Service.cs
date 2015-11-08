@@ -38,7 +38,7 @@ namespace BACExperiment
         private StimulyWindowViewModel stimuly_data_context {get; set ;}
         public Wiimote1DataContext wm1_data_context;
         public Wiimote1DataContext wm2_data_context;
-         
+        public MicViewModel mic_data_context;
         #endregion
 
 
@@ -69,7 +69,7 @@ namespace BACExperiment
             stimuly_data_context = StimulyWindowViewModel.GetInstance();
             wm1_data_context = new Wiimote1DataContext();
             wm2_data_context = new Wiimote1DataContext();
-                    
+            mic_data_context = new MicViewModel();
          
          
         }
@@ -149,19 +149,22 @@ namespace BACExperiment
 
 
         #region Microphone
-        public List<WaveInCapabilities> getMicrophoneList()
+        public void getMicrophoneList()
         {
-           return microphones.MicrophoneList();
+            mic_data_context.FillList(microphones.MicrophoneList());
         }
      
-        public void ListenToMicrophone(int index , int groupBoxIndex)
+        public bool ListenToMicrophone(int index , int groupBoxIndex)
         {
-            microphones.ListenToMicrophone(index , groupBoxIndex);
+           return microphones.ListenToMicrophone(index , groupBoxIndex);
         }
 
         public void UpdateVolumeBar(int v1, float v2)
         {
-            observer.UpdateVolumeBar( v1,  v2);
+            if (v1 == 1)
+                mic_data_context.CurrentInputLevel1 = v2 * 1000;
+            if (v1 == 2)
+                mic_data_context.CurrentInputLevel2 = v2 * 1000;
         }
 
         public void startRecording(WaveInCapabilities i)
@@ -176,7 +179,7 @@ namespace BACExperiment
 
         public void setVolume(int value , int i)
         {
-            microphones.SetVolume(value , i);
+            //microphones.SetVolume(value , i);
         }
 #endregion Microphone
 

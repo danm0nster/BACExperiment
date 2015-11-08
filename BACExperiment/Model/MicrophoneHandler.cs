@@ -15,6 +15,7 @@ namespace BACExperiment.Model
     {
 
       
+        private List<MicrophoneConstruct> activeMicrophones = new List<MicrophoneConstruct>();
         private List<MicrophoneConstruct> microphones = new List<MicrophoneConstruct>();
         private UnsignedMixerControl volumeControl1;
         private UnsignedMixerControl volumeControl2;
@@ -26,41 +27,39 @@ namespace BACExperiment.Model
             AudioSessionLogDirectoryPresent(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().ToString()));
         }
 
-        public List<WaveInCapabilities> MicrophoneList()
+        public List<MicrophoneConstruct> MicrophoneList()
         {
             int WaveInDevices = WaveIn.DeviceCount;
-            List<WaveInCapabilities> ToReturn = new List<WaveInCapabilities>();
+            microphones = new List<MicrophoneConstruct>();
             for (int WaveInDevice = 0; WaveInDevice < WaveInDevices; WaveInDevice++)
             {
-                WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(WaveInDevice);
-                ToReturn.Add(deviceInfo);
+                MicrophoneConstruct deviceInfo = new MicrophoneConstruct(WaveInDevice);
+                deviceInfo.aggregator.MaximumCalculated += MaximimumCalculated;
+                microphones.Add(deviceInfo);
                         
             }
 
-            return ToReturn;
+            return microphones;
         }
 
 
         public bool ListenToMicrophone(int selectedDevice , int groupBoxIndex)
         {
-            MicrophoneConstruct mic = new MicrophoneConstruct(selectedDevice, groupBoxIndex);
-            mic.aggregator.MaximumCalculated += new EventHandler<MaxSampleEventArgs>(MaximimumCalculated);
+            MicrophoneConstruct mic = microphones[selectedDevice];
 
-            
-            if ((microphones.Count>2))
+            if (activeMicrophones.Count > 2)
             {
                 mic.Listen();
-                microphones[groupBoxIndex - 1] = mic;
+                activeMicrophones[groupBoxIndex -1 ] = mic;
             }
             else
             {
                 mic.Listen();
-                microphones.Add(mic);
-               
+                activeMicrophones.Add(mic);  
             }
 
             TryGetVolumeControl(selectedDevice , groupBoxIndex);
-            return mic.Active();
+            return mic.Active;
         }
 
         private void MaximimumCalculated(object sender, MaxSampleEventArgs e)
@@ -68,10 +67,10 @@ namespace BACExperiment.Model
             //Figure ot to which structure the sending aggregator belongs to so that we can update the group box of that specific Micrcophone
 
             int index = 0;
-            foreach (var x in microphones)
-                if ( x.aggregator == (SampleAggregator)sender)
+            foreach (var x in activeMicrophones)
+                if ( x.aggregator.Equals((SampleAggregator)sender))
                 {
-                    index = x.groupBoxIndex;
+                    index = activeMicrophones.IndexOf(x)+1;
                 }
             observer.UpdateVolumeBar( index , Math.Max(e.MaxSample, Math.Abs(e.MinSample)));
         }
@@ -97,8 +96,8 @@ namespace BACExperiment.Model
 
         internal void StartRecording(WaveInCapabilities i)
         {
-           foreach(MicrophoneConstruct mic in microphones)
-            {
+           foreach(MicrophoneConstruct mic in activeMicrophones)
+            {   
                 WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
 
                 if(deviceInfo.Equals(i))
@@ -110,7 +109,7 @@ namespace BACExperiment.Model
 
         internal void StopRecording(WaveInCapabilities i)
         {
-            foreach (MicrophoneConstruct mic in microphones)
+            foreach (MicrophoneConstruct mic in activeMicrophones)
             {
                 WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
 
@@ -122,7 +121,7 @@ namespace BACExperiment.Model
         }
 
         private void TryGetVolumeControl(int deviceNumber , int i)
-        {
+        {/*
             int waveInDeviceNumber = deviceNumber;
             var mixerLine = new MixerLine((IntPtr)waveInDeviceNumber,
                                            0, MixerFlags.WaveIn);
@@ -140,6 +139,7 @@ namespace BACExperiment.Model
 
                 }
             }
+            */
         }
 
         public void SetVolume( int value , int i)

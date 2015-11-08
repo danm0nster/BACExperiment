@@ -15,7 +15,7 @@
             <TabItem Header="Session recording" Width="150">
                 <Grid>
                     <StackPanel>
-                        <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="203" VerticalAlignment="Top">
+                        <GroupBox x:Name="groupBox"  Header="Stats" Margin="10,0" Height="274" VerticalAlignment="Top">
                             <WrapPanel Margin="0" >
                                 <GroupBox Header="Stimuly window">
                                     <StackPanel Orientation="Vertical"  Margin="0" Width="112">
@@ -23,7 +23,7 @@
                                         <Button x:Name="StartBtn" Content="Start " Click="StartBtn_Click" Margin="10" Height="40" IsEnabled="False"/>
                                     </StackPanel>
                                 </GroupBox>
-                                <GroupBox Header="Stimuly settings" Height="183">
+                                <GroupBox Header="Stimuly settings">
                                     <StackPanel Orientation="Vertical" Width="250" Margin="0,0,0,0">
                                         <WrapPanel Height="25" Margin="0,0,0,2">
                                             <Label Content="Course mode :" Width="116" HorizontalContentAlignment="Right"/>
@@ -45,7 +45,7 @@
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Prompter settings " Margin="0,0,0,0" Width="300" Height="180">
+                                <GroupBox Header="Prompter settings " Margin="0,0,0,0" Width="300" Height="252">
                                     <StackPanel Margin="0" >
                                         <WrapPanel Height="30" Margin="0"  >
                                             <Label Content="Speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
@@ -71,15 +71,18 @@
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="sec"></Label>
                                         </WrapPanel>
-                                        <WrapPanel Height="30" Margin="0">
-                                            <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="2,2,3,2" IsEnabled="False" />
-                                            <Button x:Name="prompterPlay" Content="Play"  Click="prompterPlay_Click" Margin="3,2,2,2" IsEnabled="False"/>
+                                        <WrapPanel>
+                                            <RadioButton x:Name="SelfPaced_RBtn" Content="Self-Paced" Height="16" Checked="SelfPaced_RBtn_Checked"/>
                                             <RadioButton x:Name="Sync_RBtn" Content="Synchronous" Height="16" Checked="Sync_RBtn_Checked"/>
                                             <RadioButton x:Name="Async_RBtn" Content="Asynchronous" Height="16" Checked="Async_RBtn_Checked" Width="89"/>
                                         </WrapPanel>
+                                        <WrapPanel Height="30" Margin="0">
+                                            <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="2,2,3,2" IsEnabled="False" />
+                                            <Button x:Name="prompterPlay" Content="Play"  Click="prompterPlay_Click" Margin="3,2,2,2" IsEnabled="False"/>
+                                        </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
-                                <GroupBox Header="Recording settings" Width="220" Height="178" >
+                                <GroupBox Header="Recording settings">
                                     <StackPanel Margin="0">
                                         <WrapPanel>
                                             <Label Content="Frequency :" ToolTip="Frequency at which coordinates are recorded " IsEnabled="False"></Label>
@@ -90,7 +93,7 @@
                                 </GroupBox>
                             </WrapPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox1" Header="Microphone"  Height="240">
+                        <GroupBox x:Name="groupBox1" Header="Microphone"  Height="197">
                             <WrapPanel Margin="10,10,10,3">
                                 <StackPanel>
                                     <WrapPanel Height="35">
@@ -135,7 +138,7 @@
                                 </StackPanel>
                             </WrapPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupbox3" Header="Controllers"  Height="350" >
+                        <GroupBox x:Name="groupbox3" Header="Controllers"  Height="178" >
                             <StackPanel Margin="10,10"/>
                         </GroupBox>
                     </StackPanel>

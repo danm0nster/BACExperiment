@@ -81,6 +81,7 @@ namespace BACExperiment
                 // Modify first ellipse 
                 stimuly_data_context.Pointer1X = ((WiimoteCoordinate)sender).MidPoint.X;
                 stimuly_data_context.Pointer1Y = ((WiimoteCoordinate)sender).MidPoint.Y;
+                    
                 wm1_data_context.Update(sender , e);
 
             }

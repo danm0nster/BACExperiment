@@ -145,12 +145,18 @@ namespace BACExperiment
             {
                 if (Sync_RBtn.IsChecked == true)
                     prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text , 1);
-                if(Async_RBtn.IsChecked == true)
-                prompter = new Prompter((int)prompterSpeed.Value,(int)Switch_Frequency_Slider.Value , (int)TextSizeSlider.Value, pathTxt.Text, 2);
+
+                if (Async_RBtn.IsChecked == true)
+                    prompter = new Prompter((int)prompterSpeed.Value,(int)Switch_Frequency_Slider.Value , (int)TextSizeSlider.Value, pathTxt.Text, 2);
                 prompter.Visibility = System.Windows.Visibility.Visible;
                 prompterPlay.IsEnabled = true;
-               // prompterPause.IsEnabled = true;
-               // prompterStop.IsEnabled = true;
+
+                if (SelfPaced_RBtn.IsChecked == true)
+                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 3);
+                prompter.Visibility = System.Windows.Visibility.Visible;
+                prompterPlay.IsEnabled = true;
+                // prompterPause.IsEnabled = true;
+                // prompterStop.IsEnabled = true;
             }
 
             else
@@ -181,6 +187,10 @@ namespace BACExperiment
         }
 
         private void Async_RBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            prompterOpen.IsEnabled = true;
+        }
+        private void SelfPaced_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
         }
@@ -425,8 +435,9 @@ namespace BACExperiment
 
 
 
+
         #endregion
 
-        
+     
     }
 }

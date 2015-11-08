@@ -60,7 +60,12 @@ namespace BACExperiment.GUI
                     colorTimer.Interval = changeSpeed * 1000 ;
                 }
 
-                
+                if(mode == 3)
+                {
+                    scrollTimer.Elapsed += new ElapsedEventHandler(OnTImedEvent3);
+
+                }
+
                 StreamReader reader = new StreamReader(@path, Encoding.Default, true);
                 prompterText.AppendText(reader.ReadToEnd());
                 prompterText.FontSize = textSize;
@@ -127,6 +132,18 @@ namespace BACExperiment.GUI
             catch(Exception Ex)
             {
                 Console.WriteLine(Ex.ToString());
+            }
+        }
+
+        private void OnTimedEvent3(object Sender, ElapsedEventArgs args)
+        {
+            try
+            {
+                prompterText.Dispatcher.Invoke((Action)(() =>
+                {
+                    scroller.SetValue(scroller. );
+                }
+                ));
             }
         }
 

@@ -162,17 +162,18 @@ namespace BACExperiment
         public void UpdateVolumeBar(int v1, float v2)
         {
             if (v1 == 1)
-                mic_data_context.CurrentInputLevel1 = v2 * 1000;
+                mic_data_context.CurrentInputLevel1 = v2 * 100;
             if (v1 == 2)
-                mic_data_context.CurrentInputLevel2 = v2 * 1000;
-        }
+                mic_data_context.CurrentInputLevel2 = v2 * 100;
+        
+            }
 
-        public void startRecording(WaveInCapabilities i)
+        public void startRecording(MicrophoneConstruct i)
         {
             microphones.StartRecording(i);
         }
 
-        public void stopRecording(WaveInCapabilities i)
+        public void stopRecording(MicrophoneConstruct i)
         {
             microphones.StopRecording(i);
         }

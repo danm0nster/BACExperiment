@@ -27,7 +27,6 @@ namespace BACExperiment.GUI
     {
 
         private string path = "C:/Users/labclient/Documents/Visual Studio 2015/Projects/BACExperiment/BACExperiment/resources/prompterText.txt";
-        private string text;
         private Timer scrollTimer = new Timer();
         private Timer colorTimer = new Timer();
         private int color = 0;
@@ -62,7 +61,7 @@ namespace BACExperiment.GUI
 
                 if(mode == 3)
                 {
-                    scrollTimer.Elapsed += new ElapsedEventHandler(OnTImedEvent3);
+                    scrollTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent3);
 
                 }
 
@@ -141,9 +140,13 @@ namespace BACExperiment.GUI
             {
                 prompterText.Dispatcher.Invoke((Action)(() =>
                 {
-                    scroller.SetValue(scroller. );
+                    //scroller.SetValue();
                 }
                 ));
+            }
+            catch(Exception Ex)
+            {
+                MessageBox.Show(Ex.Message.ToString());
             }
         }
 

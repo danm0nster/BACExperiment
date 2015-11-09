@@ -106,8 +106,8 @@
                                         <Slider x:Name="VolumeSlider1" Width="154" Margin="5" Maximum="100" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel1}" ValueChanged="VolumeSlider1_ValueChanged"/>
                                     </WrapPanel>
                                     <WrapPanel >
-                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="265"
-                        					Style="{StaticResource VolumeBar}"/>
+                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal"  Value="{Binding Path=CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="265"
+                        					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
                                     </WrapPanel>
                                     <WrapPanel>
                                         <Button x:Name="Mic1_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic1_Rec_Click" />
@@ -125,7 +125,7 @@
                                     </WrapPanel>
                                     <WrapPanel>
                                         <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputLevel2, Mode=TwoWay}"  Height="20" Width="265" 
-                        					Style="{StaticResource VolumeBar}"/>
+                        					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
                                     </WrapPanel>
                                     <WrapPanel>
                                         <Button x:Name="Mic2_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic2_Rec_Click" />

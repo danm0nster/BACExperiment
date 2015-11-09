@@ -14,10 +14,10 @@ namespace BACExperiment.Model
     class MicrophoneHandler
     {
 
-      
-        private List<MicrophoneConstruct> activeMicrophones = new List<MicrophoneConstruct>();
+
+        private MicrophoneConstruct[] activeMicrophones = new MicrophoneConstruct[2];
         private List<MicrophoneConstruct> microphones = new List<MicrophoneConstruct>();
-        private UnsignedMixerControl volumeControl1;
+        private UnsignedMixerControl volumeControl1; 
         private UnsignedMixerControl volumeControl2;
         private Service observer;
 
@@ -36,7 +36,6 @@ namespace BACExperiment.Model
                 MicrophoneConstruct deviceInfo = new MicrophoneConstruct(WaveInDevice);
                 deviceInfo.aggregator.MaximumCalculated += MaximimumCalculated;
                 microphones.Add(deviceInfo);
-                        
             }
 
             return microphones;
@@ -47,17 +46,9 @@ namespace BACExperiment.Model
         {
             MicrophoneConstruct mic = microphones[selectedDevice];
 
-            if (activeMicrophones.Count > 2)
-            {
-                mic.Listen();
-                activeMicrophones[groupBoxIndex -1 ] = mic;
-            }
-            else
-            {
-                mic.Listen();
-                activeMicrophones.Add(mic);  
-            }
-
+            mic.Listen();
+            activeMicrophones[groupBoxIndex-1] = mic;  
+            
             TryGetVolumeControl(selectedDevice , groupBoxIndex);
             return mic.Active;
         }
@@ -67,11 +58,16 @@ namespace BACExperiment.Model
             //Figure ot to which structure the sending aggregator belongs to so that we can update the group box of that specific Micrcophone
 
             int index = 0;
-            foreach (var x in activeMicrophones)
-                if ( x.aggregator.Equals((SampleAggregator)sender))
+            for ( int i = 0; i<=1; i++)
+            {
+                if (activeMicrophones[i] != null)
                 {
-                    index = activeMicrophones.IndexOf(x)+1;
+                    if (activeMicrophones[i].aggregator.Equals((SampleAggregator)sender))
+                    {
+                        index = i + 1;
+                    }
                 }
+            }
             observer.UpdateVolumeBar( index , Math.Max(e.MaxSample, Math.Abs(e.MinSample)));
         }
 
@@ -94,30 +90,24 @@ namespace BACExperiment.Model
             converter.WaitForExit();
         }
 
-        internal void StartRecording(WaveInCapabilities i)
-        {
+        internal void StartRecording(MicrophoneConstruct i)
+        {/*
            foreach(MicrophoneConstruct mic in activeMicrophones)
             {   
-                WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
+                MicrophoneConstruct deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
 
                 if(deviceInfo.Equals(i))
                 {
                     mic.Record();
                 }
             }
+         */
+            i.Record();
         }
 
-        internal void StopRecording(WaveInCapabilities i)
+        internal void StopRecording(MicrophoneConstruct i)
         {
-            foreach (MicrophoneConstruct mic in activeMicrophones)
-            {
-                WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
-
-                if (deviceInfo.Equals(i))
-                {
-                    mic.Stop();
-                }
-            }
+            i.Stop();
         }
 
         private void TryGetVolumeControl(int deviceNumber , int i)

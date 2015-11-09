@@ -21,7 +21,6 @@ namespace BACExperiment.Model
         private float[] AccelState = new float[3];
         private PointF[] IRState = new PointF[5];
         private int battery = 0;
-        private PointF MidPoint = new PointF();
 
         private Stabilizer stabilizer = null;
 

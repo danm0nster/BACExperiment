@@ -59,11 +59,14 @@ namespace BACExperiment
             service.getMicrophoneList();
             WM1_groupbox.DataContext = service.wm1_data_context;
             WM2_groupbox.DataContext = service.wm2_data_context;
-            groupBox1.DataContext = service.mic_data_context;
-
+          
+            
+            Mic1_VolumeBar.DataContext = service.mic_data_context;
             Microphone1_ComboBox.ItemsSource = service.mic_data_context.Mics;
+            Mic2_VolumeBar.DataContext = service.mic_data_context;
             Microphone2_ComboBox.ItemsSource = service.mic_data_context.Mics;
         }
+
         public class ComboboxItem
         {
             public string Text { get; set; }
@@ -321,7 +324,7 @@ namespace BACExperiment
 
                 if (((ComboBox)sender).SelectedIndex > -1)
                 {
-                    if(mic1PrevVal!= null) service.stopRecording(WaveIn.GetCapabilities(mic1PrevVal.get_WaveIn().DeviceNumber));
+                    if(mic1PrevVal!= null) service.stopRecording(mic1PrevVal);
 
                     bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 1);
                     Mic1_Rec.IsEnabled = true;
@@ -342,12 +345,11 @@ namespace BACExperiment
             {
                 if (((ComboBox)sender).SelectedIndex > -1)
                 {
-                    if(mic2PrevVal != null) service.stopRecording(WaveIn.GetCapabilities(mic2PrevVal.get_WaveIn().DeviceNumber));
+                    if(mic2PrevVal != null) service.stopRecording(mic2PrevVal);
                     bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 2);
                     Mic2_Rec.IsEnabled = true;
                 }
 
-                if (mic2PrevVal == null)
                     mic2PrevVal =(MicrophoneConstruct)((ComboBox)sender).SelectedValue;
            }
             catch (Exception Ex)
@@ -362,14 +364,17 @@ namespace BACExperiment
 
         private void Mic1_Rec_Click(object sender, RoutedEventArgs e)
         {
-            service.startRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
+
+            MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone1_ComboBox.SelectedItem);
+            service.startRecording(mic);
             Mic1_Rec.IsEnabled = false;
             Mic1_Stop.IsEnabled = true;
         }
 
         private void Mic2_Rec_Click(object sender, RoutedEventArgs e)
         {
-            service.startRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
+            MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone2_ComboBox.SelectedItem);
+            service.startRecording(mic);
             Mic2_Rec.IsEnabled = false;
             Mic2_Stop.IsEnabled = true;
         }
@@ -378,7 +383,8 @@ namespace BACExperiment
 
         private void Mic1_Stop_Click(object sender, RoutedEventArgs e)
         {
-            service.stopRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
+            MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone1_ComboBox.SelectedItem);
+            service.stopRecording(mic);
             Mic1_Rec.IsEnabled = true;
             Mic1_Stop.IsEnabled = false;
         }
@@ -386,7 +392,8 @@ namespace BACExperiment
 
         private void Mic2_Stop_Click(object sender, RoutedEventArgs e)
         {
-            service.stopRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
+            MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone1_ComboBox.SelectedItem);
+            service.stopRecording(mic);
             Mic2_Rec.IsEnabled = true;
             Mic2_Stop.IsEnabled = false;
         }
@@ -395,13 +402,15 @@ namespace BACExperiment
         {
             if (Microphone1_ComboBox.SelectedIndex != -1)
             {
-                service.startRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
+                MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone1_ComboBox.SelectedItem);
+                service.startRecording(mic);
                 Mic1_Rec.IsEnabled = false;
                 Mic1_Stop.IsEnabled = true;
             }
             if (Microphone2_ComboBox.SelectedIndex != -1)
             {
-                service.startRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
+                MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone2_ComboBox.SelectedItem);
+                service.startRecording(mic);
                 Mic2_Rec.IsEnabled = false;
                 Mic2_Stop.IsEnabled = true;
             }
@@ -411,13 +420,15 @@ namespace BACExperiment
         {
             if (Microphone1_ComboBox.SelectedIndex != -1)
             {
-                service.stopRecording((WaveInCapabilities)Microphone1_ComboBox.SelectedValue);
+                MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone1_ComboBox.SelectedItem);
+                service.stopRecording(mic);
                 Mic1_Rec.IsEnabled = true;
                 Mic1_Stop.IsEnabled = false;
             }
             if (Microphone2_ComboBox.SelectedIndex != -1)
             {
-                service.stopRecording((WaveInCapabilities)Microphone2_ComboBox.SelectedValue);
+                MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone2_ComboBox.SelectedItem);
+                service.stopRecording(mic);
                 Mic2_Rec.IsEnabled = true;
                 Mic2_Stop.IsEnabled = false;
             }

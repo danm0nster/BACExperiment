@@ -47,7 +47,7 @@ namespace BACExperiment.Model
             int A = 450; // X Range in which the sfere will run around in
             int B = 450; // Y Range in which the sfere will run around in
             double d = Math.PI / 2;
-            float f = 3 / 2;
+            //float f = 3 / 2;
             float o = 2 / 7;
             double t;
             double lastX = 0;

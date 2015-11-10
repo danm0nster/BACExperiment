@@ -180,7 +180,7 @@ namespace BACExperiment
 
         public void setVolume(int value , int i)
         {
-            //microphones.SetVolume(value , i);
+            microphones.SetVolume(value , i);
         }
 #endregion Microphone
 

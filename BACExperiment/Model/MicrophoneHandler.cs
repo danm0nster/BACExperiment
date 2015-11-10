@@ -91,17 +91,7 @@ namespace BACExperiment.Model
         }
 
         internal void StartRecording(MicrophoneConstruct i)
-        {/*
-           foreach(MicrophoneConstruct mic in activeMicrophones)
-            {   
-                MicrophoneConstruct deviceInfo = WaveIn.GetCapabilities(mic.get_WaveIn().DeviceNumber);
-
-                if(deviceInfo.Equals(i))
-                {
-                    mic.Record();
-                }
-            }
-         */
+        {
             i.Record();
         }
 
@@ -111,7 +101,7 @@ namespace BACExperiment.Model
         }
 
         private void TryGetVolumeControl(int deviceNumber , int i)
-        {/*
+        {
             int waveInDeviceNumber = deviceNumber;
             var mixerLine = new MixerLine((IntPtr)waveInDeviceNumber,
                                            0, MixerFlags.WaveIn);
@@ -129,7 +119,6 @@ namespace BACExperiment.Model
 
                 }
             }
-            */
         }
 
         public void SetVolume( int value , int i)

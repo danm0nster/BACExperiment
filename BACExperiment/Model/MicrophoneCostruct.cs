@@ -68,7 +68,7 @@ namespace BACExperiment.Model
             if (WaveIn.DeviceCount > 1)
                 waveIn.DeviceNumber = selectedDevice;
 
-            waveIn.WaveFormat = new WaveFormat(44100, 1);
+            waveIn.WaveFormat = new WaveFormat(44100, 2);
 
             waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
             waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStoped);
@@ -97,7 +97,11 @@ namespace BACExperiment.Model
 
         public void Stop()
         {
-            waveIn.StopRecording();
+            if (file != null)
+            {
+                file.Dispose();
+                file = null;
+            }
         }
 
         public void waveIn_DataAvailable(object sender, WaveInEventArgs e)

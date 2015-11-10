@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment.GUI"
         mc:Ignorable="d"
-        Title="Prompter" Height="700"  Width="1000" ResizeMode="NoResize" >
+        Title="Prompter" Height="700"  Width="1000"   >
     <Grid>
         <ScrollViewer x:Name="scroller">
         <RichTextBox IsReadOnly="True" x:Name="prompterText" Margin="10" />

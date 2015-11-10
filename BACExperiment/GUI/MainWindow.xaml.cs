@@ -35,13 +35,34 @@ namespace BACExperiment
         private Service service;
         private StimulyWindow stimulyWindow;
         private Prompter prompter;
-     
+        //  private readonly List<Brush> colors_;
+        private Brush white_;
 
+        /* public IEnumerable<Brush> Colors
+        {
+            get { return colors_; }
+        }
+
+        public Brush White
+        {
+            get { return white_; }
+            set
+            {
+                if (white_ != value)
+                    white_ = value;
+            }
+        }
+        */
         //Volume bar variables
 
         public MainWindow()
         {
+           
+            
             InitializeComponent();
+            
+               
+            
 
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -59,8 +80,8 @@ namespace BACExperiment
             service.getMicrophoneList();
             WM1_groupbox.DataContext = service.wm1_data_context;
             WM2_groupbox.DataContext = service.wm2_data_context;
-          
-            
+
+
             Mic1_VolumeBar.DataContext = service.mic_data_context;
             Microphone1_ComboBox.ItemsSource = service.mic_data_context.Mics;
             Mic2_VolumeBar.DataContext = service.mic_data_context;
@@ -73,7 +94,7 @@ namespace BACExperiment
             public string Value { get; set; }
 
 
-            public ComboboxItem(string Text , string Value)
+            public ComboboxItem(string Text, string Value)
             {
                 this.Text = Text;
                 this.Value = Value;
@@ -84,7 +105,7 @@ namespace BACExperiment
             }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {  
+        {
         }
 
 
@@ -136,26 +157,24 @@ namespace BACExperiment
 
         #endregion
 
-        
+
         #region PrompterMenuCode
         private void prompterOpen_Click(object sender, RoutedEventArgs e)
         {
             if (System.IO.File.Exists(pathTxt.Text))
             {
                 if (Sync_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text , 1);
+                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 1);
 
                 if (Async_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value,(int)Switch_Frequency_Slider.Value , (int)TextSizeSlider.Value, pathTxt.Text, 2);
-                prompter.Visibility = System.Windows.Visibility.Visible;
-                prompterPlay.IsEnabled = true;
+                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 2);
 
                 if (SelfPaced_RBtn.IsChecked == true)
                     prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 3);
+
                 prompter.Visibility = System.Windows.Visibility.Visible;
                 prompterPlay.IsEnabled = true;
-                // prompterPause.IsEnabled = true;
-                // prompterStop.IsEnabled = true;
+
             }
 
             else
@@ -172,7 +191,7 @@ namespace BACExperiment
             prompter.play();
         }
 
-        
+
 
         private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -324,13 +343,13 @@ namespace BACExperiment
 
                 if (((ComboBox)sender).SelectedIndex > -1)
                 {
-                    if(mic1PrevVal!= null) service.stopRecording(mic1PrevVal);
+                    if (mic1PrevVal != null) service.stopRecording(mic1PrevVal);
 
                     bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 1);
                     Mic1_Rec.IsEnabled = true;
                     mic1PrevVal = (MicrophoneConstruct)((ComboBox)sender).SelectedValue;
                 }
-                   
+
             }
             catch (Exception Ex)
             {
@@ -345,13 +364,13 @@ namespace BACExperiment
             {
                 if (((ComboBox)sender).SelectedIndex > -1)
                 {
-                    if(mic2PrevVal != null) service.stopRecording(mic2PrevVal);
+                    if (mic2PrevVal != null) service.stopRecording(mic2PrevVal);
                     bool active = service.ListenToMicrophone(((ComboBox)sender).SelectedIndex, 2);
                     Mic2_Rec.IsEnabled = true;
                 }
 
-                    mic2PrevVal =(MicrophoneConstruct)((ComboBox)sender).SelectedValue;
-           }
+                mic2PrevVal = (MicrophoneConstruct)((ComboBox)sender).SelectedValue;
+            }
             catch (Exception Ex)
             {
                 MessageBox.Show(Ex.Message);
@@ -360,7 +379,7 @@ namespace BACExperiment
         }
 
 
-        
+
 
         private void Mic1_Rec_Click(object sender, RoutedEventArgs e)
         {
@@ -388,7 +407,7 @@ namespace BACExperiment
             Mic1_Rec.IsEnabled = true;
             Mic1_Stop.IsEnabled = false;
         }
-        
+
 
         private void Mic2_Stop_Click(object sender, RoutedEventArgs e)
         {
@@ -447,30 +466,21 @@ namespace BACExperiment
             Microphone2_ComboBox.DisplayMemberPath = "ProductName";
          */
             service.getMicrophoneList();
-            }
+        }
 
 
         private void VolumeSlider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            service.setVolume((int)e.NewValue , 1);
+            service.setVolume((int)e.NewValue, 1);
         }
 
         private void VolumeSlider2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            service.setVolume((int)e.NewValue , 2);  
+            service.setVolume((int)e.NewValue, 2);
+
+            #endregion
+
+
         }
-
-
-
-
-
-
-
-
-
-
-        #endregion
-
-     
     }
 }

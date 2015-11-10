@@ -29,8 +29,8 @@ namespace BACExperiment
         #endregion
 
         private ObservableCollection<MicrophoneConstruct> _mics;
-        private float _currentInputlevel1 = 50 ;
-        private float _currentInputlevel2 = 50 ;
+        private float _currentInputlevel1 = 0 ;
+        private float _currentInputlevel2 = 0 ;
 
 
         public ObservableCollection<MicrophoneConstruct> Mics { get { return _mics; } set { _mics = value; if (PropertyChanged != null) { Notify("Mics"); }; } }

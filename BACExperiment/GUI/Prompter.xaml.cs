@@ -62,7 +62,7 @@ namespace BACExperiment.GUI
                 if(mode == 3)
                 {
                     scrollTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent3);
-
+                    scrollTimer.Interval = 600;     
                 }
 
                 StreamReader reader = new StreamReader(@path, Encoding.Default, true);
@@ -105,6 +105,11 @@ namespace BACExperiment.GUI
 
                     prompterText.Focus();
                     prompterText.Selection.Select(startPos, endPos);
+
+
+                    var start = prompterText.Selection.Start.GetCharacterRect(LogicalDirection.Forward);
+                    var end = prompterText.Selection.End.GetCharacterRect(LogicalDirection.Forward);
+                    prompterText.ScrollToVerticalOffset((start.Top + end.Bottom - prompterText.ViewportHeight) / 2 + prompterText.VerticalOffset);
                 }));
             }
 
@@ -138,9 +143,10 @@ namespace BACExperiment.GUI
         {
             try
             {
-                prompterText.Dispatcher.Invoke((Action)(() =>
+                this.Dispatcher.Invoke((Action)(() =>
                 {
-                    //scroller.SetValue();
+                    scroller.Focus();
+                    scroller.ScrollToVerticalOffset(scroller.VerticalOffset + prompterText.FontSize/20);
                 }
                 ));
             }
@@ -162,6 +168,14 @@ namespace BACExperiment.GUI
         public void textSize_Changed(int size)
         {
             prompterText.FontSize = size;
+        }
+
+        public void ScrollToSelection(RichTextBox viewer)
+        {
+            TextPointer t = viewer.Selection.Start;
+            FrameworkContentElement e = t.Parent as FrameworkContentElement;
+            if (e != null)
+                e.BringIntoView();
         }
     }
 }

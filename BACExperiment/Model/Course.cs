@@ -22,21 +22,7 @@ namespace BACExperiment.Model
             
         }
 
-        /*
-        public static ThreadStart Run()
-        {
-            while(running)
-            {
-
-                // calculate function and rezulted coordinates
-                //call the method in Stimuly window to display the coordinates
-                //Wait 100 ms so that the elipse can be displayed 
-
-            }
-
-            return null;
-        }
-        */
+        
 
         public List<Point> firstFuntion()
         {

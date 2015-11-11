@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using WiimoteLib;
-
+using Xceed.Wpf.Toolkit;
 
 namespace BACExperiment
 {
@@ -164,14 +164,43 @@ namespace BACExperiment
             if (System.IO.File.Exists(pathTxt.Text))
             {
                 if (Sync_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 1);
-
+                {
+                    try
+                    {
+                        System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
+                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)SyncTraversalSpeed_Slider.Value, color1);
+                    }
+                    catch (Exception ex)
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                    }
+                }
                 if (Async_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 2);
+                {
+                    try
+                    {
+                        System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
+                        System.Windows.Media.Color color2 = (System.Windows.Media.Color)Color2.SelectedColor;
+                        System.Windows.Media.Color color3 = (System.Windows.Media.Color)Color3.SelectedColor;
+                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)AsyncTraversalSpeed_Slider.Value,(int)Turn_duration_Slider.Value, (int)Switch_Frequency_Slider.Value, color1, color2, color3);
+                    }
+                    catch(Exception ex)
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                    }
+                }
 
                 if (SelfPaced_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 3);
-
+                {
+                    try
+                    {
+                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)prompterSpeed.Value);
+                    }
+                    catch(Exception ex)
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                    }
+                }
                 prompter.Visibility = System.Windows.Visibility.Visible;
                 prompterPlay.IsEnabled = true;
 
@@ -202,15 +231,24 @@ namespace BACExperiment
         private void Sync_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
+            Color1.IsEnabled = true;
+            Color2.IsEnabled = false;
+            Color3.IsEnabled = false;
         }
 
         private void Async_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
+            Color1.IsEnabled = true;
+            Color2.IsEnabled = true;
+            Color3.IsEnabled = true;
         }
         private void SelfPaced_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
+            Color1.IsEnabled = false;
+            Color2.IsEnabled = false;
+            Color3.IsEnabled = false;
         }
 
         private void BrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -353,7 +391,7 @@ namespace BACExperiment
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message);
+                Xceed.Wpf.Toolkit.MessageBox.Show(Ex.Message);
                 Microphone1_ComboBox.SelectedIndex = -1;
             }
         }
@@ -373,7 +411,7 @@ namespace BACExperiment
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message);
+                Xceed.Wpf.Toolkit.MessageBox.Show(Ex.Message);
                 Microphone2_ComboBox.SelectedIndex = -1;
             }
         }
@@ -480,6 +518,11 @@ namespace BACExperiment
 
             #endregion
 
+
+        }
+
+        private void SelfPaced_RBtn_Checked_1(object sender, RoutedEventArgs e)
+        {
 
         }
     }

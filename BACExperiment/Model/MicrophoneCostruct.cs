@@ -97,11 +97,7 @@ namespace BACExperiment.Model
 
         public void Stop()
         {
-            if (file != null)
-            {
-                file.Dispose();
-                file = null;
-            }
+            waveIn.StopRecording();
         }
 
         public void waveIn_DataAvailable(object sender, WaveInEventArgs e)

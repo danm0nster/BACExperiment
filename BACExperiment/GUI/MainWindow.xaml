@@ -16,7 +16,7 @@
             <TabItem Header="Session recording" Width="150">
                 <Grid>
                     <StackPanel>
-                        <GroupBox x:Name="groupBox"  Header="Stats" Margin="0,0,10,0" Height="343" VerticalAlignment="Top">
+                        <GroupBox x:Name="groupBox"  Header="Stats" Margin="0,0,10,0" Height="383" VerticalAlignment="Top">
                             <WrapPanel Margin="0" >
                                 <GroupBox Header="Stimuly window">
                                     <StackPanel Orientation="Vertical"  Margin="0" Width="112">
@@ -46,7 +46,7 @@
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Prompter settings " Margin="0,0,0,0" Width="300" Height="327">
+                                <GroupBox Header="Prompter settings " Margin="0,0,0,0" Width="300" Height="357">
                                     <StackPanel Margin="0" HorizontalAlignment="Center" >
                                         
                                         <WrapPanel Height="30" Margin="0">
@@ -60,47 +60,56 @@
                                             <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="135" />
                                             <Button x:Name="BrowseBtn" Content="Browse" Margin="2"  Click="BrowseBtn_Click"/>
                                         </WrapPanel>
-                                        <RadioButton x:Name="SelfPaced_RBtn" Content="Self-Paced" Height="16" Checked="SelfPaced_RBtn_Checked" Width="70" Margin="0,10,0,0"/>
+                                        <WrapPanel>
+                                            <xctk:ColorPicker Name="Color1" Width="90" Margin="2,0,2,0" SelectedColor="Aquamarine" IsEnabled="False"></xctk:ColorPicker>
+                                            <xctk:ColorPicker Name="Color2" Width="90" Margin="2,0,2,0" SelectedColor="Salmon" IsEnabled="False"></xctk:ColorPicker>
+                                            <xctk:ColorPicker Name="Color3" Width="90" Margin="2,0,2,0" SelectedColor="BurlyWood" IsEnabled="False"></xctk:ColorPicker>
+                                        </WrapPanel>
+                                        <RadioButton x:Name="SelfPaced_RBtn" Content="Self-Paced" Height="16" Checked="SelfPaced_RBtn_Checked" Width="100" Margin="0,10,0,0"/>
                                         <WrapPanel Height="30" Margin="0" IsEnabled="{Binding ElementName=SelfPaced_RBtn , Path=IsChecked}"  >
-                                            <Label Content="Speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
+                                            <Label Content="Scroll speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
                                             <Slider x:Name="prompterSpeed" Width="136" Minimum="1" Maximum="10" TickFrequency="1" TickPlacement="BottomRight" Margin="0" IsSnapToTickEnabled="True"/>
                                             <TextBox x:Name="prompterSpeedTxt" Text="{Binding ElementName=prompterSpeed,Path=Value}" Width="40" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" ></TextBox>
                                         </WrapPanel>
 
-                                        <RadioButton x:Name="Async_RBtn" Content="Asynchronous" Height="16" Checked="Async_RBtn_Checked" Width="89"/>
-                                        <WrapPanel x:Name="Traversal_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Sync_RBtn, Path=IsChecked}">
+                                        <RadioButton x:Name="Async_RBtn" Content="Asynchronous" Height="16" Checked="Async_RBtn_Checked" Width="100"/>
+                                        <WrapPanel x:Name="Traversal_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Async_RBtn, Path=IsChecked}">
                                             <Label Content="Traversal speed :" HorizontalContentAlignment="Right" Width="102" ></Label>
-                                            <Slider x:Name="TraversalSpeed_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                            <Slider x:Name="AsyncTraversalSpeed_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
                                                     ></Slider>
-                                            <TextBox x:Name="TraversalSpeed_TextBox" Text="{Binding ElementName=Switch_Frequency_Slider, Path=Value}" Width="20" Height="26" 
+                                            <TextBox x:Name="TraversalSpeed_TextBox" Text="{Binding ElementName=AsyncTraversalSpeed_Slider, Path=Value}" Width="20" Height="26" 
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="c/s"></Label>
                                         </WrapPanel>
-                                        <WrapPanel x:Name="Frequency_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Sync_RBtn, Path=IsChecked}">
-                                            <Label Content="Switch speed :" HorizontalContentAlignment="Right" Width="102" ></Label>
+                                        <WrapPanel x:Name="Turn_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Async_RBtn, Path=IsChecked}">
+                                            <Label Content="Turn duration :" HorizontalContentAlignment="Right" Width="102" ></Label>
+                                            <Slider x:Name="Turn_duration_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                                    ></Slider>
+                                            <TextBox x:Name="Turn_Duration_TextBox" Text="{Binding ElementName=Turn_duration_Slider, Path=Value}" Width="20" Height="26" 
+                                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
+                                            <Label Content="sec"></Label>
+                                        </WrapPanel>
+                                        <WrapPanel x:Name="Frequency_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Async_RBtn, Path=IsChecked}">
+                                            <Label Content="Switch duration :" HorizontalContentAlignment="Right" Width="102" ></Label>
                                             <Slider x:Name="Switch_Frequency_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
                                                     ></Slider>
                                             <TextBox x:Name="Switch_Speed_TextBox" Text="{Binding ElementName=Switch_Frequency_Slider, Path=Value}" Width="20" Height="26" 
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="sec"></Label>
                                         </WrapPanel>
-                                        <WrapPanel>
-                                            <xctk:ColorPicker Name="Color1"></xctk:ColorPicker>
-                                            <xctk:ColorPicker Name="Color2"></xctk:ColorPicker>
-                                            <xctk:ColorPicker Name="Color3"></xctk:ColorPicker>
-                                        </WrapPanel>
-                                        <RadioButton x:Name="Sync_RBtn" Content="Synchronous" Height="16" Checked="Sync_RBtn_Checked" Width="84" Margin="0,10,0,0"/>
+                                      
+                                        <RadioButton x:Name="Sync_RBtn" Content="Synchronous" Height="16" Checked="Sync_RBtn_Checked" Width="100" Margin="0,10,0,0"/>
                                         <WrapPanel x:Name="Traversal2_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Sync_RBtn, Path=IsChecked}">
                                             <Label Content="Traversal speed :" HorizontalContentAlignment="Right" Width="102" ></Label>
-                                            <Slider x:Name="Traversal2Speed_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                            <Slider x:Name="SyncTraversalSpeed_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
                                                     ></Slider>
-                                            <TextBox x:Name="Traversal2Speed_TextBox" Text="{Binding ElementName=Switch_Frequency_Slider, Path=Value}" Width="20" Height="26" 
+                                            <TextBox x:Name="Traversal2Speed_TextBox" Text="{Binding ElementName=SyncTraversalSpeed_Slider, Path=Value}" Width="20" Height="26" 
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="c/s"></Label>
                                         </WrapPanel>
                                         <WrapPanel Height="30" Margin="5" HorizontalAlignment="Center">
-                                            <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="2,2,3,2" IsEnabled="False" />
-                                            <Button x:Name="prompterPlay" Content="Play"  Click="prompterPlay_Click" Margin="3,2,2,2" IsEnabled="False"/>
+                                            <Button x:Name="prompterOpen" Height="25" Width="45" Content="Open" Click="prompterOpen_Click" Margin="2,2,3,2" IsEnabled="False" />
+                                            <Button x:Name="prompterPlay" Content="Play" Height="24" Width="45"  Click="prompterPlay_Click" Margin="3,2,2,2" IsEnabled="False"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>

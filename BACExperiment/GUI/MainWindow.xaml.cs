@@ -35,25 +35,7 @@ namespace BACExperiment
         private Service service;
         private StimulyWindow stimulyWindow;
         private Prompter prompter;
-        //  private readonly List<Brush> colors_;
-        private Brush white_;
-
-        /* public IEnumerable<Brush> Colors
-        {
-            get { return colors_; }
-        }
-
-        public Brush White
-        {
-            get { return white_; }
-            set
-            {
-                if (white_ != value)
-                    white_ = value;
-            }
-        }
-        */
-        //Volume bar variables
+       
 
         public MainWindow()
         {
@@ -111,6 +93,44 @@ namespace BACExperiment
 
 
         #region MainCourseOfActionCode
+      
+
+        private void OpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.Cursor = Cursors.Wait;
+                stimulyWindow = StimulyWindow.GetInstance(this);
+                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
+               
+                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
+               
+                stimulyWindow.Show();
+            
+                this.Cursor = Cursors.Arrow;
+                GenerateCourseBtn.IsEnabled = true;
+                OpenBtn.IsEnabled = false;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        private void GenerateCourse_Click(object sender, RoutedEventArgs e)
+        {
+            stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
+            stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
+            stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
+            stimulyWindow.ResizeMode = ResizeMode.NoResize;
+            TrajectoryCheck.IsEnabled = false;
+            stimulyWindow.buildCourseType1();
+            StartBtn.IsEnabled = true;
+            GenerateCourseBtn.IsEnabled = false;
+        }
+
+
         private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
             StartBtn.IsEnabled = false;
@@ -123,31 +143,6 @@ namespace BACExperiment
 
             StartFullRecording();
 
-        }
-
-        private void OpenBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                this.Cursor = Cursors.Wait;
-                stimulyWindow = StimulyWindow.GetInstance(this);
-                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
-                stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
-                stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
-                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
-                StartBtn.IsEnabled = true;
-                stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
-                TrajectoryCheck.IsEnabled = false;
-
-                stimulyWindow.buildCourseType1();
-                this.Cursor = Cursors.Arrow;
-
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
         }
 
         public void enableStartBtn()
@@ -220,7 +215,22 @@ namespace BACExperiment
             prompter.play();
         }
 
+        private void RandomizeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Sync_RBtn.IsChecked = false;
+            Async_RBtn.IsChecked = false;
+            SelfPaced_RBtn.IsChecked = false;
 
+            Random r = new Random();
+            int i = r.Next(3);
+
+            if (i == 1)
+                Sync_RBtn.IsChecked = true;
+            if (i == 2)
+                Async_RBtn.IsChecked = true;
+            if (i == 0)
+                SelfPaced_RBtn.IsChecked = true;
+        }
 
         private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -525,5 +535,7 @@ namespace BACExperiment
         {
 
         }
+
+        
     }
 }

@@ -5,17 +5,16 @@ using System.Windows;
 
 namespace BACExperiment.Model
 {
-    class CourseThread 
+    class Course 
     {
         
         //private Thread course = new Thread(Run());
         private Random random = new Random();
         private int courseNumber;
-        private static bool running = true;
         private StimulyWindow window;
 
 
-        public CourseThread( StimulyWindow window)
+        public Course( StimulyWindow window)
         {
             courseNumber = random.Next(3);
             this.window = window;
@@ -30,8 +29,8 @@ namespace BACExperiment.Model
             double x, y;
             int a = 5;
             int b = 4;
-            int A = 450; // X Range in which the sfere will run around in
-            int B = 450; // Y Range in which the sfere will run around in
+            int A = (int)window.ActualWidth / 3;// X Range in which the sfere will run around in
+            int B = (int)window.ActualHeight / 3;  // Y Range in which the sfere will run around in
             double d = Math.PI / 2;
             //float f = 3 / 2;
             float o = 2 / 7;
@@ -41,7 +40,7 @@ namespace BACExperiment.Model
             for (int i = 0; i <= 4000; i++)
             {
                
-                t = 16 * System.Math.PI / 4000 * (double)i;
+                t = 8* Math.PI / 4000 * (double)i;
                 x = Math.Cos(o * t)*A*Math.Sin(a*t+ d) + Math.Sin(o*t)*B*Math.Sin(b*t); //A * System.Math.Sin(a * t + d); //cos(o*t)*A*sin(a*t+d)+sin(o*t)*B*sin(b*t)
                 y = -Math.Sin(o * t) * A * Math.Sin(a * t + d) + Math.Cos(o * t) * B * Math.Sin(b * t); // B * System.Math.Sin(b * t); // -sin(o*t)*A*sin(a*t+d)+cos(o*t)*B*sin(b*t)
                 if (Math.Abs(lastX - x) > 5 || Math.Abs(lastY - y) > 5)
@@ -63,8 +62,8 @@ namespace BACExperiment.Model
             double x, y;
             int a = 9;
             int b = 10;
-            int A = 100; // X Range in which the sfere will run around in
-            int B = 100; // Y Range in which the sfere will run around in
+            int A =100; // X Range in which the sfere will run around in
+            int B =100; // Y Range in which the sfere will run around in
             double d = Math.PI / 2;
             int g = 2;
             double f = 1.5;
@@ -96,8 +95,8 @@ namespace BACExperiment.Model
             double x, y;
             int a = 9;
             int b = 10;
-            int A = 500; // X Range in which the sfere will run around in
-            int B = 500; // Y Range in which the sfere will run around in
+            int A = 1; // X Range in which the sfere will run around in
+            int B = 1; // Y Range in which the sfere will run around in
             double d = Math.PI / 2 ;
             int g = 2;
             double f = 1.5;
@@ -120,15 +119,6 @@ namespace BACExperiment.Model
             }
 
             return coordinates;
-        }
-
-        public static bool Stop()
-        {
-            running = false;
-            return running;
-        }
-
-       
-        
+        } 
     }
 }

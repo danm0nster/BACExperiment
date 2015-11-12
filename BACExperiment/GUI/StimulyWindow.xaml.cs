@@ -18,7 +18,7 @@ namespace BACExperiment
     {
 
         //Links
-        private CourseThread course;
+        private Course course;
         private AnimationQueue queue1;
         private coordinateRecorder recorder;
         private CoordinateHolder holder;
@@ -33,7 +33,7 @@ namespace BACExperiment
         private bool random;
         private bool showTrajectory;
         private Random r = new Random();
-
+        private bool animationEnden = false;
 
         // 
 
@@ -66,7 +66,7 @@ namespace BACExperiment
             Pointer2.DataContext = model;
           
             
-            course = new CourseThread(this);
+            course = new Course(this);
             this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
             random = (bool)mainWindow.RandomCheck.IsChecked;
@@ -137,7 +137,7 @@ namespace BACExperiment
                         l.Y2 = coordinates[i].Y;
 
                         l.StrokeThickness = 2;
-                        StimulyCanvas.Children.Add(l);
+                        StimulyReferencePoint.Children.Add(l);
                     }
 
                 }
@@ -163,33 +163,6 @@ namespace BACExperiment
             queue1.start();
         }
 
-        public async void movePointer1(int x, int y)
-        {
-            Action action = () =>
-            {
-                Point p = makeToCartezian(x, y);
-                Canvas.SetLeft(Pointer1, p.X);
-                Canvas.SetTop(Pointer1, p.Y);
-                Pointer1.Visibility = System.Windows.Visibility.Visible;
-            };
-
-            await Dispatcher.BeginInvoke(action);
-        }
-
-        public async void movePointer2(int x, int y)
-        {
-            Action action = () =>
-            {
-                Point p = makeToCartezian(x, y);
-                Canvas.SetLeft(Pointer2, p.X);
-                Canvas.SetTop(Pointer2, p.Y);
-                Pointer2.Visibility = System.Windows.Visibility.Visible; // Moving the pointer visibility setter here appears to have improved the speed of the guy dramatically as there is no intermediary thread called just to 
-                //Show the pointer 
-            };
-
-            await Dispatcher.BeginInvoke(action);
-        }
-
         private class AnimationQueue
         {
             private List<DoubleAnimation> animation1;
@@ -200,6 +173,7 @@ namespace BACExperiment
 
             private int curent;
             private UIElement element;
+            private bool finished;
 
             public AnimationQueue(UIElement element, DependencyProperty property)
             {
@@ -218,6 +192,7 @@ namespace BACExperiment
                 animation2 = new List<DoubleAnimation>();
                 this.property1 = property1;
                 this.property2 = property2;
+               
             }
 
             public void queueAnimation(DoubleAnimation animation1, DoubleAnimation animation2)
@@ -225,6 +200,8 @@ namespace BACExperiment
 
                 this.animation1.Add(animation1);
                 this.animation2.Add(animation2);
+                
+
                 animation1.Completed += (s, e) =>
                 {
                     if (this.animation1.Contains(animation1))
@@ -267,6 +244,9 @@ namespace BACExperiment
                     {
                         element.BeginAnimation(property1, animation1[i]);
                         element.BeginAnimation(property2, animation2[i]);
+                        curent++;
+                        if (curent == animation1.Capacity)
+                            finished = true;
                     };
                 }
             }
@@ -284,7 +264,7 @@ namespace BACExperiment
         private void Window_Closed(object sender, EventArgs e)
         {
 
-            mainWindow.enableStartBtn();
+            mainWindow.OpenBtn.IsEnabled = true;
             mainWindow.complexitySlider.IsEnabled = true;
             mainWindow.SpeedSlider.IsEnabled = true;
             mainWindow.TrajectoryCheck.IsEnabled = true;
@@ -321,8 +301,7 @@ namespace BACExperiment
 
         private void SendInfo(object sender, ElapsedEventArgs e)
         {
-            // When the recording starts , the sending of information will also be sent . The only thing left is to make shure that the two timer threads are synched with the CoordinateHolder class 
-            // So that one does not update the numbers , while the
+            
 
             Action action = () =>
             {

@@ -29,11 +29,11 @@ namespace BACExperiment.Model
             double x, y;
             int a = 5;
             int b = 4;
-            int A = (int)window.ActualWidth / 3;// X Range in which the sfere will run around in
-            int B = (int)window.ActualHeight / 3;  // Y Range in which the sfere will run around in
+            int A = (int)window.ActualWidth / 5;// X Range in which the sfere will run around in
+            int B = (int)window.ActualHeight / 5 ;  // Y Range in which the sfere will run around in
             double d = Math.PI / 2;
             //float f = 3 / 2;
-            float o = 2 / 7;
+            double o = 2.0 / 7.0;
             double t;
             double lastX = 0;
             double lastY = 0;

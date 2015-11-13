@@ -197,7 +197,7 @@ namespace BACExperiment.GUI
 
                     var start = prompterText.Selection.Start.GetCharacterRect(LogicalDirection.Forward);
                     var end = prompterText.Selection.End.GetCharacterRect(LogicalDirection.Forward);
-                    scroller.ScrollToVerticalOffset(text.GetOffsetToPosition(endPos));
+                   // scroller.ScrollToVerticalOffset(text.GetOffsetToPosition(endPos));
                 }));
             }
 

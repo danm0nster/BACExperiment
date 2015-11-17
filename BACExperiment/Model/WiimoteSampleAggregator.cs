@@ -147,12 +147,17 @@ namespace BACExperiment.Model
             PointF delta = Stabilize(e.WiimoteState);
             Boolean all4 = true;
 
+            bool ir1 = false;
+            bool ir2 = false;
+
             for(int i = 0; i < 4; i++)
             {
                 if (float.IsNaN(current_IRState[i].X) || float.IsNaN(current_IRState[i].Y))
                 {
                     updated_IRState[i].X = prev_IRState[i].X + delta.X;
                     updated_IRState[i].Y = prev_IRState[i].Y + delta.Y;
+                    if (i == 0) ir1 = false;
+                    if (i == 1) ir2 = false;
                    
                 }
                 else
@@ -160,12 +165,14 @@ namespace BACExperiment.Model
                     updated_IRState[i].X = current_IRState[i].X;
                     updated_IRState[i].Y = current_IRState[i].Y;
 
+                    if (i == 0) ir1 = true;
+                    if (i == 1) ir2 = true;
                 }
 
                 all4 = all4 && e.WiimoteState.IRState.IRSensors[i].Found;
             }
 
-            if (all4 == true)
+            if (ir1 == true && ir2 == true)
             {
                 updated_IRState[4] = e.WiimoteState.IRState.Midpoint;
             }

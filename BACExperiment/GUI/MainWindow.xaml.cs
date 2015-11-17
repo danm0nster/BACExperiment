@@ -3,6 +3,7 @@ using BACExperiment.Model;
 using NAudio.Mixer;
 using NAudio.Wave;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,16 +36,16 @@ namespace BACExperiment
         private Service service;
         private StimulyWindow stimulyWindow;
         private Prompter prompter;
-       
+
 
         public MainWindow()
         {
-           
-            
+
+
             InitializeComponent();
-            
-               
-            
+
+
+
 
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -93,7 +94,7 @@ namespace BACExperiment
 
 
         #region MainCourseOfActionCode
-      
+
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -102,11 +103,11 @@ namespace BACExperiment
                 this.Cursor = Cursors.Wait;
                 stimulyWindow = StimulyWindow.GetInstance(this);
                 stimulyWindow.Visibility = System.Windows.Visibility.Visible;
-               
+
                 // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
-               
+
                 stimulyWindow.Show();
-            
+
                 this.Cursor = Cursors.Arrow;
                 GenerateCourseBtn.IsEnabled = true;
                 OpenBtn.IsEnabled = false;
@@ -125,7 +126,7 @@ namespace BACExperiment
             stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
             stimulyWindow.ResizeMode = ResizeMode.NoResize;
             TrajectoryCheck.IsEnabled = false;
-            stimulyWindow.buildCourseType1();
+            stimulyWindow.buildCourse();
             StartBtn.IsEnabled = true;
             GenerateCourseBtn.IsEnabled = false;
         }
@@ -177,9 +178,9 @@ namespace BACExperiment
                         System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
                         System.Windows.Media.Color color2 = (System.Windows.Media.Color)Color2.SelectedColor;
                         System.Windows.Media.Color color3 = (System.Windows.Media.Color)Color3.SelectedColor;
-                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)AsyncTraversalSpeed_Slider.Value,(int)Turn_duration_Slider.Value, (int)Switch_Frequency_Slider.Value, color1, color2, color3);
+                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)AsyncTraversalSpeed_Slider.Value, (int)Turn_duration_Slider.Value, (int)Switch_Frequency_Slider.Value, color1, color2, color3);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
                     }
@@ -191,7 +192,7 @@ namespace BACExperiment
                     {
                         prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)prompterSpeed.Value);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
                     }
@@ -502,17 +503,8 @@ namespace BACExperiment
         }
 
         private void Microphone_refresh_btn_Click(object sender, RoutedEventArgs e)
-        { /*
-            Microphone1_ComboBox.Items.Clear();
-            Microphone2_ComboBox.Items.Clear();
-            foreach (var mic in service.getMicrophoneList())
-            {
-                Microphone1_ComboBox.Items.Add(mic);
-                Microphone2_ComboBox.Items.Add(mic);
-            }
-            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
-            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
-         */
+        {
+
             service.getMicrophoneList();
         }
 
@@ -531,11 +523,19 @@ namespace BACExperiment
 
         }
 
-        private void SelfPaced_RBtn_Checked_1(object sender, RoutedEventArgs e)
+        private void Port_Ping_btn_Click(object sender, RoutedEventArgs e)
         {
-
+            service.PingExperimentStart();
         }
 
-        
+        private void Port_Phase1_btn_Click(object sender, RoutedEventArgs e)
+        {
+            service.PingFirstPhase();
+        }
+
+        private void Port_Phase2_btn_Click(object sender, RoutedEventArgs e)
+        {
+            service.PingSecondPhase();
+        }
     }
 }

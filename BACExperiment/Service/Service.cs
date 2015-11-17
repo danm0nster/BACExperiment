@@ -32,6 +32,7 @@ namespace BACExperiment
         #region Handlers
         private MicrophoneHandler microphones { get; set; }
         private WiimoteHandler WMHandler { get; set;}
+        private PortAccessHandler port { get; set; }
         #endregion
 
         #region Links
@@ -70,6 +71,8 @@ namespace BACExperiment
             wm1_data_context = new Wiimote1DataContext();
             wm2_data_context = new Wiimote1DataContext();
             mic_data_context = new MicViewModel();
+            port = PortAccessHandler.GetIntance();
+           
          
          
         }
@@ -182,7 +185,56 @@ namespace BACExperiment
         {
             microphones.SetVolume(value , i);
         }
-#endregion Microphone
+        #endregion Microphone
+
+        #region Port
+
+        public void WriteToPort(short Data)
+        {
+            port.Write(Data);
+        }
+
+        public void PingExperimentStart()
+        {
+            for (int i = 0; i <= 2; i++)
+            {
+                port.Write(255);
+                Thread.Sleep(1000);
+                port.Write(0);
+                Thread.Sleep(100);
+            }
+        }
+
+        public void PingFirstPhase()
+        {
+            port.Write(128);
+            Thread.Sleep(1000);
+            port.Write(0);
+        }
+
+        public void PingSecondPhase()
+        {
+            port.Write(64);
+            Thread.Sleep(1000);
+            port.Write(0);
+        }
+
+        public void PingThirdPhase()
+        {
+            port.Write(32);
+            Thread.Sleep(1000);
+            port.Write(0);
+        }
+
+        public void PingForthPhase()
+        {
+            port.Write(16);
+            Thread.Sleep(1000);
+            port.Write(0);
+        }
+
+        
+        #endregion
 
     }
 }   

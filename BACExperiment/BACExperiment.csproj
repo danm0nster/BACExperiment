@@ -128,7 +128,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Model\MicrophoneHandler.cs" />
-    <Compile Include="Model\SampleAggregator.cs" />
+    <Compile Include="Model\MicrophoneSampleAggregator.cs" />
+    <Compile Include="Model\PortAccessHandler.cs" />
     <Compile Include="Model\WiimoteCoordinate.cs" />
     <Compile Include="Model\WiimoteHandler.cs" />
     <Compile Include="Model\WiimoteSampleAggregator.cs" />

@@ -167,8 +167,18 @@
                                 </StackPanel>
                                 <StackPanel>
                                     <WrapPanel>
-                                        <Button x:Name="Microphone_refresh_btn" Content="Refresh" Click="Microphone_refresh_btn_Click"/>
+                                        <Button x:Name="Microphone_refresh_btn" Content="Refresh" Click="Microphone_refresh_btn_Click" Width="45" Height="25"/>
                                     </WrapPanel>
+                                    <WrapPanel>
+                                        <Button x:Name="Port_Ping_btn" Content="Ping" Click="Port_Ping_btn_Click" Width="45" Height="25"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Button x:Name="Port_Phase1_btn" Content="Phase1" Click="Port_Phase1_btn_Click" Width="45" Height="25"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Button x:Name="Port_Phase2_btn" Content="Phase2" Click="Port_Phase2_btn_Click" Width="45" Height="25"/>
+                                    </WrapPanel>
+
                                 </StackPanel>
                             </WrapPanel>
                         </GroupBox>

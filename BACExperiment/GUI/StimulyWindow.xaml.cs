@@ -17,6 +17,19 @@ namespace BACExperiment
     public partial class StimulyWindow : Window
     {
 
+        #region INotifyPropertyChangedImplementation
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Notify(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+
         //Links
         private Course course;
         private AnimationQueue queue1;
@@ -25,6 +38,7 @@ namespace BACExperiment
         private System.Timers.Timer t;
         private MainWindow mainWindow;
         private StimulyWindowViewModel model = StimulyWindowViewModel.GetInstance();
+      
 
         //Variables
         private int CourseMode;
@@ -33,16 +47,17 @@ namespace BACExperiment
         private bool random;
         private bool showTrajectory;
         private Random r = new Random();
-        int color = 0;
-        // 
+        private int color = 0;
+        private List<System.Windows.Point> coordinates;
 
-        
+
 
 
         private static StimulyWindow instance;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+     
         private delegate void  CourseGenerate(List<System.Windows.Point> coordiantes ) ;
+        CourseGenerate generate;
 
         public int getCourseMode() { return CourseMode; }
         public void setCourseMode(int CourseMode) { this.CourseMode = CourseMode; }
@@ -58,7 +73,7 @@ namespace BACExperiment
          
 
 
-        private StimulyWindow(MainWindow mainWindow)
+        private StimulyWindow(MainWindow mainWindow /*, string mode , int complexity*/ )
         {
 
            
@@ -80,33 +95,23 @@ namespace BACExperiment
 
             this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.OneWayToSource });
             this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.OneWayToSource });
-            
+
         }
 
 
         public void buildCourse()
         {
-
-
-            CourseGenerate del = SynchronousCourse;
-            List<System.Windows.Point> coordinates = new List<System.Windows.Point>();
-            if (CourseComplexity == 0)
+            if (generate == null)
+            { MessageBox.Show(" Please select a course setting from the main window before attempting to run ."); }
+            else
             {
-                coordinates = course.firstFuntion();
-            }
-            if (CourseComplexity == 1)
-            {
-                coordinates = course.secondFunction();
-            }
-            if (CourseComplexity == 2)
-            {
-                coordinates = course.thirdFunction();
-            }
+                if(CourseComplexity == null )
+                { MessageBox.Show(" Please select a course complexity ."); }
 
-
+            }
         }
 
-        private void SynchronousCourse(List<Point> coordinates )
+        private void Synchronous(List<Point> coordinates )
         {
           
             int i = 1;
@@ -167,20 +172,17 @@ namespace BACExperiment
 
         }
 
-        private void AsynchronousCourse()
+        private void Self_Paced(List<Point> coordinates)
         {
+           
             int i = 1;
             double lastX = 0;
             double lastY = 0;
-            while (i != this.coordinates.Count)
+            while (i != coordinates.Count)
             {
                     Line l = new Line();
                     l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
 
-                    if (showTrajectory == true)
-                    {
-
-                        //Starts the line drawing from where the first coordinate set is
                         if (lastX == 0 || lastY == 0)
                         {
                             lastX = coordinates[i].X;
@@ -200,8 +202,6 @@ namespace BACExperiment
                             l.Stroke = System.Windows.Media.Brushes.Red;
                         color++;
                         StimulyReferencePoint.Children.Add(l);
-                    }
-
                 }
 
                 //Position Ellipse to the begining of the course
@@ -216,7 +216,12 @@ namespace BACExperiment
                 lastY = coordinates[i].Y;
                 i++;
             }
+
+        private void Asynchronous(List<Point> coordinates)
+        {
+
         }
+        
         public void startCourse()
         {
             queue1.start();
@@ -325,8 +330,7 @@ namespace BACExperiment
 
             mainWindow.OpenBtn.IsEnabled = true;
             mainWindow.complexitySlider.IsEnabled = true;
-            mainWindow.SpeedSlider.IsEnabled = true;
-            mainWindow.TrajectoryCheck.IsEnabled = true;
+            mainWindow.SpeedSlider.IsEnabled = true;           
             mainWindow.StopFullRecording();
             recorder.Stop();
 
@@ -334,6 +338,8 @@ namespace BACExperiment
 
             instance = null;
         }
+
+        
 
         private Point makeToCartezian(int x, int y)
         {
@@ -343,11 +349,7 @@ namespace BACExperiment
             return p;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+      
         public void startRecording()
         {
             recorder.Run();
@@ -373,40 +375,12 @@ namespace BACExperiment
             Dispatcher.BeginInvoke(action);
         }
 
-        public void ShowPointer1()
-        {
-            Action action = () =>
-            {
-                Pointer1.Visibility = System.Windows.Visibility.Visible;
-            };
+    
 
-            Dispatcher.BeginInvoke(action);
-        }
-
-        public void ShowPointer2()
-        {
-            Action action = () =>
-            {
-                Pointer2.Visibility = System.Windows.Visibility.Visible;
-            };
-
-            Dispatcher.BeginInvoke(action);
-        }
+        
 
 
-
-        #region INotifyPropertyChangedImplementation
-
-        protected void Notify(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        #endregion
-
+  
 
     }
 }

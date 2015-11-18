@@ -21,17 +21,6 @@ namespace BACExperiment
     /// </summary>
     public partial class MainWindow : Window
     {
-        /* Declare 2 wiimotes for the application to use. The number of remotes can be changed if we need too.
-        For now I am keeping in mind the necesity we have . I also add a WiimoteStatus user controll for each 
-        of the wii remotes. That way we can store the methods of updating the gui with each change the wii remote
-        has , without too much hassle and with a better idea of where everything happens .*/
-
-        /* Wiimote wm1;
-         WiimoteInfo wm1_info;
-         Wiimote wm2;
-         WiimoteInfo wm2_info; */
-
-        /* Wiiremotes were moved in the service class for architecturall efficiency issues */
 
         private Service service;
         private StimulyWindow stimulyWindow;
@@ -54,9 +43,9 @@ namespace BACExperiment
 
 
             service = Service.getInstance(this);
-            ModeSelect.Items.Add(new ComboboxItem("Ellipse", "Ellipse"));
-            ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));
-            ModeSelect.Items.Add(new ComboboxItem("Pipe", "Pipe"));
+            ModeSelect.Items.Add(new ComboboxItem("Synchronous", "Synchronous"));
+            ModeSelect.Items.Add(new ComboboxItem("Asynchronous", "Asynchronous"));
+            ModeSelect.Items.Add(new ComboboxItem("Self-Paced", "Self-Paced"));
             Mic1_VolumeBar.DataContext = this;
             Mic2_VolumeBar.DataContext = this;
 
@@ -93,8 +82,20 @@ namespace BACExperiment
 
 
 
-        #region MainCourseOfActionCode
+        #region StimulySettingCode
 
+        private void ModeSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedIndex == 0) // Synchronous
+            {
+            }
+            if (((ComboBox)sender).SelectedIndex == 1) // Asynchronous
+            {
+            }
+            if (((ComboBox)sender).SelectedIndex == 2) // Self-Paced
+            {
+            }
+        }
 
         private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -111,6 +112,7 @@ namespace BACExperiment
                 this.Cursor = Cursors.Arrow;
                 GenerateCourseBtn.IsEnabled = true;
                 OpenBtn.IsEnabled = false;
+                CloseBtn.IsEnabled = true;
             }
 
             catch (Exception ex)
@@ -119,13 +121,19 @@ namespace BACExperiment
             }
         }
 
+        private void CloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            stimulyWindow.Close();
+            CloseBtn.IsEnabled = false;
+        }
+
         private void GenerateCourse_Click(object sender, RoutedEventArgs e)
         {
             stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
             stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
-            stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
+
             stimulyWindow.ResizeMode = ResizeMode.NoResize;
-            TrajectoryCheck.IsEnabled = false;
+
             stimulyWindow.buildCourse();
             StartBtn.IsEnabled = true;
             GenerateCourseBtn.IsEnabled = false;
@@ -537,5 +545,11 @@ namespace BACExperiment
         {
             service.PingSecondPhase();
         }
+
+        
+            //Color2.SelectedColor = ((ColorPicker)sender).SelectedColor;
+        
+
+        
     }
 }

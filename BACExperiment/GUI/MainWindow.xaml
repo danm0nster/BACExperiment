@@ -23,27 +23,43 @@
                                         <Button x:Name="OpenBtn" Content="Open" Click="OpenBtn_Click" Margin="10" Height="40"/>
                                         <Button x:Name="GenerateCourseBtn" Content="GenerateCourse" Click="GenerateCourse_Click" Margin="10" Height="40" IsEnabled="False"></Button>
                                         <Button x:Name="StartBtn" Content="Start " Click="StartBtn_Click" Margin="10" Height="40" IsEnabled="False"/>
+                                        <Button x:Name="CloseBtn" Content="Close " Click="CloseBtn_Click" Margin="10" Height="40" IsEnabled="False"/>
                                     </StackPanel>
                                 </GroupBox>
                                 <GroupBox Header="Stimuly settings">
                                     <StackPanel Orientation="Vertical" Width="250" Margin="0,0,0,0">
                                         <WrapPanel Height="25" Margin="0,0,0,2">
                                             <Label Content="Course mode :" Width="116" HorizontalContentAlignment="Right"/>
-                                            <ComboBox x:Name="ModeSelect" Width="134" IsEnabled="False" />
+                                            <ComboBox x:Name="ModeSelect" Width="134" IsEnabled="True" ItemsSource="{Binding Path=Modes}" SelectionChanged="ModeSelect_SelectionChanged"  />
                                         </WrapPanel>
-                                        <WrapPanel Height="25" Margin="0,2,0,2">
-                                            <Label Content="Course Complexity :" Height="25" Width="116" HorizontalContentAlignment="Center"/>
-                                            <Slider x:Name="complexitySlider" Height="25" Width="133"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1" IsSnapToTickEnabled="True"  />
+                                        <WrapPanel>
+                                            <xctk:ColorPicker  x:Name="Subject1" Width="90"  Margin="0,2,0,2" SelectedColor="Aquamarine"></xctk:ColorPicker>
+                                            <xctk:ColorPicker  x:Name="Subject2" Width="90"  Margin="0,2,0,2" SelectedColor="Salmon" ></xctk:ColorPicker>
                                         </WrapPanel>
-                                        <WrapPanel Height="25" Margin=" 0,2">
-                                            <Label Content="Course speed :" Height="25" HorizontalContentAlignment="Right" HorizontalAlignment="Center" Width="116"/>
-                                            <Slider x:Name="SpeedSlider" Height="25" Width="134" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" />
-                                        </WrapPanel>
-                                        <WrapPanel Height="25" Margin="0">
-                                            <CheckBox x:Name="RandomCheck" Content="Random" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="73" IsEnabled="False"/>
-                                            <CheckBox x:Name="TrajectoryCheck" Content="Trajectory" Height="25" Width="76" VerticalAlignment="Center"  />
-                                            <CheckBox x:Name="AxisCheck" Content="Axis" Height="25" Width="43" VerticalAlignment="Center" />
-                                        </WrapPanel>
+                                        <GroupBox x:Name="SynchronousGroupBox" Margin="0,10" IsEnabled="False">
+                                            <StackPanel>
+                                            <WrapPanel Height="25" >
+                                                <Label Content="Complexity :" Height="25" Width="116" HorizontalContentAlignment="Right"/>
+                                                <Slider x:Name="complexitySlider" Height="25" Width="118"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1" IsSnapToTickEnabled="True"  />
+                                            </WrapPanel>
+                                            <WrapPanel Height="25">
+                                                <Label Content="Speed :" Height="25" HorizontalContentAlignment="Right" HorizontalAlignment="Center" Width="116"/>
+                                                <Slider x:Name="SpeedSlider" Height="25" Width="118" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" />
+                                            </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox x:Name="Asynchronous" Margin="0,10" IsEnabled="False">
+                                            <StackPanel>
+                                                <WrapPanel Height="25" >
+                                                    <Label Content="Complexity :" Height="25" Width="116" HorizontalContentAlignment="Right"/>
+                                                    <Slider x:Name="complexitySlider2" Height="25" Width="118"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1" IsSnapToTickEnabled="True"  />
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Speed :" Height="25" HorizontalContentAlignment="Right" HorizontalAlignment="Center" Width="116"/>
+                                                    <Slider x:Name="SpeedSlider2" Height="25" Width="118" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" />
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
                                     </StackPanel>
                                 </GroupBox>
 

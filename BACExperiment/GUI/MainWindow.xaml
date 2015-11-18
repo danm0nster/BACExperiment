@@ -6,7 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="815" Width="980" ResizeMode="NoResize" Loaded="Window_Loaded" Background="White" >
+        Title="MainWindow" Height="815" Width="980" ResizeMode="NoResize" Background="White" >
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="22*"/>

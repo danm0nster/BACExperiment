@@ -76,10 +76,7 @@ namespace BACExperiment
                 return Text;
             }
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
+        
 
 
         #region StimulySettingCode

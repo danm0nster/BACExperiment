@@ -7,6 +7,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 namespace BACExperiment
@@ -36,28 +37,23 @@ namespace BACExperiment
         private coordinateRecorder recorder;
         private CoordinateHolder holder;
         private System.Timers.Timer t;
+        private System.Timers.Timer checkPointTimer;
         private MainWindow mainWindow;
         private StimulyWindowViewModel model = StimulyWindowViewModel.GetInstance();
-      
+        private System.Windows.Media.Brush lineBrush;
 
         //Variables
         private int CourseMode;
         private int CourseSpeed;
-        private int CourseComplexity;
-        private bool random;
-        private bool showTrajectory;
-        private Random r = new Random();
-        private int color = 0;
-        private List<System.Windows.Point> coordinates;
+        private int CourseComplexity = -1;
+        private bool random;      
+        private int currentCheckPoint = 0;
+        private List<System.Windows.Point> coordinates = new List<Point>();
+        private List<System.Windows.Point> checkPoints = new List<Point>();
+        private int StrokeThickness;
 
-
-
-
-        private static StimulyWindow instance;
-
-     
-        private delegate void  CourseGenerate(List<System.Windows.Point> coordiantes ) ;
-        CourseGenerate generate;
+        private delegate void  CourseGenerate() ;
+        private CourseGenerate generate ;
 
         public int getCourseMode() { return CourseMode; }
         public void setCourseMode(int CourseMode) { this.CourseMode = CourseMode; }
@@ -67,23 +63,22 @@ namespace BACExperiment
         public void setCourseComplexity(int CourseComplexity) { this.CourseComplexity = CourseComplexity; }
         public bool isRandom() { return random; }
         public void setRandom(bool random) { this.random = random; }
-        public bool isShowTrajectory() { return showTrajectory; }
-        public void setShowTrajectory(bool value) { this.showTrajectory = value; }
-        public static StimulyWindow GetInstance(MainWindow observer) { if(instance == null){ instance = new StimulyWindow(observer);} return instance; }
-         
+      
+    
 
 
-        private StimulyWindow(MainWindow mainWindow /*, string mode , int complexity*/ )
+        public StimulyWindow(MainWindow mainWindow , string mode , int complexity , int Speed, System.Windows.Media.Color color1 , System.Windows.Media.Color color2 , System.Windows.Media.Color color3 )
         {
-
-           
-          
+     
             InitializeComponent();
+            Pointer1.Stroke = new SolidColorBrush(color1);
             Pointer1.DataContext = model;
+            Pointer2.Stroke = new SolidColorBrush(color2);
             Pointer2.DataContext = model;
-          
+            lineBrush = new SolidColorBrush(color3);
+            CourseSpeed = Speed;
             
-            course = new Course(this);
+           
             this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
             recorder = coordinateRecorder.getInstance(this);
@@ -96,22 +91,98 @@ namespace BACExperiment
             this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.OneWayToSource });
             this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.OneWayToSource });
 
+            if (mode == "Asynchronous")
+            {
+                generate = Asynchronous;
+                checkPointTimer = new System.Timers.Timer();
+                checkPointTimer.Interval = 1;
+                checkPointTimer.Elapsed += new ElapsedEventHandler(ShowNextCheckPoint);
+            }
+            if (mode == "Synchronous")
+                generate = Synchronous;
+            if (mode == "Self-Paced")
+                generate = Self_Paced;
+
+            CourseComplexity = complexity;
+          
         }
 
+        public StimulyWindow(MainWindow mainWindow , System.Windows.Media.Color color1, System.Windows.Media.Color color2, System.Windows.Media.Color color3 , int StrokeThickness) 
+        {
+            InitializeComponent();
+            Pointer1.Stroke = new SolidColorBrush(color1);
+            Pointer1.DataContext = model;
+            Pointer2.Stroke = new SolidColorBrush(color2);
+            Pointer2.DataContext = model;
+            lineBrush = new SolidColorBrush(color3);
+            this.StrokeThickness = StrokeThickness;
 
+         
+            this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
+            this.mainWindow = mainWindow;
+            recorder = coordinateRecorder.getInstance(this);
+            holder = CoordinateHolder.GetInstance();
+
+            t = new System.Timers.Timer();
+            t.Elapsed += new ElapsedEventHandler(SendInfo);
+            t.Interval += 100;
+
+            this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.OneWayToSource });
+            this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.OneWayToSource });
+
+            generate = Self_Paced;
+            CourseComplexity = 1;
+            
+        }
+        private void ShowNextCheckPoint(object sender, ElapsedEventArgs e)
+        {
+
+            Action action = () =>
+            {
+                Canvas.SetLeft(CheckPointEllipse, checkPoints[currentCheckPoint].X-50);
+                Canvas.SetTop(CheckPointEllipse, checkPoints[currentCheckPoint].Y-50);
+                CheckPointEllipse.Visibility = System.Windows.Visibility.Visible;
+                currentCheckPoint++;
+            };
+            this.Dispatcher.Invoke(action);
+            if(checkPointTimer.Interval == 1)
+            checkPointTimer.Interval = 1000 / CourseSpeed * 60; 
+
+        }
+
+       
         public void buildCourse()
         {
+            course = new Course(this);
+            try {
+                if (CourseComplexity == 0)
+                    coordinates = course.simpleFunction();
+                if (CourseComplexity == 1)
+                    coordinates = course.firstFunction();
+                if (CourseComplexity == 2)
+                    coordinates = course.secondFunction();
+                if (CourseComplexity == 3)
+                    coordinates = course.thirdFunction();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             if (generate == null)
             { MessageBox.Show(" Please select a course setting from the main window before attempting to run ."); }
             else
             {
-                if(CourseComplexity == null )
-                { MessageBox.Show(" Please select a course complexity ."); }
-
+                if(CourseComplexity == -1 )
+                { MessageBox.Show(" Please select a course complexity . If the problem persists please contact our developer team of one."); }
+                else
+                {
+                    generate();
+                }
             }
         }
 
-        private void Synchronous(List<Point> coordinates )
+        private void Synchronous()
         {
           
             int i = 1;
@@ -123,38 +194,9 @@ namespace BACExperiment
 
                 if (Math.Abs(coordinates[i].X - coordinates[i - 1].X) > 3 || Math.Abs(coordinates[i].Y - coordinates[i - 1].Y) > 3)
                 {
-                   this.queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed / 3))),
-                                           new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed / 3)))
+                   this.queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed ))),
+                                           new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed )))
                                            );
-
-                    Line l = new Line();
-                    l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-
-                    if (showTrajectory == true)
-                    {
-
-                        //Starts the line drawing from where the first coordinate set is
-                        if (lastX == 0 || lastY == 0)
-                        {
-                            lastX = coordinates[i].X;
-                            lastY = coordinates[i].Y;
-                        }
-
-                        //Draw the line 
-                        l.X1 = lastX;
-                        l.X2 = coordinates[i].X;
-                        l.Y1 = lastY;
-                        l.Y2 = coordinates[i].Y;
-
-                        l.StrokeThickness = 2;
-                        if (color % 2 == 0)
-                            l.Stroke = System.Windows.Media.Brushes.Blue;
-                        else
-                            l.Stroke = System.Windows.Media.Brushes.Red;
-                        color++;
-                        StimulyReferencePoint.Children.Add(l);
-                    }
-
                 }
 
                 //Position Ellipse to the begining of the course
@@ -172,36 +214,88 @@ namespace BACExperiment
 
         }
 
-        private void Self_Paced(List<Point> coordinates)
+        private void Self_Paced()
         {
-           
+
             int i = 1;
             double lastX = 0;
             double lastY = 0;
             while (i != coordinates.Count)
             {
+                Line l = new Line();
+                l.Stroke = lineBrush;
+
+                if (lastX == 0 || lastY == 0)
+                {
+                    lastX = coordinates[i].X;
+                    lastY = coordinates[i].Y;
+                }
+
+                //Draw the line 
+                l.X1 = lastX;
+                l.X2 = coordinates[i].X;
+                l.Y1 = lastY;
+                l.Y2 = coordinates[i].Y;
+
+                l.StrokeThickness = StrokeThickness;
+
+                StimulyReferencePoint.Children.Add(l);
+
+
+                //Position Ellipse to the begining of the course
+
+                if (i == 1)
+                {
+                    Canvas.SetLeft(StimulyEllipse1, coordinates[i].X - 50);
+                    Canvas.SetTop(StimulyEllipse1, coordinates[i].Y - 50);
+                }
+
+                lastX = coordinates[i].X;
+                lastY = coordinates[i].Y;
+                i++;
+            }
+        }
+        private void Asynchronous()
+        {
+            int agregator = 0;
+            int i = 1;
+            double lastX = 0;
+            double lastY = 0;
+            while (i != coordinates.Count)
+            {
+
+
+                if (Math.Abs(coordinates[i].X - coordinates[i - 1].X) > 3 || Math.Abs(coordinates[i].Y - coordinates[i - 1].Y) > 3)
+                {
+                    this.queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed ))),
+                                            new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed )))
+                                            );
                     Line l = new Line();
                     l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
 
-                        if (lastX == 0 || lastY == 0)
-                        {
-                            lastX = coordinates[i].X;
-                            lastY = coordinates[i].Y;
-                        }
+                    if (lastX == 0 || lastY == 0)
+                    {
+                        lastX = coordinates[i].X;
+                        lastY = coordinates[i].Y;
+                    }
 
-                        //Draw the line 
-                        l.X1 = lastX;
-                        l.X2 = coordinates[i].X;
-                        l.Y1 = lastY;
-                        l.Y2 = coordinates[i].Y;
+                    //Draw the line 
+                    l.X1 = lastX;
+                    l.X2 = coordinates[i].X;
+                    l.Y1 = lastY;
+                    l.Y2 = coordinates[i].Y;
 
-                        l.StrokeThickness = 2;
-                        if (color % 2 == 0)
-                            l.Stroke = System.Windows.Media.Brushes.Blue;
-                        else
-                            l.Stroke = System.Windows.Media.Brushes.Red;
-                        color++;
-                        StimulyReferencePoint.Children.Add(l);
+                    l.StrokeThickness = StrokeThickness;
+
+                    StimulyReferencePoint.Children.Add(l);
+
+                    agregator++;
+
+                    if (agregator == 50)
+                    {
+                        checkPoints.Add(new Point(coordinates[i].X, coordinates[i].Y));
+                        agregator = 0;
+                    }
                 }
 
                 //Position Ellipse to the begining of the course
@@ -216,15 +310,16 @@ namespace BACExperiment
                 lastY = coordinates[i].Y;
                 i++;
             }
-
-        private void Asynchronous(List<Point> coordinates)
-        {
-
         }
         
         public void startCourse()
         {
-            queue1.start();
+            if (queue1.NotEmpty)
+                queue1.start();
+            else
+                StimulyEllipse1.Visibility = System.Windows.Visibility.Hidden;
+            if(checkPointTimer != null)
+            checkPointTimer.Start();
         }
 
         private class AnimationQueue
@@ -237,10 +332,11 @@ namespace BACExperiment
 
             private int curent;
             private UIElement element;
-            private bool finished;
-
+            public bool NotEmpty = false;
+            public int Count=0;
             public AnimationQueue(UIElement element, DependencyProperty property)
             {
+              
                 curent = -1;
                 this.element = element;
                 animation1 = new List<DoubleAnimation>();
@@ -264,12 +360,13 @@ namespace BACExperiment
 
                 this.animation1.Add(animation1);
                 this.animation2.Add(animation2);
-                
+                NotEmpty = true;
 
                 animation1.Completed += (s, e) =>
                 {
                     if (this.animation1.Contains(animation1))
                     {
+                        
                         int index1 = this.animation1.IndexOf(animation1);
                         if (index1 + 1 < this.animation1.Count)
                         {
@@ -309,8 +406,7 @@ namespace BACExperiment
                         element.BeginAnimation(property1, animation1[i]);
                         element.BeginAnimation(property2, animation2[i]);
                         curent++;
-                        if (curent == animation1.Capacity)
-                            finished = true;
+                        
                     };
                 }
             }
@@ -335,8 +431,8 @@ namespace BACExperiment
             recorder.Stop();
 
             t.Stop();
-
-            instance = null;
+            checkPointTimer.Stop();
+           
         }
 
         
@@ -363,7 +459,6 @@ namespace BACExperiment
         private void SendInfo(object sender, ElapsedEventArgs e)
         {
             
-
             Action action = () =>
             {
 
@@ -374,13 +469,5 @@ namespace BACExperiment
 
             Dispatcher.BeginInvoke(action);
         }
-
-    
-
-        
-
-
-  
-
     }
 }

@@ -85,12 +85,21 @@ namespace BACExperiment
         {
             if (((ComboBox)sender).SelectedIndex == 0) // Synchronous
             {
+                AsynchronousGroupBox.IsEnabled = false;
+                SelfpacedCombobox.IsEnabled = false;
+                SynchronousGroupBox.IsEnabled = true;
             }
             if (((ComboBox)sender).SelectedIndex == 1) // Asynchronous
             {
+                AsynchronousGroupBox.IsEnabled = true;
+                SelfpacedCombobox.IsEnabled = false;
+                SynchronousGroupBox.IsEnabled = false;
             }
             if (((ComboBox)sender).SelectedIndex == 2) // Self-Paced
             {
+                AsynchronousGroupBox.IsEnabled = false;
+                SelfpacedCombobox.IsEnabled = true;
+                SynchronousGroupBox.IsEnabled = false;
             }
         }
 
@@ -99,23 +108,48 @@ namespace BACExperiment
             try
             {
                 this.Cursor = Cursors.Wait;
-                stimulyWindow = StimulyWindow.GetInstance(this);
-                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
 
-                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
+                System.Windows.Media.Color color1 = (System.Windows.Media.Color)Subject1.SelectedColor;
+                System.Windows.Media.Color color2 = (System.Windows.Media.Color)Subject2.SelectedColor;
+                System.Windows.Media.Color color3 = (System.Windows.Media.Color)CourseColorPicker.SelectedColor;
 
-                stimulyWindow.Show();
+                if (ModeSelect.SelectedIndex == -1)
+                {
+                    System.Windows.MessageBox.Show("Please select a course mode before attempting to run the experiment");
+                }
+                else
+                {
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Synchronous")
+                    {
+                        stimulyWindow = new StimulyWindow(this, "Synchronous", (int)complexitySlider.Value, (int)SpeedSlider.Value, color1, color2, color3);
+                    }
+                    else
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Asynchronous")
+                    {
+                        stimulyWindow = new StimulyWindow(this, "Asynchronous", (int)complexitySlider2.Value, (int)SpeedSlider2.Value, color1, color2, color3);
+                    }
+                    else
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Self-Paced")
+                    {
+                        stimulyWindow = new StimulyWindow(this, color1, color2, color3, (int)LineThicknessPicker.Value);
+                    }
 
-                this.Cursor = Cursors.Arrow;
-                GenerateCourseBtn.IsEnabled = true;
-                OpenBtn.IsEnabled = false;
-                CloseBtn.IsEnabled = true;
+                    stimulyWindow.Show();
+
+
+                    GenerateCourseBtn.IsEnabled = true;
+                    OpenBtn.IsEnabled = false;
+                    CloseBtn.IsEnabled = true;
+                }
+
+                
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
             }
+            this.Cursor = Cursors.Arrow;
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
@@ -126,11 +160,9 @@ namespace BACExperiment
 
         private void GenerateCourse_Click(object sender, RoutedEventArgs e)
         {
-            stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
-            stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
-
+           
             stimulyWindow.ResizeMode = ResizeMode.NoResize;
-
+            
             stimulyWindow.buildCourse();
             StartBtn.IsEnabled = true;
             GenerateCourseBtn.IsEnabled = false;

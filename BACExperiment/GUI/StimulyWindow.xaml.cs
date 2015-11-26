@@ -51,6 +51,8 @@ namespace BACExperiment
         private List<System.Windows.Point> coordinates = new List<Point>();
         private List<System.Windows.Point> checkPoints = new List<Point>();
         private int StrokeThickness;
+        private SolidColorBrush color1;
+        private SolidColorBrush color2;
 
         private delegate void  CourseGenerate() ;
         private CourseGenerate generate ;
@@ -71,9 +73,14 @@ namespace BACExperiment
         {
      
             InitializeComponent();
+            
             Pointer1.Stroke = new SolidColorBrush(color1);
+            this.color1 = new SolidColorBrush(color1);
             Pointer1.DataContext = model;
             Pointer2.Stroke = new SolidColorBrush(color2);
+            this.color2 = new SolidColorBrush(color2);
+            StimulyEllipse1.Stroke = this.color1;
+            CheckPointEllipse.Stroke = this.color2;
             Pointer2.DataContext = model;
             lineBrush = new SolidColorBrush(color3);
             CourseSpeed = Speed;
@@ -87,6 +94,7 @@ namespace BACExperiment
             t = new System.Timers.Timer();
             t.Elapsed += new ElapsedEventHandler(SendInfo);
             t.Interval += 100;
+ 
 
             this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.OneWayToSource });
             this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.OneWayToSource });
@@ -95,8 +103,9 @@ namespace BACExperiment
             {
                 generate = Asynchronous;
                 checkPointTimer = new System.Timers.Timer();
-                checkPointTimer.Interval = 1;
+                checkPointTimer.Interval = 1000.0 / CourseSpeed * 50;
                 checkPointTimer.Elapsed += new ElapsedEventHandler(ShowNextCheckPoint);
+                queue1.checkPointHandler += new EventHandler(ShowNextCheckPoint);
             }
             if (mode == "Synchronous")
                 generate = Synchronous;
@@ -134,21 +143,45 @@ namespace BACExperiment
             CourseComplexity = 1;
             
         }
-        private void ShowNextCheckPoint(object sender, ElapsedEventArgs e)
-        {
-
-            Action action = () =>
-            {
-                Canvas.SetLeft(CheckPointEllipse, checkPoints[currentCheckPoint].X-50);
-                Canvas.SetTop(CheckPointEllipse, checkPoints[currentCheckPoint].Y-50);
-                CheckPointEllipse.Visibility = System.Windows.Visibility.Visible;
-                currentCheckPoint++;
-            };
-            this.Dispatcher.Invoke(action);
-            if(checkPointTimer.Interval == 1)
-            checkPointTimer.Interval = 1000 / CourseSpeed * 60; 
-
+        private void ShowNextCheckPoint(object sender, EventArgs e)
+         {
+                Action action = () =>
+                {
+                    CheckPoint();
+                };
+                this.Dispatcher.Invoke(action);
+                
+            
         }
+
+        private void CheckPoint()
+        {
+            if ( currentCheckPoint == 0 || ( Canvas.GetLeft(StimulyEllipse1) == Canvas.GetLeft(CheckPointEllipse) && Canvas.GetTop(StimulyEllipse1)== Canvas.GetTop(CheckPointEllipse)))
+            {
+                
+                Canvas.SetLeft(CheckPointEllipse, checkPoints[currentCheckPoint].X);
+                Canvas.SetTop(CheckPointEllipse, checkPoints[currentCheckPoint].Y);
+
+                if (currentCheckPoint != 0)
+                {
+                    if (StimulyEllipse1.Stroke == color2)
+                    {
+                        CheckPointEllipse.Stroke = color2;
+                        StimulyEllipse1.Stroke = color1;
+                    }
+                    else
+                    {
+                        CheckPointEllipse.Stroke = color1;
+                        StimulyEllipse1.Stroke = color2;
+                    }
+                }
+
+                currentCheckPoint++;
+
+            }
+           
+        }
+
 
        
         public void buildCourse()
@@ -267,8 +300,8 @@ namespace BACExperiment
 
                 if (Math.Abs(coordinates[i].X - coordinates[i - 1].X) > 3 || Math.Abs(coordinates[i].Y - coordinates[i - 1].Y) > 3)
                 {
-                    this.queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed ))),
-                                            new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000 / CourseSpeed )))
+                    this.queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000.00 / CourseSpeed))),
+                                            new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000.00 / CourseSpeed)))
                                             );
                     Line l = new Line();
                     l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
@@ -289,13 +322,14 @@ namespace BACExperiment
 
                     StimulyReferencePoint.Children.Add(l);
 
-                    agregator++;
 
                     if (agregator == 50)
                     {
-                        checkPoints.Add(new Point(coordinates[i].X, coordinates[i].Y));
+                        checkPoints.Add(new Point(coordinates[i].X-50, coordinates[i].Y-50));
                         agregator = 0;
                     }
+                    agregator++;
+
                 }
 
                 //Position Ellipse to the begining of the course
@@ -317,13 +351,18 @@ namespace BACExperiment
             if (queue1.NotEmpty)
                 queue1.start();
             else
-                StimulyEllipse1.Visibility = System.Windows.Visibility.Hidden;
-            if(checkPointTimer != null)
-            checkPointTimer.Start();
+                StimulyEllipse1.Visibility = System.Windows.Visibility.Visible;
+            if (checkPointTimer != null)
+            {
+                checkPointTimer.Start();
+                ShowNextCheckPoint(null , null);
+            }
         }
 
         private class AnimationQueue
         {
+            public EventHandler checkPointHandler;
+
             private List<DoubleAnimation> animation1;
             private DependencyProperty property1;
 
@@ -372,6 +411,7 @@ namespace BACExperiment
                         {
                             element.BeginAnimation(property1, this.animation1[index1 + 1]);
                         }
+                        
                     }
                 };
                 animation2.Completed += (s, e) =>
@@ -384,7 +424,10 @@ namespace BACExperiment
                             element.BeginAnimation(property2, this.animation2[index2 + 1]);
 
                         }
+                        if (checkPointHandler != null)
+                            checkPointHandler(this , new EventArgs());
                     }
+                    Count++;
                 };
 
 
@@ -434,17 +477,6 @@ namespace BACExperiment
             checkPointTimer.Stop();
            
         }
-
-        
-
-        private Point makeToCartezian(int x, int y)
-        {
-            Point p = new Point();
-            p.X = (500 - x);
-            p.Y = (500 - y);
-            return p;
-        }
-
       
         public void startRecording()
         {

@@ -51,8 +51,9 @@ namespace BACExperiment.GUI
                 this.textSize = fontSize;
                 InitializeComponent();
 
+
                 scrollTimer.Elapsed += new ElapsedEventHandler(ScrollDownEvent);
-                scrollTimer.Interval = 600 * _ScrollDowndSpeed;
+                scrollTimer.Interval = 1000 / _ScrollDowndSpeed;
 
                 StreamReader reader = new StreamReader(@path, Encoding.Default, true);
                 prompterText.AppendText(reader.ReadToEnd());
@@ -64,6 +65,10 @@ namespace BACExperiment.GUI
                 {
                     text = text.GetNextContextPosition(LogicalDirection.Forward);
                 }
+
+                this.KeyDown += new KeyEventHandler(PrompterWindow_KeyDown_OnSelfPaced);
+
+
             }
             catch (Exception ex)
             {
@@ -98,8 +103,9 @@ namespace BACExperiment.GUI
                 TextPointer endPos = text.GetPositionAtOffset(index + 30);
                 prompterText.Selection.Select(startPos, endPos);
                 prompterText.SelectionBrush = brush1;
-               
 
+                this.KeyDown += new KeyEventHandler(PrompterWindow_KeyDown_AsyncAndSync);
+             
             }
 
             catch(Exception Ex)
@@ -108,7 +114,7 @@ namespace BACExperiment.GUI
             }
         }
 
-        public Prompter(int fontSize, string path, int _TraversalSpeed, int _TurnDuration, int _SwitchDuration , System.Windows.Media.Color color1 , System.Windows.Media.Color color2 , System.Windows.Media.Color color3)
+        public Prompter(int fontSize, string path, int _TraversalSpeed, int _TurnDuration, int _SwitchDuration, System.Windows.Media.Color color1, System.Windows.Media.Color color2, System.Windows.Media.Color color3)
         {
             try
             {
@@ -142,6 +148,7 @@ namespace BACExperiment.GUI
                 prompterText.Selection.Select(startPos, endPos);
                 prompterText.SelectionBrush = brush1;
 
+                this.KeyDown += new KeyEventHandler(PrompterWindow_KeyDown_AsyncAndSync);
             }
 
             catch (Exception Ex)
@@ -149,6 +156,54 @@ namespace BACExperiment.GUI
                 MessageBox.Show(Ex.Message);
             }
         }
+
+        private void PrompterWindow_KeyDown_AsyncAndSync(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.A)
+            {
+                scroller.ScrollToVerticalOffset(scroller.VerticalOffset + FontSize / 2);
+            }
+            if (e.Key == Key.S)
+            {
+                scroller.Focus();
+                scroller.ScrollToVerticalOffset(scroller.VerticalOffset - FontSize / 2);
+            }
+            if (e.Key == Key.Q)
+            {
+                traversallTimer.Stop();
+                traversallTimer.Interval = traversallTimer.Interval + 50;
+                traversallTimer.Start();
+            }
+            if (e.Key == Key.W)
+            {
+                traversallTimer.Stop();
+                if (traversallTimer.Interval > 50)
+                traversallTimer.Interval = traversallTimer.Interval - 50;
+                traversallTimer.Start();
+            }
+        }
+
+        private void PrompterWindow_KeyDown_OnSelfPaced(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.A)
+            {
+                scrollTimer.Stop();
+                scrollTimer.Interval = scrollTimer.Interval + 100;
+                scrollTimer.Start();
+            }
+            if(e.Key == Key.S)
+            {
+                scrollTimer.Stop();
+                if(scrollTimer.Interval-100 > 0)
+                scrollTimer.Interval = scrollTimer.Interval - 100;
+                scrollTimer.Start();
+            }
+        }
+
+      
+
+
+       
 
         private void ColorSwitchEvent2(object sender, ElapsedEventArgs e)
         {
@@ -167,6 +222,7 @@ namespace BACExperiment.GUI
                            prompterText.SelectionBrush = brush1;
                        }
                        switchTimer.Stop();
+                       colorTimer.Start();
                    }));
              
 
@@ -217,7 +273,6 @@ namespace BACExperiment.GUI
                             direction = 0;
                             prompterText.Focus();
                             prompterText.SelectionBrush = brush2;
-                            switchTimer.Start();
                             
                         }
                         else
@@ -226,8 +281,9 @@ namespace BACExperiment.GUI
                             direction = 1;
                             prompterText.Focus();
                             prompterText.SelectionBrush = brush2;
-                            switchTimer.Start();
                         }
+                        switchTimer.Start();
+                        colorTimer.Stop();
                     }
                     ));
             }
@@ -243,8 +299,8 @@ namespace BACExperiment.GUI
             {
                 this.Dispatcher.Invoke((Action)(() =>
                 {
-                    scroller.Focus();
-                    scroller.ScrollToVerticalOffset(scroller.VerticalOffset + prompterText.FontSize/20);
+                 
+                    scroller.ScrollToVerticalOffset(scroller.VerticalOffset + prompterText.FontSize/5);
                 }
                 ));
             }

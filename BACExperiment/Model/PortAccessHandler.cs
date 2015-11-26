@@ -10,7 +10,7 @@ namespace BACExperiment.Model
 {
     class PortAccessHandler
     {
-        int address = 888;
+       
         private static PortAccessHandler instance;
 
         [DllImport("inpout32.dll")]

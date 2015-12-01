@@ -3,6 +3,9 @@ using BACExperiment.Model;
 using NAudio.Mixer;
 using NAudio.Wave;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,13 +22,27 @@ namespace BACExperiment
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window , INotifyPropertyChanged
     {
 
         private Service service;
-        private StimulyWindow stimulyWindow;
-        private Prompter prompter;
+        private MovementWindow stimulyWindow;
+        private ReadingWIndow prompter;
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        #region INotifyPropertyChanged Members
+
+        protected void Notify(string propName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+        #endregion
+
+
+        private ObservableCollection<Window> _sequenceList;
 
         public MainWindow()
         {
@@ -33,8 +50,8 @@ namespace BACExperiment
 
             InitializeComponent();
 
-
-
+            _sequenceList = new ObservableCollection<Window>();
+            SequenceListView.DataContext = _sequenceList;
 
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -79,7 +96,7 @@ namespace BACExperiment
         
 
 
-        #region StimulySettingCode
+        #region MovementSettingCode
 
         private void ModeSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -121,17 +138,17 @@ namespace BACExperiment
                 {
                     if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Synchronous")
                     {
-                        stimulyWindow = new StimulyWindow(this, "Synchronous", (int)complexitySlider.Value, (int)SpeedSlider.Value, color1, color2, color3);
+                        stimulyWindow = new MovementWindow(this, "Synchronous", (int)complexitySlider.Value, (int)SpeedSlider.Value, color1, color2, color3);
                     }
                     else
                     if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Asynchronous")
                     {
-                        stimulyWindow = new StimulyWindow(this, "Asynchronous", (int)complexitySlider2.Value, (int)SpeedSlider2.Value, color1, color2, color3);
+                        stimulyWindow = new MovementWindow(this, "Asynchronous", (int)complexitySlider2.Value, (int)SpeedSlider2.Value, color1, color2, color3);
                     }
                     else
                     if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Self-Paced")
                     {
-                        stimulyWindow = new StimulyWindow(this, color1, color2, color3, (int)LineThicknessPicker.Value);
+                        stimulyWindow = new MovementWindow(this, color1, color2, color3, (int)LineThicknessPicker.Value);
                     }
 
                     stimulyWindow.Show();
@@ -188,6 +205,48 @@ namespace BACExperiment
             StartBtn.IsEnabled = true;
         }
 
+        private void AddToSequence_Click(object sender, RoutedEventArgs e)
+        {
+            MovementWindow window = null;
+            try
+            {
+            System.Windows.Media.Color color1 = (System.Windows.Media.Color)Subject1.SelectedColor;
+            System.Windows.Media.Color color2 = (System.Windows.Media.Color)Subject2.SelectedColor;
+            System.Windows.Media.Color color3 = (System.Windows.Media.Color)CourseColorPicker.SelectedColor;
+
+            if (ModeSelect.SelectedIndex == -1)
+            {
+                System.Windows.MessageBox.Show("Please select a course mode before attempting to run the experiment");
+            }
+            else
+            {
+
+                if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Synchronous")
+                {
+                    window = new MovementWindow(this, "Synchronous", (int)complexitySlider.Value, (int)SpeedSlider.Value, color1, color2, color3);
+                }
+                else
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Asynchronous")
+                {
+                    window = new MovementWindow(this, "Asynchronous", (int)complexitySlider2.Value, (int)SpeedSlider2.Value, color1, color2, color3);
+                }
+                else
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Self-Paced")
+                {
+                    window = new MovementWindow(this, color1, color2, color3, (int)LineThicknessPicker.Value);
+                }
+            }
+
+          
+                if (window != null)
+                    _sequenceList.Add(window);
+            }
+            catch(Exception ex)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show(ex.ToString());
+            }
+            
+        }
         #endregion
 
 
@@ -201,7 +260,7 @@ namespace BACExperiment
                     try
                     {
                         System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
-                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)SyncTraversalSpeed_Slider.Value, color1);
+                        prompter = new ReadingWIndow((int)TextSizeSlider.Value, pathTxt.Text, (int)SyncTraversalSpeed_Slider.Value, color1);
                     }
                     catch (Exception ex)
                     {
@@ -215,7 +274,7 @@ namespace BACExperiment
                         System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
                         System.Windows.Media.Color color2 = (System.Windows.Media.Color)Color2.SelectedColor;
                         System.Windows.Media.Color color3 = (System.Windows.Media.Color)Color3.SelectedColor;
-                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)AsyncTraversalSpeed_Slider.Value, (int)Turn_duration_Slider.Value, (int)Switch_Frequency_Slider.Value, color1, color2, color3);
+                        prompter = new ReadingWIndow((int)TextSizeSlider.Value, pathTxt.Text, (int)AsyncTraversalSpeed_Slider.Value, (int)Turn_duration_Slider.Value, (int)Switch_Frequency_Slider.Value, color1, color2, color3);
                     }
                     catch (Exception ex)
                     {
@@ -227,7 +286,7 @@ namespace BACExperiment
                 {
                     try
                     {
-                        prompter = new Prompter((int)TextSizeSlider.Value, pathTxt.Text, (int)prompterSpeed.Value);
+                        prompter = new ReadingWIndow((int)TextSizeSlider.Value, pathTxt.Text, (int)prompterSpeed.Value);
                     }
                     catch (Exception ex)
                     {
@@ -241,8 +300,7 @@ namespace BACExperiment
 
             else
             {
-                PopUp msg = new PopUp("No file at specified path .");
-                msg.Visibility = System.Windows.Visibility.Visible;
+                Xceed.Wpf.Toolkit.MessageBox.Show("No file specified in path");
             }
         }
 
@@ -422,6 +480,8 @@ namespace BACExperiment
         MicrophoneConstruct mic1PrevVal = null;
         MicrophoneConstruct mic2PrevVal = null;
 
+        
+
         private void Microphone1_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -554,11 +614,29 @@ namespace BACExperiment
         private void VolumeSlider2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             service.setVolume((int)e.NewValue, 2);
-
+        }
             #endregion
 
+#region SequenceManagement
 
+            public ObservableCollection<Window> SequenceList
+        {
+            get { return _sequenceList; }
+            set
+            {
+                _sequenceList = value;
+                if(PropertyChanged!=null)
+                Notify("SequenceList");
+            }
         }
+
+           private void SequenceList_CollectionChanged(object sender, CollectionChangeEventArgs e)
+        {
+            if(PropertyChanged != null)
+            Notify("SequenceList");
+        }
+#endregion
+
 
         private void Port_Ping_btn_Click(object sender, RoutedEventArgs e)
         {
@@ -575,10 +653,7 @@ namespace BACExperiment
             service.PingSecondPhase();
         }
 
-        
-            //Color2.SelectedColor = ((ColorPicker)sender).SelectedColor;
-        
-
-        
+      
+       
     }
 }

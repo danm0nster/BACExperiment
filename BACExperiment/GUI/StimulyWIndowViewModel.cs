@@ -12,7 +12,7 @@ using System.Windows.Media.Animation;
 
 namespace BACExperiment.GUI
 {
-    class StimulyWindowViewModel : INotifyPropertyChanged
+    class StimulyWindowViewModel : INotifyPropertyChanged, IStimulyWindow
     {
         //Links
         //Variables
@@ -110,6 +110,16 @@ namespace BACExperiment.GUI
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void End()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

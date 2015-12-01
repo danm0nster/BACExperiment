@@ -109,13 +109,12 @@
     <Compile Include="GUI\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\IStimulyWindow.cs" />
     <Compile Include="GUI\MicViewModel.cs" />
-    <Compile Include="GUI\PopUp.xaml.cs">
-      <DependentUpon>PopUp.xaml</DependentUpon>
+    <Compile Include="GUI\ReadingWindow.xaml.cs">
+      <DependentUpon>ReadingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Prompter.xaml.cs">
-      <DependentUpon>Prompter.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="GUI\SequenceItem.cs" />
     <Compile Include="GUI\StimulyWIndowViewModel.cs" />
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\MicrophoneCostruct.cs">
@@ -130,10 +129,11 @@
     <Compile Include="Service\CoordinateHolder.cs" />
     <Compile Include="Service\CoordinateRecorder.cs" />
     <Compile Include="Service\Service.cs" />
-    <Compile Include="GUI\StimulyWindow.xaml.cs">
-      <DependentUpon>StimulyWindow.xaml</DependentUpon>
+    <Compile Include="GUI\MovementWindow.xaml.cs">
+      <DependentUpon>MovementWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Wiimote1DataContext.cs" />
+    <Compile Include="GUI\WiimoteDataContext.cs" />
+    <Compile Include="System\Windows\media.cs" />
     <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -146,15 +146,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="GUI\PopUp.xaml">
+    <Page Include="GUI\ReadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\Prompter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\StimulyWindow.xaml">
+    <Page Include="GUI\MovementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,10 +7,10 @@ namespace BACExperiment.Model
     class Course
     {
 
-        private StimulyWindow window;
+        private MovementWindow window;
 
 
-        public Course(StimulyWindow window)
+        public Course(MovementWindow window)
         {
             this.window = window;
 

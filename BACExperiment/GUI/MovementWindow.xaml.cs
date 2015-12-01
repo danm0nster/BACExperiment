@@ -15,7 +15,7 @@ namespace BACExperiment
     /// <summary>
     /// Interaction logic for StimulyWindow.xaml
     /// </summary>
-    public partial class StimulyWindow : Window
+    public partial class MovementWindow : Window, IStimulyWindow
     {
 
         #region INotifyPropertyChangedImplementation
@@ -54,6 +54,8 @@ namespace BACExperiment
         private SolidColorBrush color1;
         private SolidColorBrush color2;
 
+        public string title = "faggot";
+
         private delegate void  CourseGenerate() ;
         private CourseGenerate generate ;
 
@@ -69,7 +71,7 @@ namespace BACExperiment
     
 
 
-        public StimulyWindow(MainWindow mainWindow , string mode , int complexity , int Speed, System.Windows.Media.Color color1 , System.Windows.Media.Color color2 , System.Windows.Media.Color color3 )
+        public MovementWindow(MainWindow mainWindow , string mode , int complexity , int Speed, System.Windows.Media.Color color1 , System.Windows.Media.Color color2 , System.Windows.Media.Color color3 )
         {
      
             InitializeComponent();
@@ -116,7 +118,7 @@ namespace BACExperiment
           
         }
 
-        public StimulyWindow(MainWindow mainWindow , System.Windows.Media.Color color1, System.Windows.Media.Color color2, System.Windows.Media.Color color3 , int StrokeThickness) 
+        public MovementWindow(MainWindow mainWindow , System.Windows.Media.Color color1, System.Windows.Media.Color color2, System.Windows.Media.Color color3 , int StrokeThickness) 
         {
             InitializeComponent();
             Pointer1.Stroke = new SolidColorBrush(color1);
@@ -501,5 +503,31 @@ namespace BACExperiment
 
             Dispatcher.BeginInvoke(action);
         }
+
+            public string toString()
+            {
+                string toReturn = "Movement ";
+                if (generate == Asynchronous)
+                    toReturn += "Asynchronous";
+                else if (generate == Synchronous)
+                    toReturn += "Synchronous";
+                else if (generate == Self_Paced)
+                    toReturn += "Self-Paced";
+
+                return toReturn;
+            }
+
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void End()
+        {
+            throw new NotImplementedException();
+        }
     }
+
+    
+   
 }

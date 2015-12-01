@@ -24,7 +24,7 @@ namespace BACExperiment.GUI
     /// 
 
 
-    public partial class Prompter : Window
+    public partial class ReadingWIndow : Window, IStimulyWindow
     {
 
         private string path = "C:/Users/labclient/Documents/Visual Studio 2015/Projects/BACExperiment/BACExperiment/resources/prompterText.txt";
@@ -43,7 +43,7 @@ namespace BACExperiment.GUI
         public void setPath(string path) { this.path = path; }
         public string getPath() { return path; }
 
-        public Prompter(int fontSize, string path, int _ScrollDowndSpeed )
+        public ReadingWIndow(int fontSize, string path, int _ScrollDowndSpeed )
         {
             try
             {
@@ -76,7 +76,7 @@ namespace BACExperiment.GUI
             }
         }
 
-        public Prompter(int fontSize , string path , int _TraversalSpeed , System.Windows.Media.Color color1)
+        public ReadingWIndow(int fontSize , string path , int _TraversalSpeed , System.Windows.Media.Color color1)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace BACExperiment.GUI
             }
         }
 
-        public Prompter(int fontSize, string path, int _TraversalSpeed, int _TurnDuration, int _SwitchDuration, System.Windows.Media.Color color1, System.Windows.Media.Color color2, System.Windows.Media.Color color3)
+        public ReadingWIndow(int fontSize, string path, int _TraversalSpeed, int _TurnDuration, int _SwitchDuration, System.Windows.Media.Color color1, System.Windows.Media.Color color2, System.Windows.Media.Color color3)
         {
             try
             {
@@ -325,6 +325,14 @@ namespace BACExperiment.GUI
             prompterText.FontSize = size;
         }
 
-        
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void End()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace BACExperiment
         private CoordinateHolder holder;
 
 
-        public static coordinateRecorder getInstance(StimulyWindow observee)
+        public static coordinateRecorder getInstance(MovementWindow observee)
         {
             if (instance == null)
                 instance = new coordinateRecorder();

@@ -100,12 +100,6 @@ namespace BACExperiment
                 s.WriteLine(toWrite);
                 s.Close();
             }
-
-
-
-
-
-
         }
 
 

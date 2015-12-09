@@ -114,7 +114,6 @@
     <Compile Include="GUI\ReadingWindow.xaml.cs">
       <DependentUpon>ReadingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\SequenceItem.cs" />
     <Compile Include="GUI\StimulyWIndowViewModel.cs" />
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\MicrophoneCostruct.cs">
@@ -133,7 +132,6 @@
       <DependentUpon>MovementWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\WiimoteDataContext.cs" />
-    <Compile Include="System\Windows\media.cs" />
     <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

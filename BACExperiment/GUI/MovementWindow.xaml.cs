@@ -41,6 +41,7 @@ namespace BACExperiment
         private MainWindow mainWindow;
         private StimulyWindowViewModel model = StimulyWindowViewModel.GetInstance();
         private System.Windows.Media.Brush lineBrush;
+        
 
         //Variables
         private int CourseMode;
@@ -53,8 +54,8 @@ namespace BACExperiment
         private int StrokeThickness;
         private SolidColorBrush color1;
         private SolidColorBrush color2;
+        private bool built = false;
 
-        public string title = "faggot";
 
         private delegate void  CourseGenerate() ;
         private CourseGenerate generate ;
@@ -188,6 +189,7 @@ namespace BACExperiment
        
         public void buildCourse()
         {
+            
             course = new Course(this);
             try {
                 if (CourseComplexity == 0)
@@ -213,6 +215,7 @@ namespace BACExperiment
                 else
                 {
                     generate();
+                    built = true;
                 }
             }
         }
@@ -350,11 +353,13 @@ namespace BACExperiment
         
         public void startCourse()
         {
+            buildCourse();
             if (queue1.NotEmpty)
                 queue1.start();
             else
                 StimulyEllipse1.Visibility = System.Windows.Visibility.Visible;
-            if (checkPointTimer != null)
+
+            if (checkPointTimer != null && built)
             {
                 checkPointTimer.Start();
                 ShowNextCheckPoint(null , null);
@@ -403,7 +408,7 @@ namespace BACExperiment
                 this.animation2.Add(animation2);
                 NotEmpty = true;
 
-                animation1.Completed += (s, e) =>
+                animation1.Completed += (s,e) =>
                 {
                     if (this.animation1.Contains(animation1))
                     {
@@ -464,6 +469,11 @@ namespace BACExperiment
 
             }
 
+            public void Clear()
+            {
+                animation1.Clear();
+                animation2.Clear();
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -525,6 +535,12 @@ namespace BACExperiment
         public void End()
         {
             throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            StimulyReferencePoint.Children.Clear();
+            queue1.Clear();
         }
     }
 

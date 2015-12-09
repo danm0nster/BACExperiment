@@ -140,7 +140,6 @@
                                             <Button x:Name="GenerateCourseBtn" Content="Load" Click="GenerateCourse_Click" Margin="5" Height="25" IsEnabled="False"></Button>
                                             <Button x:Name="StartBtn" Content="Start " Click="StartBtn_Click" Margin="5" Height="25" IsEnabled="False"/>
                                             <Button x:Name="CloseBtn" Content="Close " Click="CloseBtn_Click" Margin="5" Height="25" IsEnabled="False"/>
-                                            <Button x:Name="AddToSequence" Content="Add" Height="25" Click="AddToSequence_Click"></Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
@@ -156,7 +155,7 @@
                                         </WrapPanel>
                                         <WrapPanel Height="30" Margin="0">
                                             <Label Content="Path :" Width="101" HorizontalContentAlignment="Right"/>
-                                            <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="135" />
+                                            <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="128" />
                                             <Button x:Name="BrowseBtn" Content="Browse" Margin="2"  Click="BrowseBtn_Click"/>
                                         </WrapPanel>
                                         <WrapPanel>
@@ -215,17 +214,59 @@
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
-                             
-                                <GroupBox Header="Sequence">
-                                    <StackPanel Width="243">
-                                        <ListBox x:Name="SequenceListView" ItemsSource="{Binding Path=SequenceList}"  Margin="0" Height="289" />
-                                    <Button Content="Clear" Width="75" Height="25" Margin="10"/>
-                                </StackPanel>
-                                </GroupBox>
+                                
+                                    <GroupBox Header="Sequence planing" Margin="0" Width="232">
+                                    <StackPanel Margin="0,0,3,0">
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Movement :" Width="95"></Label>
+                                            <ComboBox x:Name="MovementCombo" Width="75" SelectionChanged="MovementCombo_Selected" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" ></ComboBoxItem>
+                                                <ComboBoxItem Content="Second"></ComboBoxItem>
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Reading :" Width="95"></Label>
+                                            <ComboBox x:Name="ReadingCombo" Width="75" SelectionChanged="ReadingCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel Height="25"></WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Asynchronous :" Width="95"></Label>
+                                            <ComboBox x:Name="AsyncCombo" Width="75" SelectionChanged="AsyncCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                                <ComboBoxItem Content="Third" />
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Synchronous :" Width="95"></Label>
+                                            <ComboBox x:Name="SyncCombo"  Width="75"  SelectionChanged="SyncCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                                <ComboBoxItem Content="Third" />
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Self-paced :" Width="95"></Label>
+                                            <ComboBox x:Name="SelfPacedCombo" Width="75" SelectionChanged="SelfPacedCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                                <ComboBoxItem Content="Third" />
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel>
+                                            <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click"></Button>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                    </GroupBox>                         
+                                
+                               
                             </WrapPanel>
                         </GroupBox>
 
-                        <GroupBox x:Name="groupbox3" Header="Controllers"  Height="263" >
+                        <GroupBox x:Name="groupbox3" Header="Controllers"  Height="115" >
                             <StackPanel Margin="10,10"/>
                         </GroupBox>
                     </StackPanel>

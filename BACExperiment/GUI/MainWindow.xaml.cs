@@ -1,28 +1,15 @@
 ﻿using BACExperiment.GUI;
 using BACExperiment.Model;
-using NAudio.Mixer;
-using NAudio.Wave;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using WiimoteLib;
-using Xceed.Wpf.Toolkit;
 
 namespace BACExperiment
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+  
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
@@ -31,6 +18,7 @@ namespace BACExperiment
         private ReadingWIndow prompter;
         public event PropertyChangedEventHandler PropertyChanged;
         private SequenceForm sequence;
+
         #region INotifyPropertyChanged Members
 
         protected void Notify(string propName)
@@ -42,16 +30,11 @@ namespace BACExperiment
         }
         #endregion
 
-
-        private ObservableCollection<Window> _sequenceList;
-
         public MainWindow()
         {
 
 
             InitializeComponent();
-
-            _sequenceList = new ObservableCollection<Window>();
 
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -205,46 +188,7 @@ namespace BACExperiment
         }
 
 
-        /*
-        private void AddToSequence_Click(object sender, RoutedEventArgs e)
-        {
-            MovementWindow window = null;
-            try
-            {
-                System.Windows.Media.Color color1 = (System.Windows.Media.Color)Subject1.SelectedColor;
-                System.Windows.Media.Color color2 = (System.Windows.Media.Color)Subject2.SelectedColor;
-                System.Windows.Media.Color color3 = (System.Windows.Media.Color)CourseColorPicker.SelectedColor;
-
-                if (ModeSelect.SelectedIndex == -1)
-                {
-                    System.Windows.MessageBox.Show("Please select a course mode before attempting to run the experiment");
-                }
-                else
-                {
-
-                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Synchronous")
-                    {
-                        window = new MovementWindow(this, "Synchronous", (int)complexitySlider.Value, (int)SpeedSlider.Value, color1, color2, color3);
-                    }
-                    else
-                        if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Asynchronous")
-                    {
-                        window = new MovementWindow(this, "Asynchronous", (int)complexitySlider2.Value, (int)SpeedSlider2.Value, color1, color2, color3);
-                    }
-                    else
-                        if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Self-Paced")
-                    {
-                        window = new MovementWindow(this, color1, color2, color3, (int)LineThicknessPicker.Value);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show(ex.ToString());
-            }
-
-        }
-        */
+        
         #endregion
 
 
@@ -718,25 +662,7 @@ namespace BACExperiment
         }
         #endregion
       
-        #endregion
-
-
-        private void Port_Ping_btn_Click(object sender, RoutedEventArgs e)
-        {
-            service.PingExperimentStart();
-        }
-
-        private void Port_Phase1_btn_Click(object sender, RoutedEventArgs e)
-        {
-            service.PingFirstPhase();
-        }
-
-        private void Port_Phase2_btn_Click(object sender, RoutedEventArgs e)
-        {
-            service.PingSecondPhase();
-        }
-
-      
+        #endregion     
 
         private void Sequence_Start_Click(object sender, RoutedEventArgs e)
         {
@@ -747,11 +673,13 @@ namespace BACExperiment
                 sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
                 System.Timers.Timer t = new System.Timers.Timer();
                 t.Interval = 100;
-                t.Elapsed += Sequence_TImer_TickEvent;
+                t.Elapsed += Sequence_Timer_TickEvent;
                 
                 if (sequence != null)
                 {
                     t.Start();
+                    StartFullRecording();
+                    service.PingExperimentStart();
                 }
             }
             catch(Exception ex)
@@ -760,7 +688,7 @@ namespace BACExperiment
             }
         }
 
-        private void Sequence_TImer_TickEvent(object sender, ElapsedEventArgs args)
+        private void Sequence_Timer_TickEvent(object sender, ElapsedEventArgs args)
         {
             #region CloseWindows
             if (stimulyWindow != null)
@@ -783,15 +711,29 @@ namespace BACExperiment
                 prompter = null;
             }
             #endregion
-
-            var t = (System.Timers.Timer)sender;
-            if (t.Interval <= 1000)
-                t.Interval = 1000 * 60 * 5;
-            Mode++;
+            if (_window == 2)
+            {
+                _window = 0;
+                ((Timer)sender).Dispose();
+            }
+            else
+            {
+                var t = (System.Timers.Timer)sender;
+                if (t.Interval <= 1000)
+                {
+                    Action action = () =>
+                    {
+                        t.Interval = 1000 * 60 * ((int)Sequence_Duration_Slider.Value + 1);
+                    };
+                    this.Dispatcher.Invoke(action);
+                }
+                Mode++;
+            }
         }  
 
         private void Sequence_next()
         {
+            service.PingStartNewPhase();
             if (sequence.mode[_mode] == "asynchronous")
             {
                 if (sequence.window[_window] == "movement")
@@ -801,8 +743,18 @@ namespace BACExperiment
                     {
                         stimulyWindow.Show();
                         stimulyWindow.Focus();
-                        stimulyWindow.startCourse();
-                        stimulyWindow.startRecording();
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.ASYNCHRONOUS_MOVEMENT);
+                        w.Show();          
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60 ;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            stimulyWindow.startCourse();
+                            stimulyWindow.startRecording();
+                            t.Dispose();
+                        };
+                        t.Start();                   
                     };
 
                     if (stimulyWindow != null)
@@ -816,7 +768,19 @@ namespace BACExperiment
                     Action action = () =>
                     {
                         prompter.Show();
-                        prompter.play();
+
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.ASYNCHRONOUS_READING);
+                        w.Show();
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            prompter.play();
+                            t.Dispose();
+                        };
+                        t.Start();
+                        
                     };
                     if (prompter != null)
                         this.Dispatcher.Invoke(action);
@@ -833,10 +797,19 @@ namespace BACExperiment
                     SyncMovement();
                     Action action = () =>
                     {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SYNCHRONOUS_MOVEMENT);
+                        w.Show();
                         stimulyWindow.Show();
                         stimulyWindow.Focus();
-                        generateCourse();
-                        stimulyWindow.startCourse();
+
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            stimulyWindow.startCourse();
+                            t.Dispose();
+                        };
                     };
                     this.Dispatcher.Invoke(action);
                 }
@@ -846,8 +819,18 @@ namespace BACExperiment
                     SyncReading();
                     Action action = () =>
                     {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SYNCHRONOUS_READING);
                         prompter.Show();
-                        prompter.play();
+                        w.Show();
+
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            prompter.play();
+                            t.Dispose();
+                        };
                     };
 
                     this.Dispatcher.Invoke(action);
@@ -863,10 +846,18 @@ namespace BACExperiment
                     SelfPacedMovement();
                     Action action = () =>
                     {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SELFPACED_MOVEMENT);
                         stimulyWindow.Show();
                         stimulyWindow.Focus();
                         generateCourse();
-                        stimulyWindow.startCourse();
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Show();
+                            stimulyWindow.startCourse();
+                            t.Dispose();
+                        };
                     };
                     this.Dispatcher.Invoke(action);
                 }
@@ -875,8 +866,19 @@ namespace BACExperiment
                     SelfPacedReading();
                     Action action = () =>
                     {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SELFPACED_READING);
+                        w.Show();
                         prompter.Show();
-                        prompter.play();
+
+
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Show();
+                            prompter.play();
+                            t.Dispose();
+                        };
                     };
                     this.Dispatcher.Invoke(action);
 
@@ -965,7 +967,7 @@ namespace BACExperiment
             {
                 Sequence_next();
                 _mode = value;
-                if (_mode == 2)
+                if (_mode == 3)
                 {
                     _mode = 0;
                     Window++;
@@ -1031,6 +1033,16 @@ namespace BACExperiment
                 }
 
             }
+
+        }
+
+        private void PrompterCloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Sequence_Stop_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }

@@ -24,7 +24,7 @@ namespace BACExperiment.GUI
     /// 
 
 
-    public partial class ReadingWIndow : Window, IStimulyWindow
+    public partial class ReadingWIndow : Window
     {
 
         private string path = "C:/Users/labclient/Documents/Visual Studio 2015/Projects/BACExperiment/BACExperiment/resources/prompterText.txt";
@@ -198,12 +198,7 @@ namespace BACExperiment.GUI
                 scrollTimer.Interval = scrollTimer.Interval - 100;
                 scrollTimer.Start();
             }
-        }
-
-      
-
-
-       
+        } 
 
         private void ColorSwitchEvent2(object sender, ElapsedEventArgs e)
         {
@@ -253,7 +248,6 @@ namespace BACExperiment.GUI
 
                     var start = prompterText.Selection.Start.GetCharacterRect(LogicalDirection.Forward);
                     var end = prompterText.Selection.End.GetCharacterRect(LogicalDirection.Forward);
-                   // scroller.ScrollToVerticalOffset(text.GetOffsetToPosition(endPos));
                 }));
             }
 
@@ -310,9 +304,6 @@ namespace BACExperiment.GUI
             }
         }
 
-
-
-
         public void play()
         {
             scrollTimer.Enabled = true;
@@ -325,14 +316,6 @@ namespace BACExperiment.GUI
             prompterText.FontSize = size;
         }
 
-        public void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void End()
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

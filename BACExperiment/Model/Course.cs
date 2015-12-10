@@ -73,40 +73,7 @@ namespace BACExperiment.Model
                     lastY = y;
                 }
             }
-
-        
             return coordinates;
-        
-            /*
-             List<Point> coordinates = new List<Point>();
-            double x, y;
-            int a = 5;
-            int b = 4;
-            double A = (double)window.ActualWidth / 4;//influences circumferince
-            double B = (double)window.ActualHeight / 7;  //influences rotation factor of function
-            double d = Math.PI / 2;
-            //float f = 3 / 2;
-            double o = 2.0 / 7.0;
-            double t;
-            double lastX = 0;
-            double lastY = 0;
-            for (int i = 0; i <= 4000; i++)
-            {
-               
-                t = 64* Math.PI / 4000 * (double)i;
-                x = Math.Cos(o * t)*A*Math.Sin(a*t+ d) + Math.Sin(o*t)*B*Math.Sin(b*t); 
-                y = -Math.Sin(o * t) * A * Math.Sin(a * t + d) + Math.Cos(o * t) * B * Math.Sin(b * t); 
-                if (Math.Abs(lastX - x) > 5 || Math.Abs(lastY - y) > 5)
-                {
-                    coordinates.Add(new Point(x, y));
-                    lastX = x;
-                    lastY = y;
-                }
-
-            }
-
-            return coordinates;
-            */
            }
         
 
@@ -136,11 +103,8 @@ namespace BACExperiment.Model
                     lastX = x;
                     lastY = y;
                 }
-
             }
-
             return coordinates;
-
         }
 
         public List<Point> thirdFunction()      

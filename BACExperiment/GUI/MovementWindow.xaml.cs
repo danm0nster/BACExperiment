@@ -15,7 +15,7 @@ namespace BACExperiment
     /// <summary>
     /// Interaction logic for StimulyWindow.xaml
     /// </summary>
-    public partial class MovementWindow : Window, IStimulyWindow
+    public partial class MovementWindow : Window
     {
 
         #region INotifyPropertyChangedImplementation
@@ -109,13 +109,14 @@ namespace BACExperiment
                 checkPointTimer.Interval = 1000.0 / CourseSpeed * 50;
                 checkPointTimer.Elapsed += new ElapsedEventHandler(ShowNextCheckPoint);
                 queue1.checkPointHandler += new EventHandler(ShowNextCheckPoint);
+                StimulyEllipse1.Visibility = Visibility.Visible;
+                CheckPointEllipse.Visibility = Visibility.Visible;
             }
             if (mode == "Synchronous")
+            {
                 generate = Synchronous;
-            if (mode == "Self-Paced")
-                generate = Self_Paced;
-
-            CourseComplexity = complexity;
+                StimulyEllipse1.Visibility = Visibility.Visible;
+            }
           
         }
 
@@ -143,7 +144,8 @@ namespace BACExperiment
             this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.OneWayToSource });
 
             generate = Self_Paced;
-            CourseComplexity = 1;
+            CourseComplexity = 0;
+            StimulyEllipse1.Visibility = Visibility.Visible;
             
         }
         private void ShowNextCheckPoint(object sender, EventArgs e)
@@ -292,6 +294,8 @@ namespace BACExperiment
                 lastY = coordinates[i].Y;
                 i++;
             }
+
+            StimulyEllipse1.Visibility = Visibility.Hidden;
         }
         private void Asynchronous()
         {
@@ -330,7 +334,7 @@ namespace BACExperiment
 
                     if (agregator == 50)
                     {
-                        checkPoints.Add(new Point(coordinates[i].X-50, coordinates[i].Y-50));
+                        checkPoints.Add(new Point(coordinates[i].X - 50, coordinates[i].Y - 50));
                         agregator = 0;
                     }
                     agregator++;
@@ -349,6 +353,8 @@ namespace BACExperiment
                 lastY = coordinates[i].Y;
                 i++;
             }
+            Canvas.SetLeft(StimulyEllipse1, coordinates[0].X);
+            Canvas.SetTop(StimulyEllipse1, coordinates[0].Y);
         }
         
         public void startCourse()

@@ -205,35 +205,12 @@ namespace BACExperiment
             }
         }
 
-        public void PingFirstPhase()
+        public void PingStartNewPhase()
         {
             port.Write(128);
             Thread.Sleep(1000);
             port.Write(0);
         }
-
-        public void PingSecondPhase()
-        {
-            port.Write(64);
-            Thread.Sleep(1000);
-            port.Write(0);
-        }
-
-        public void PingThirdPhase()
-        {
-            port.Write(32);
-            Thread.Sleep(1000);
-            port.Write(0);
-        }
-
-        public void PingForthPhase()
-        {
-            port.Write(16);
-            Thread.Sleep(1000);
-            port.Write(0);
-        }
-
-        
         #endregion
 
     }

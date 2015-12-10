@@ -109,12 +109,15 @@
     <Compile Include="GUI\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\IStimulyWindow.cs" />
+    <Compile Include="GUI\Instructions.cs" />
     <Compile Include="GUI\MicViewModel.cs" />
     <Compile Include="GUI\ReadingWindow.xaml.cs">
       <DependentUpon>ReadingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\StimulyWIndowViewModel.cs" />
+    <Compile Include="GUI\InstructionPopUp.xaml.cs">
+      <DependentUpon>InstructionPopUp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\MicrophoneCostruct.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -153,6 +156,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Themes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\InstructionPopUp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

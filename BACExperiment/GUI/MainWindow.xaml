@@ -6,19 +6,19 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="815" Width="980" ResizeMode="NoResize" Background="White" >
+        Title="MainWindow" Height="680" Width="980" ResizeMode="NoResize" Background="White" >
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="22*"/>
             <RowDefinition Height="109*"/>
         </Grid.RowDefinitions>
-        <TabControl x:Name="tabControl"  Margin="0,0,10,23" Grid.RowSpan="2">
+        <TabControl x:Name="tabControl"  Margin="0,0,10,10" Grid.RowSpan="2">
             <TabItem Header="Session recording" Width="150">
                 <Grid>
                     <StackPanel>
                         <GroupBox x:Name="groupBox1" Header="Sequence Execution"  Height="197">
                             <WrapPanel>
-                                <GroupBox Header="Recording settings">
+                                <GroupBox Header="&#x9;">
                                     <WrapPanel Margin="0" Width="824">
                                         <WrapPanel>
                                             <Label Content="Frequency :" ToolTip="Frequency at which coordinates are recorded " IsEnabled="False"/>
@@ -36,7 +36,7 @@
                                                 <Slider x:Name="VolumeSlider1" Width="122" Margin="5" Maximum="100" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel1}" ValueChanged="VolumeSlider1_ValueChanged"/>
                                             </WrapPanel>
                                             <WrapPanel >
-                                                <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal"  Value="{Binding CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="265"
+                                                <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal"  Value="{Binding CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="211"
                                 					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
                                             </WrapPanel>
                                             <WrapPanel>
@@ -54,7 +54,7 @@
                                                 <Slider x:Name="VolumeSlider2" Width="122" Margin="5" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel2}" ValueChanged="VolumeSlider2_ValueChanged"/>
                                             </WrapPanel>
                                             <WrapPanel>
-                                                <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputLevel2, Mode=TwoWay}"  Height="20" Width="265" 
+                                                <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputLevel2, Mode=TwoWay}"  Height="20" Width="213" 
                                 					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
                                             </WrapPanel>
                                             <WrapPanel>
@@ -68,22 +68,16 @@
                                     <WrapPanel>
                                         <Button x:Name="Microphone_refresh_btn" Content="Refresh" Click="Microphone_refresh_btn_Click" Width="45" Height="25"/>
                                     </WrapPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Port_Ping_btn" Content="Ping" Click="Port_Ping_btn_Click" Width="45" Height="25"/>
-                                    </WrapPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Port_Phase1_btn" Content="Phase1" Click="Port_Phase1_btn_Click" Width="45" Height="25"/>
-                                    </WrapPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Port_Phase2_btn" Content="Phase2" Click="Port_Phase2_btn_Click" Width="45" Height="25"/>
-                                    </WrapPanel>
+                                    <WrapPanel/>
+                                    <WrapPanel/>
+                                    <WrapPanel/>
                                 </StackPanel>
                             </WrapPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox"  Header="Stimuly" Margin="0,0,10,0" Height="416" VerticalAlignment="Top">
+                        <GroupBox x:Name="groupBox"  Header="Stimuly" Margin="0,0,0,0" VerticalAlignment="Top">
                             <WrapPanel Margin="0" >
 
-                                <GroupBox Header="Movement settings" Height="395">
+                                <GroupBox Header="Movement settings" Margin="0" Height="353">
                                     <StackPanel Orientation="Vertical" Width="250" Margin="0,0,0,0">
                                         <WrapPanel Height="25" Margin="0,0,0,2">
                                             <Label Content="Course mode :" Width="116" HorizontalContentAlignment="Right"/>
@@ -144,7 +138,7 @@
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Reading settings " Margin="0,0,0,0" Width="300" Height="396">
+                                <GroupBox Header="Reading settings " Margin="0,0,0,0" Width="300" Height="355">
                                     <StackPanel Margin="2,0,2,-1" HorizontalAlignment="Center" >
 
                                         <WrapPanel Height="30" Margin="0">
@@ -210,12 +204,12 @@
                                             <Button x:Name="prompterOpen" Height="25" Width="45" Content="Open" Click="prompterOpen_Click" Margin="5" IsEnabled="False" />
                                             <Button x:Name="prompterPlay" Content="Play" Height="24" Width="45"  Click="prompterPlay_Click" Margin="5" IsEnabled="False"/>
                                             <Button x:Name="RandomizeBtn" Content="Randomize" Height="25" Width=" 75" Click="RandomizeBtn_Click" Margin="5"></Button>
-                                            <Button x:Name="AddReadingToSequence" Content="Add" Height="25" Margin="5"></Button>
+                                            <Button x:Name="PrompterCloseBtn" Content="Close" Height="25" Margin="5" Click="PrompterCloseBtn_Click"></Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
-                                
-                                    <GroupBox Header="Sequence planing" Margin="0" Width="232">
+
+                                <GroupBox Header="Sequence planing" Margin="0" Width="232">
                                     <StackPanel Margin="0,0,3,0">
                                         <WrapPanel HorizontalAlignment="Center" Margin="5">
                                             <Label Content="Movement :" Width="95"></Label>
@@ -256,19 +250,23 @@
                                                 <ComboBoxItem Content="Third" />
                                             </ComboBox>
                                         </WrapPanel>
-                                        <WrapPanel>
-                                            <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click"></Button>
+                                        <WrapPanel HorizontalAlignment="Center">
+                                            <Label Content="Duration:"></Label>
+                                            <Slider x:Name="Sequence_Duration_Slider" TickFrequency="1" Minimum="1" Maximum="10" Value="5" IsSnapToTickEnabled="True"  TickPlacement="BottomRight" Width="107" ></Slider>
+                                            <TextBox Text="{Binding ElementName=Sequence_Duration_Slider, Path=Value}"></TextBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center">
+                                            <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click" Margin="5"></Button>
+                                            <Button x:Name="Sequence_Stop" Content="Stop" Width="75" Height="25" Click="Sequence_Stop_Click" Margin="5"></Button>
                                         </WrapPanel>
                                     </StackPanel>
-                                    </GroupBox>                         
-                                
-                               
+                                </GroupBox>
+
+
                             </WrapPanel>
                         </GroupBox>
 
-                        <GroupBox x:Name="groupbox3" Header="Controllers"  Height="115" >
-                            <StackPanel Margin="10,10"/>
-                        </GroupBox>
+
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -419,8 +417,8 @@
                     </WrapPanel>
 
                     <StackPanel>
-                        <GroupBox Header="Console output" Height="217" BorderBrush="SteelBlue" BorderThickness="2">
-                            <TextBlock x:Name="Console_TextBox" Margin="0" Background="AliceBlue">
+                        <GroupBox Header="Console output" Height="98" BorderBrush="SteelBlue" BorderThickness="2">
+                            <TextBlock x:Name="Console_TextBox" Margin="0,0,0,2" Background="AliceBlue">
                             </TextBlock>
                         </GroupBox>
                         <WrapPanel>
@@ -428,12 +426,8 @@
                             <Button x:Name="ClearButton" Height="25" Width="75" Content="Clear" Margin="5" Click="ClearButton_OnClick"></Button>
                         </WrapPanel>
                     </StackPanel>
-
                 </StackPanel>
-
             </TabItem>
-
         </TabControl>
-        <StatusBar Margin="0,628,0,-5" Grid.Row="1"/>
     </Grid>
 </Window>

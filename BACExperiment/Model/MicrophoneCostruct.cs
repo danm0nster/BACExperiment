@@ -26,7 +26,7 @@ namespace BACExperiment.Model
         #endregion
 
         private WaveIn waveIn = null;
-        public SampleAggregator aggregator { get; set; }
+        public MicrophoneSampleAggregator aggregator { get; set; }
         private WaveFileWriter file = null;
         private int sampleCount = 0;
         public bool active = false;
@@ -57,7 +57,7 @@ namespace BACExperiment.Model
             waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
             waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStoped);
 
-            aggregator = new SampleAggregator();
+            aggregator = new MicrophoneSampleAggregator();
             aggregator.NotificationCount = 10; // How often we update the volume bar value;
         }
 
@@ -73,7 +73,7 @@ namespace BACExperiment.Model
             waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
             waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStoped);
 
-            aggregator = new SampleAggregator();
+            aggregator = new MicrophoneSampleAggregator();
             aggregator.NotificationCount = 10; // How often we update the volume bar value;
         }
 
@@ -97,11 +97,7 @@ namespace BACExperiment.Model
 
         public void Stop()
         {
-            if (file != null)
-            {
-                file.Dispose();
-                file = null;
-            }
+            waveIn.StopRecording();
         }
 
         public void waveIn_DataAvailable(object sender, WaveInEventArgs e)

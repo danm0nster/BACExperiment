@@ -15,24 +15,14 @@ using System.Windows.Shapes;
 namespace BACExperiment.GUI
 {
     /// <summary>
-    /// Interaction logic for PopUp.xaml
+    /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class PopUp : Window
+    public partial class InstructionsPopUp : Window
     {
-        public PopUp(string message)
+        public InstructionsPopUp(string instructions)
         {
             InitializeComponent();
-            MessageLabel.Content = message;
-        }
-
-        private void PopUp_OnClosed(object sender, EventArgs e)
-        {
-        
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            InstructionsLabel.Content = instructions;
         }
     }
 }

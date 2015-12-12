@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BACExperiment
 {
-   public class Wiimote1DataContext :INotifyPropertyChanged
+   public class WiimoteDataContext :INotifyPropertyChanged
     {
         private string _AxCoord;
         private string _AyCoord;
@@ -47,7 +47,7 @@ namespace BACExperiment
         public double ScaleX { get { return _scaleX; } set { _scaleX = value; if (PropertyChanged != null) Notify("ScaleX"); } }
         public double ScaleY { get { return _scaley; } set { _scaley = value; if (PropertyChanged != null) Notify("ScaleY"); } } 
         
-        public Wiimote1DataContext()
+        public WiimoteDataContext()
         {
             ScaleX = 300.0;
             ScaleY = 200.0;

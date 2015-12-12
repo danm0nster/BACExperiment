@@ -3,53 +3,144 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
-        Title="MainWindow" Height="815" Width="980" ResizeMode="NoResize" Loaded="Window_Loaded" Background="White" >
+        Title="MainWindow" Height="680" Width="980" ResizeMode="NoResize" Background="White" >
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="22*"/>
             <RowDefinition Height="109*"/>
         </Grid.RowDefinitions>
-        <TabControl x:Name="tabControl"  Margin="0,0,10,23" Grid.RowSpan="2">
+        <TabControl x:Name="tabControl"  Margin="0,0,10,10" Grid.RowSpan="2">
             <TabItem Header="Session recording" Width="150">
                 <Grid>
                     <StackPanel>
-                        <GroupBox x:Name="groupBox"  Header="Stats" Margin="0,0,10,0" Height="343" VerticalAlignment="Top">
-                            <WrapPanel Margin="0" >
-                                <GroupBox Header="Stimuly window">
-                                    <StackPanel Orientation="Vertical"  Margin="0" Width="112">
-                                        <Button x:Name="OpenBtn" Content="Open" Click="OpenBtn_Click" Margin="10" Height="40"/>
-                                        <Button x:Name="StartBtn" Content="Start " Click="StartBtn_Click" Margin="10" Height="40" IsEnabled="False"/>
-                                    </StackPanel>
+                        <GroupBox x:Name="groupBox1" Header="Sequence Execution"  Height="197">
+                            <WrapPanel>
+                                <GroupBox Header="&#x9;">
+                                    <WrapPanel Margin="0" Width="824">
+                                        <WrapPanel>
+                                            <Label Content="Frequency :" ToolTip="Frequency at which coordinates are recorded " IsEnabled="False"/>
+                                            <Slider  x:Name="ReqFrequencySlider" Width="100" Minimum="10" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" />
+                                            <TextBox x:Name="ReqFrequencyTxt" Text="{Binding Value, ElementName=ReqFrequencySlider}" Width="33" HorizontalContentAlignment="Right" Margin="2" />
+                                        </WrapPanel>
+                                        <StackPanel Width="232" Height="148" Margin="0,0,1,0">
+                                            <WrapPanel Height="35">
+                                                <Label Content="Microphone 1 :" Height="25" Width="100"/>
+                                                <ComboBox x:Name="Microphone1_ComboBox" Width="122" Height="25" Margin="5" SelectionChanged="Microphone1_ComboBox_SelectionChanged" ItemsSource ="{Binding Mics}" 
+                                              />
+                                            </WrapPanel>
+                                            <WrapPanel Height="35">
+                                                <Label Content="Volume :" Height="25" Width="100"/>
+                                                <Slider x:Name="VolumeSlider1" Width="122" Margin="5" Maximum="100" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel1}" ValueChanged="VolumeSlider1_ValueChanged"/>
+                                            </WrapPanel>
+                                            <WrapPanel >
+                                                <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal"  Value="{Binding CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="211"
+                                					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
+                                            </WrapPanel>
+                                            <WrapPanel>
+                                                <Button x:Name="Mic1_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic1_Rec_Click" />
+                                                <Button x:Name="Mic1_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic1_Stop_Click"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <WrapPanel Height="35">
+                                                <Label Content="Microphone2 :" Height="25" Width="100"/>
+                                                <ComboBox x:Name="Microphone2_ComboBox" Width="122" Height="25" Margin="5" SelectionChanged="Microphone2_ComboBox_SelectionChanged" ItemsSource="{Binding Mics}" DisplayMemberPath="{Binding Active}"  />
+                                            </WrapPanel>
+                                            <WrapPanel Height="35">
+                                                <Label Content="Volume :" Height="25" Width="100"/>
+                                                <Slider x:Name="VolumeSlider2" Width="122" Margin="5" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel2}" ValueChanged="VolumeSlider2_ValueChanged"/>
+                                            </WrapPanel>
+                                            <WrapPanel>
+                                                <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding CurrentInputLevel2, Mode=TwoWay}"  Height="20" Width="213" 
+                                					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
+                                            </WrapPanel>
+                                            <WrapPanel>
+                                                <Button x:Name="Mic2_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic2_Rec_Click" />
+                                                <Button x:Name="Mic2_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic2_Stop_Click"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </WrapPanel>
                                 </GroupBox>
-                                <GroupBox Header="Stimuly settings">
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <Button x:Name="Microphone_refresh_btn" Content="Refresh" Click="Microphone_refresh_btn_Click" Width="45" Height="25"/>
+                                    </WrapPanel>
+                                    <WrapPanel/>
+                                    <WrapPanel/>
+                                    <WrapPanel/>
+                                </StackPanel>
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox x:Name="groupBox"  Header="Stimuly" Margin="0,0,0,0" VerticalAlignment="Top">
+                            <WrapPanel Margin="0" >
+
+                                <GroupBox Header="Movement settings" Margin="0" Height="353">
                                     <StackPanel Orientation="Vertical" Width="250" Margin="0,0,0,0">
                                         <WrapPanel Height="25" Margin="0,0,0,2">
                                             <Label Content="Course mode :" Width="116" HorizontalContentAlignment="Right"/>
-                                            <ComboBox x:Name="ModeSelect" Width="134" IsEnabled="False" />
+                                            <ComboBox x:Name="ModeSelect" Width="134" IsEnabled="True" ItemsSource="{Binding Path=Modes}" SelectionChanged="ModeSelect_SelectionChanged"  />
                                         </WrapPanel>
-                                        <WrapPanel Height="25" Margin="0,2,0,2">
-                                            <Label Content="Course Complexity :" Height="25" Width="116" HorizontalContentAlignment="Center"/>
-                                            <Slider x:Name="complexitySlider" Height="25" Width="133"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1" IsSnapToTickEnabled="True"  />
+                                        <WrapPanel>
+                                            <StackPanel>
+                                                <Label Content="Participant 1" HorizontalContentAlignment="Center"></Label>
+                                                <xctk:ColorPicker  x:Name="Subject1" Width="90"  Margin="2,0" SelectedColor="Aquamarine"></xctk:ColorPicker>
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <Label Content="Participant 2" HorizontalContentAlignment="Center"></Label>
+                                                <xctk:ColorPicker  x:Name="Subject2" Width="90"  Margin="2,0" SelectedColor="Salmon" ></xctk:ColorPicker>
+                                            </StackPanel>
                                         </WrapPanel>
-                                        <WrapPanel Height="25" Margin=" 0,2">
-                                            <Label Content="Course speed :" Height="25" HorizontalContentAlignment="Right" HorizontalAlignment="Center" Width="116"/>
-                                            <Slider x:Name="SpeedSlider" Height="25" Width="134" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" />
-                                        </WrapPanel>
-                                        <WrapPanel Height="25" Margin="0">
-                                            <CheckBox x:Name="RandomCheck" Content="Random" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="73" IsEnabled="False"/>
-                                            <CheckBox x:Name="TrajectoryCheck" Content="Trajectory" Height="25" Width="76" VerticalAlignment="Center"  />
-                                            <CheckBox x:Name="AxisCheck" Content="Axis" Height="25" Width="43" VerticalAlignment="Center" />
+                                        <GroupBox x:Name="SynchronousGroupBox" Margin="0,10" IsEnabled="False">
+                                            <StackPanel>
+                                                <WrapPanel Height="25" >
+                                                    <Label Content="Complexity :" Height="25" Width="116" HorizontalContentAlignment="Right"/>
+                                                    <Slider x:Name="complexitySlider" Height="25" Width="118"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1" IsSnapToTickEnabled="True"  />
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Speed :" Height="25" HorizontalContentAlignment="Right" HorizontalAlignment="Center" Width="116"/>
+                                                    <Slider x:Name="SpeedSlider" Height="25" Width="118" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" />
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox x:Name="AsynchronousGroupBox" Margin="0,10" IsEnabled="False">
+                                            <StackPanel>
+                                                <WrapPanel Height="25" >
+                                                    <Label Content="Complexity :" Height="25" Width="116" HorizontalContentAlignment="Right"/>
+                                                    <Slider x:Name="complexitySlider2" Height="25" Width="118"  TickFrequency="1" TickPlacement="BottomRight" Maximum="2" Value="1" IsSnapToTickEnabled="True"  />
+                                                </WrapPanel>
+                                                <WrapPanel Height="25">
+                                                    <Label Content="Speed :" Height="25" HorizontalContentAlignment="Right" HorizontalAlignment="Center" Width="116"/>
+                                                    <Slider x:Name="SpeedSlider2" Height="25" Width="118" Minimum="1" TickFrequency="1" Maximum="5" TickPlacement="BottomRight" Value="1" IsSnapToTickEnabled="True" />
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox x:Name="SelfpacedCombobox" IsEnabled="False">
+                                            <StackPanel>
+                                                <WrapPanel HorizontalAlignment="Center">
+                                                    <Label Content="Course color :" HorizontalContentAlignment="Center"></Label>
+                                                    <xctk:ColorPicker x:Name="CourseColorPicker" Width="90" Margin="2,0" SelectedColor="Green"></xctk:ColorPicker>
+                                                </WrapPanel>
+                                                <WrapPanel HorizontalAlignment="Center">
+                                                    <Label Content="Line thicknes :" ></Label>
+                                                    <xctk:SingleUpDown  x:Name="LineThicknessPicker" Width="90" Margin="2,0" Value="1"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <WrapPanel  Margin="10,0" Height="46">
+                                            <Button x:Name="OpenBtn" Content="Open" Click="OpenBtn_Click" Margin="5" Height="25"/>
+                                            <Button x:Name="GenerateCourseBtn" Content="Load" Click="GenerateCourse_Click" Margin="5" Height="25" IsEnabled="False"></Button>
+                                            <Button x:Name="StartBtn" Content="Start " Click="StartBtn_Click" Margin="5" Height="25" IsEnabled="False"/>
+                                            <Button x:Name="CloseBtn" Content="Close " Click="CloseBtn_Click" Margin="5" Height="25" IsEnabled="False"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Prompter settings " Margin="0,0,0,0" Width="300" Height="327">
-                                    <StackPanel Margin="0" HorizontalAlignment="Center" >
-                                        
+                                <GroupBox Header="Reading settings " Margin="0,0,0,0" Width="300" Height="355">
+                                    <StackPanel Margin="2,0,2,-1" HorizontalAlignment="Center" >
+
                                         <WrapPanel Height="30" Margin="0">
                                             <Label Content="Text size :" HorizontalContentAlignment="Right" Width="101"></Label>
                                             <Slider x:Name="TextSizeSlider" Width="135" Minimum="1" Maximum="50" TickFrequency="3" Value="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" ValueChanged="TextSizeSlider_ValueChanged" ></Slider>
@@ -58,112 +149,124 @@
                                         </WrapPanel>
                                         <WrapPanel Height="30" Margin="0">
                                             <Label Content="Path :" Width="101" HorizontalContentAlignment="Right"/>
-                                            <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="135" />
+                                            <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="128" />
                                             <Button x:Name="BrowseBtn" Content="Browse" Margin="2"  Click="BrowseBtn_Click"/>
                                         </WrapPanel>
-                                        <RadioButton x:Name="SelfPaced_RBtn" Content="Self-Paced" Height="16" Checked="SelfPaced_RBtn_Checked" Width="70" Margin="0,10,0,0"/>
+                                        <WrapPanel>
+                                            <xctk:ColorPicker Name="Color1" Width="90" Margin="2,0,2,0" SelectedColor="Aquamarine" IsEnabled="False"></xctk:ColorPicker>
+                                            <xctk:ColorPicker Name="Color2" Width="90" Margin="2,0,2,0" SelectedColor="Salmon" IsEnabled="False"></xctk:ColorPicker>
+                                            <xctk:ColorPicker Name="Color3" Width="90" Margin="2,0,2,0" SelectedColor="BurlyWood" IsEnabled="False"></xctk:ColorPicker>
+                                        </WrapPanel>
+                                        <RadioButton x:Name="SelfPaced_RBtn" Content="Self-Paced" Height="16" Checked="SelfPaced_RBtn_Checked" Width="100" Margin="0,10,0,0"/>
                                         <WrapPanel Height="30" Margin="0" IsEnabled="{Binding ElementName=SelfPaced_RBtn , Path=IsChecked}"  >
-                                            <Label Content="Speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
-                                            <Slider x:Name="prompterSpeed" Width="136" Minimum="1" Maximum="10" TickFrequency="1" TickPlacement="BottomRight" Margin="0" IsSnapToTickEnabled="True"/>
-                                            <TextBox x:Name="prompterSpeedTxt" Text="{Binding ElementName=prompterSpeed,Path=Value}" Width="40" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" ></TextBox>
+                                            <Label Content="Scroll speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
+                                            <Slider x:Name="prompterSpeed" Width="135" Minimum="1" Maximum="30" TickFrequency="5" TickPlacement="BottomRight" Margin="0" IsSnapToTickEnabled="True"/>
+                                            <TextBox x:Name="prompterSpeedTxt" Text="{Binding ElementName=prompterSpeed,Path=Value}" Width="20" Height="26" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" ></TextBox>
+
                                         </WrapPanel>
 
-                                        <RadioButton x:Name="Async_RBtn" Content="Asynchronous" Height="16" Checked="Async_RBtn_Checked" Width="89"/>
-                                        <WrapPanel x:Name="Traversal_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Sync_RBtn, Path=IsChecked}">
+                                        <RadioButton x:Name="Async_RBtn" Content="Asynchronous" Height="16" Checked="Async_RBtn_Checked" Width="100"/>
+                                        <WrapPanel x:Name="Traversal_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Async_RBtn, Path=IsChecked}">
                                             <Label Content="Traversal speed :" HorizontalContentAlignment="Right" Width="102" ></Label>
-                                            <Slider x:Name="TraversalSpeed_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                            <Slider x:Name="AsyncTraversalSpeed_Slider" Width="135" Value="5" TickFrequency="5" Minimum="1" Maximum="30" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
                                                     ></Slider>
-                                            <TextBox x:Name="TraversalSpeed_TextBox" Text="{Binding ElementName=Switch_Frequency_Slider, Path=Value}" Width="20" Height="26" 
+                                            <TextBox x:Name="TraversalSpeed_TextBox" Text="{Binding ElementName=AsyncTraversalSpeed_Slider, Path=Value}" Width="20" Height="26" 
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="c/s"></Label>
                                         </WrapPanel>
-                                        <WrapPanel x:Name="Frequency_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Sync_RBtn, Path=IsChecked}">
-                                            <Label Content="Switch speed :" HorizontalContentAlignment="Right" Width="102" ></Label>
-                                            <Slider x:Name="Switch_Frequency_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                        <WrapPanel x:Name="Turn_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Async_RBtn, Path=IsChecked}">
+                                            <Label Content="Turn duration :" HorizontalContentAlignment="Right" Width="102" ></Label>
+                                            <Slider x:Name="Turn_duration_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="15" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                                    ></Slider>
+                                            <TextBox x:Name="Turn_Duration_TextBox" Text="{Binding ElementName=Turn_duration_Slider, Path=Value}" Width="20" Height="26" 
+                                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
+                                            <Label Content="sec"></Label>
+                                        </WrapPanel>
+                                        <WrapPanel x:Name="Frequency_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Async_RBtn, Path=IsChecked}">
+                                            <Label Content="Switch duration :" HorizontalContentAlignment="Right" Width="102" ></Label>
+                                            <Slider x:Name="Switch_Frequency_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="15" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
                                                     ></Slider>
                                             <TextBox x:Name="Switch_Speed_TextBox" Text="{Binding ElementName=Switch_Frequency_Slider, Path=Value}" Width="20" Height="26" 
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="sec"></Label>
                                         </WrapPanel>
-                                        <WrapPanel>
-                                            <toolkit:ColorPicker></toolkit:ColorPicker>
-                                        </WrapPanel>
-                                        <WrapPanel></WrapPanel>
-                                        <RadioButton x:Name="Sync_RBtn" Content="Synchronous" Height="16" Checked="Sync_RBtn_Checked" Width="84" Margin="0,10,0,0"/>
+
+                                        <RadioButton x:Name="Sync_RBtn" Content="Synchronous" Height="16" Checked="Sync_RBtn_Checked" Width="100" Margin="0,10,0,0"/>
                                         <WrapPanel x:Name="Traversal2_Wrappanel" Height="30" IsEnabled="{Binding ElementName=Sync_RBtn, Path=IsChecked}">
                                             <Label Content="Traversal speed :" HorizontalContentAlignment="Right" Width="102" ></Label>
-                                            <Slider x:Name="Traversal2Speed_Slider" Width="135" Value="5" TickFrequency="1" Minimum="1" Maximum="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                                            <Slider x:Name="SyncTraversalSpeed_Slider" Width="135" Value="5" TickFrequency="5" Minimum="1" Maximum="30" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
                                                     ></Slider>
-                                            <TextBox x:Name="Traversal2Speed_TextBox" Text="{Binding ElementName=Switch_Frequency_Slider, Path=Value}" Width="20" Height="26" 
+                                            <TextBox x:Name="Traversal2Speed_TextBox" Text="{Binding ElementName=SyncTraversalSpeed_Slider, Path=Value}" Width="20" Height="26" 
                                                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                             <Label Content="c/s"></Label>
                                         </WrapPanel>
-                                        <WrapPanel Height="30" Margin="5" HorizontalAlignment="Center">
-                                            <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="2,2,3,2" IsEnabled="False" />
-                                            <Button x:Name="prompterPlay" Content="Play"  Click="prompterPlay_Click" Margin="3,2,2,2" IsEnabled="False"/>
+                                        <WrapPanel HorizontalAlignment="Center">
+                                            <Button x:Name="prompterOpen" Height="25" Width="45" Content="Open" Click="prompterOpen_Click" Margin="5" IsEnabled="False" />
+                                            <Button x:Name="prompterPlay" Content="Play" Height="24" Width="45"  Click="prompterPlay_Click" Margin="5" IsEnabled="False"/>
+                                            <Button x:Name="RandomizeBtn" Content="Randomize" Height="25" Width=" 75" Click="RandomizeBtn_Click" Margin="5"></Button>
+                                            <Button x:Name="PrompterCloseBtn" Content="Close" Height="25" Margin="5" Click="PrompterCloseBtn_Click"></Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
-                                <GroupBox Header="Recording settings">
-                                    <StackPanel Margin="0">
-                                        <WrapPanel>
-                                            <Label Content="Frequency :" ToolTip="Frequency at which coordinates are recorded " IsEnabled="False"></Label>
-                                            <Slider  x:Name="ReqFrequencySlider" Width="100" Minimum="10" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" />
-                                            <TextBox x:Name="ReqFrequencyTxt" Text="{Binding ElementName=ReqFrequencySlider ,Path=Value}" Width="33" HorizontalContentAlignment="Right" Margin="2" ></TextBox>
+
+                                <GroupBox Header="Sequence planing" Margin="0" Width="232">
+                                    <StackPanel Margin="0,0,3,0">
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Movement :" Width="95"></Label>
+                                            <ComboBox x:Name="MovementCombo" Width="75" SelectionChanged="MovementCombo_Selected" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" ></ComboBoxItem>
+                                                <ComboBoxItem Content="Second"></ComboBoxItem>
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Reading :" Width="95"></Label>
+                                            <ComboBox x:Name="ReadingCombo" Width="75" SelectionChanged="ReadingCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel Height="25"></WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Asynchronous :" Width="95"></Label>
+                                            <ComboBox x:Name="AsyncCombo" Width="75" SelectionChanged="AsyncCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                                <ComboBoxItem Content="Third" />
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Synchronous :" Width="95"></Label>
+                                            <ComboBox x:Name="SyncCombo"  Width="75"  SelectionChanged="SyncCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                                <ComboBoxItem Content="Third" />
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center" Margin="5">
+                                            <Label Content="Self-paced :" Width="95"></Label>
+                                            <ComboBox x:Name="SelfPacedCombo" Width="75" SelectionChanged="SelfPacedCombo_SelectionChanged" SelectedValuePath="Content">
+                                                <ComboBoxItem Content="First" />
+                                                <ComboBoxItem Content="Second"/>
+                                                <ComboBoxItem Content="Third" />
+                                            </ComboBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center">
+                                            <Label Content="Duration:"></Label>
+                                            <Slider x:Name="Sequence_Duration_Slider" TickFrequency="1" Minimum="1" Maximum="10" Value="5" IsSnapToTickEnabled="True"  TickPlacement="BottomRight" Width="107" ></Slider>
+                                            <TextBox Text="{Binding ElementName=Sequence_Duration_Slider, Path=Value}"></TextBox>
+                                        </WrapPanel>
+                                        <WrapPanel HorizontalAlignment="Center">
+                                            <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click" Margin="5"></Button>
+                                            <Button x:Name="Sequence_Stop" Content="Stop" Width="75" Height="25" Click="Sequence_Stop_Click" Margin="5"></Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>
+
+
                             </WrapPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox1" Header="Microphone"  Height="197">
-                            <WrapPanel Margin="10,10,10,3">
-                                <StackPanel>
-                                    <WrapPanel Height="35">
-                                        <Label Content="Microphone 1 :" Height="25" Width="100"/>
-                                        <ComboBox x:Name="Microphone1_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone1_ComboBox_SelectionChanged" ItemsSource ="{Binding Path=Mics}" 
-                                              />
-                                    </WrapPanel>
-                                    <WrapPanel Height="35">
-                                        <Label Content="Volume :" Height="25" Width="100"/>
-                                        <Slider x:Name="VolumeSlider1" Width="154" Margin="5" Maximum="100" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel1}" ValueChanged="VolumeSlider1_ValueChanged"/>
-                                    </WrapPanel>
-                                    <WrapPanel >
-                                        <ProgressBar x:Name="Mic1_VolumeBar" Margin="10" Orientation="Horizontal"  Value="{Binding Path=CurrentInputLevel1, Mode=TwoWay}"  Height="20" Width="265"
-                        					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
-                                    </WrapPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Mic1_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic1_Rec_Click" />
-                                        <Button x:Name="Mic1_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic1_Stop_Click"/>
-                                    </WrapPanel>
-                                </StackPanel>
-                                <StackPanel>
-                                    <WrapPanel Height="35">
-                                        <Label Content="Microphone2 :" Height="25" Width="100"/>
-                                        <ComboBox x:Name="Microphone2_ComboBox" Width="150" Height="25" Margin="5" SelectionChanged="Microphone2_ComboBox_SelectionChanged" ItemsSource="{Binding Path=Mics}" DisplayMemberPath="{Binding Path = Active}"  />
-                                    </WrapPanel>
-                                    <WrapPanel Height="35">
-                                        <Label Content="Volume :" Height="25" Width="100"/>
-                                        <Slider x:Name="VolumeSlider2" Width="154" Margin="5" IsEnabled="True" Orientation="Horizontal" Value="{Binding MicrophoneLevel2}" ValueChanged="VolumeSlider2_ValueChanged"/>
-                                    </WrapPanel>
-                                    <WrapPanel>
-                                        <ProgressBar x:Name="Mic2_VolumeBar" Margin="10" Orientation="Horizontal" Value="{Binding Path=CurrentInputLevel2, Mode=TwoWay}"  Height="20" Width="265" 
-                        					Style="{StaticResource VolumeBar}" Minimum="0" Maximum="100"/>
-                                    </WrapPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Mic2_Rec" Content="Rec" Height="25" Width=" 40" IsEnabled="False"  Margin="5" Click="Mic2_Rec_Click" />
-                                        <Button x:Name="Mic2_Stop" Content="Stop" Height="25" Width="40" IsEnabled="False" Margin="5" Click="Mic2_Stop_Click"/>
-                                    </WrapPanel>
-                                </StackPanel>
-                                <StackPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Microphone_refresh_btn" Content="Refresh" Click="Microphone_refresh_btn_Click"/>
-                                    </WrapPanel>
-                                </StackPanel>
-                            </WrapPanel>
-                        </GroupBox>
-                        <GroupBox x:Name="groupbox3" Header="Controllers"  Height="178" >
-                            <StackPanel Margin="10,10"/>
-                        </GroupBox>
+
+
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -314,8 +417,8 @@
                     </WrapPanel>
 
                     <StackPanel>
-                        <GroupBox Header="Console output" Height="217" BorderBrush="SteelBlue" BorderThickness="2">
-                            <TextBlock x:Name="Console_TextBox" Margin="0" Background="AliceBlue">
+                        <GroupBox Header="Console output" Height="98" BorderBrush="SteelBlue" BorderThickness="2">
+                            <TextBlock x:Name="Console_TextBox" Margin="0,0,0,2" Background="AliceBlue">
                             </TextBlock>
                         </GroupBox>
                         <WrapPanel>
@@ -323,12 +426,8 @@
                             <Button x:Name="ClearButton" Height="25" Width="75" Content="Clear" Margin="5" Click="ClearButton_OnClick"></Button>
                         </WrapPanel>
                     </StackPanel>
-
                 </StackPanel>
-
             </TabItem>
-
         </TabControl>
-        <StatusBar Margin="0,628,0,-5" Grid.Row="1"/>
     </Grid>
 </Window>

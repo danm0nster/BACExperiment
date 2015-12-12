@@ -1,68 +1,40 @@
 ﻿using BACExperiment.GUI;
 using BACExperiment.Model;
-using NAudio.Mixer;
-using NAudio.Wave;
 using System;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using WiimoteLib;
-using Xceed.Wpf.Toolkit;
 
 namespace BACExperiment
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+  
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        /* Declare 2 wiimotes for the application to use. The number of remotes can be changed if we need too.
-        For now I am keeping in mind the necesity we have . I also add a WiimoteStatus user controll for each 
-        of the wii remotes. That way we can store the methods of updating the gui with each change the wii remote
-        has , without too much hassle and with a better idea of where everything happens .*/
-
-        /* Wiimote wm1;
-         WiimoteInfo wm1_info;
-         Wiimote wm2;
-         WiimoteInfo wm2_info; */
-
-        /* Wiiremotes were moved in the service class for architecturall efficiency issues */
 
         private Service service;
-        private StimulyWindow stimulyWindow;
-        private Prompter prompter;
-        //  private readonly List<Brush> colors_;
-        private Brush white_;
+        private MovementWindow stimulyWindow;
+        private ReadingWIndow prompter;
+        public event PropertyChangedEventHandler PropertyChanged;
+        private SequenceForm sequence;
 
-        /* public IEnumerable<Brush> Colors
-        {
-            get { return colors_; }
-        }
+        #region INotifyPropertyChanged Members
 
-        public Brush White
+        protected void Notify(string propName)
         {
-            get { return white_; }
-            set
+            if (this.PropertyChanged != null)
             {
-                if (white_ != value)
-                    white_ = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-        */
-        //Volume bar variables
+        #endregion
 
         public MainWindow()
         {
-           
-            
+
+
             InitializeComponent();
-            
-               
-            
 
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -71,9 +43,9 @@ namespace BACExperiment
 
 
             service = Service.getInstance(this);
-            ModeSelect.Items.Add(new ComboboxItem("Ellipse", "Ellipse"));
-            ModeSelect.Items.Add(new ComboboxItem("Course", "Course"));
-            ModeSelect.Items.Add(new ComboboxItem("Pipe", "Pipe"));
+            ModeSelect.Items.Add(new ComboboxItem("Synchronous", "Synchronous"));
+            ModeSelect.Items.Add(new ComboboxItem("Asynchronous", "Asynchronous"));
+            ModeSelect.Items.Add(new ComboboxItem("Self-Paced", "Self-Paced"));
             Mic1_VolumeBar.DataContext = this;
             Mic2_VolumeBar.DataContext = this;
 
@@ -104,13 +76,98 @@ namespace BACExperiment
                 return Text;
             }
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+
+
+
+        #region MovementSettingCode
+
+        private void ModeSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (((ComboBox)sender).SelectedIndex == 0) // Synchronous
+            {
+                AsynchronousGroupBox.IsEnabled = false;
+                SelfpacedCombobox.IsEnabled = false;
+                SynchronousGroupBox.IsEnabled = true;
+            }
+            if (((ComboBox)sender).SelectedIndex == 1) // Asynchronous
+            {
+                AsynchronousGroupBox.IsEnabled = true;
+                SelfpacedCombobox.IsEnabled = false;
+                SynchronousGroupBox.IsEnabled = false;
+            }
+            if (((ComboBox)sender).SelectedIndex == 2) // Self-Paced
+            {
+                AsynchronousGroupBox.IsEnabled = false;
+                SelfpacedCombobox.IsEnabled = true;
+                SynchronousGroupBox.IsEnabled = false;
+            }
         }
 
+        private void OpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.Cursor = Cursors.Wait;
+
+                if (ModeSelect.SelectedIndex == -1)
+                {
+                    System.Windows.MessageBox.Show("Please select a course mode before attempting to run the experiment");
+                }
+                else
+                {
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Synchronous")
+                    {
+                        SyncMovement();
+                    }
+                    else
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Asynchronous")
+                    {
+                        AsyncMovement();
+                    }
+                    else
+                    if (((ComboboxItem)ModeSelect.SelectedItem).Value == "Self-Paced")
+                    {
+                        SelfPacedMovement();
+                    }
+
+                    stimulyWindow.Show();
 
 
-        #region MainCourseOfActionCode
+                    GenerateCourseBtn.IsEnabled = true;
+                    OpenBtn.IsEnabled = false;
+                    CloseBtn.IsEnabled = true;
+                }
+
+
+            }
+
+            catch (Exception ex)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+            }
+            this.Cursor = Cursors.Arrow;
+        }
+
+        private void CloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            stimulyWindow.Close();
+            CloseBtn.IsEnabled = false;
+        }
+
+        private void GenerateCourse_Click(object sender, RoutedEventArgs e)
+        {
+            generateCourse();
+            StartBtn.IsEnabled = true;
+            GenerateCourseBtn.IsEnabled = false;
+        }
+
+        private void generateCourse()
+        {
+            stimulyWindow.ResizeMode = ResizeMode.NoResize;
+            stimulyWindow.buildCourse();
+
+        }
+
         private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
             StartBtn.IsEnabled = false;
@@ -125,36 +182,13 @@ namespace BACExperiment
 
         }
 
-        private void OpenBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                this.Cursor = Cursors.Wait;
-                stimulyWindow = StimulyWindow.GetInstance(this);
-                stimulyWindow.Visibility = System.Windows.Visibility.Visible;
-                stimulyWindow.setCourseComplexity((int)complexitySlider.Value);
-                stimulyWindow.setCourseSpeed((int)SpeedSlider.Value);
-                // stimulyWindow.setCourseMode((int)ModeSelect.SelectedValue);
-                StartBtn.IsEnabled = true;
-                stimulyWindow.setShowTrajectory((bool)TrajectoryCheck.IsChecked);
-                TrajectoryCheck.IsEnabled = false;
-
-                stimulyWindow.buildCourseType1();
-                this.Cursor = Cursors.Arrow;
-
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
-
         public void enableStartBtn()
         {
             StartBtn.IsEnabled = true;
         }
 
+
+        
         #endregion
 
 
@@ -164,14 +198,39 @@ namespace BACExperiment
             if (System.IO.File.Exists(pathTxt.Text))
             {
                 if (Sync_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 1);
-
+                {
+                    try
+                    {
+                        SyncReading();
+                    }
+                    catch (Exception ex)
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                    }
+                }
                 if (Async_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 2);
+                {
+                    try
+                    {
+                        AsyncReading();
+                    }
+                    catch (Exception ex)
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                    }
+                }
 
                 if (SelfPaced_RBtn.IsChecked == true)
-                    prompter = new Prompter((int)prompterSpeed.Value, (int)Switch_Frequency_Slider.Value, (int)TextSizeSlider.Value, pathTxt.Text, 3);
-
+                {
+                    try
+                    {
+                        SelfPacedReading();
+                    }
+                    catch (Exception ex)
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                    }
+                }
                 prompter.Visibility = System.Windows.Visibility.Visible;
                 prompterPlay.IsEnabled = true;
 
@@ -179,8 +238,7 @@ namespace BACExperiment
 
             else
             {
-                PopUp msg = new PopUp("No file at specified path .");
-                msg.Visibility = System.Windows.Visibility.Visible;
+                Xceed.Wpf.Toolkit.MessageBox.Show("No file specified in path");
             }
         }
 
@@ -191,7 +249,22 @@ namespace BACExperiment
             prompter.play();
         }
 
+        private void RandomizeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Sync_RBtn.IsChecked = false;
+            Async_RBtn.IsChecked = false;
+            SelfPaced_RBtn.IsChecked = false;
 
+            Random r = new Random();
+            int i = r.Next(3);
+
+            if (i == 1)
+                Sync_RBtn.IsChecked = true;
+            if (i == 2)
+                Async_RBtn.IsChecked = true;
+            if (i == 0)
+                SelfPaced_RBtn.IsChecked = true;
+        }
 
         private void TextSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -202,15 +275,24 @@ namespace BACExperiment
         private void Sync_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
+            Color1.IsEnabled = true;
+            Color2.IsEnabled = false;
+            Color3.IsEnabled = false;
         }
 
         private void Async_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
+            Color1.IsEnabled = true;
+            Color2.IsEnabled = true;
+            Color3.IsEnabled = true;
         }
         private void SelfPaced_RBtn_Checked(object sender, RoutedEventArgs e)
         {
             prompterOpen.IsEnabled = true;
+            Color1.IsEnabled = false;
+            Color2.IsEnabled = false;
+            Color3.IsEnabled = false;
         }
 
         private void BrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -336,6 +418,8 @@ namespace BACExperiment
         MicrophoneConstruct mic1PrevVal = null;
         MicrophoneConstruct mic2PrevVal = null;
 
+
+
         private void Microphone1_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -353,7 +437,7 @@ namespace BACExperiment
             }
             catch (Exception Ex)
             {
-                System.Windows.MessageBox.Show(Ex.Message);
+                Xceed.Wpf.Toolkit.MessageBox.Show(Ex.Message);
                 Microphone1_ComboBox.SelectedIndex = -1;
             }
         }
@@ -373,7 +457,7 @@ namespace BACExperiment
             }
             catch (Exception Ex)
             {
-                System.Windows.MessageBox.Show(Ex.Message);
+                Xceed.Wpf.Toolkit.MessageBox.Show(Ex.Message);
                 Microphone2_ComboBox.SelectedIndex = -1;
             }
         }
@@ -454,17 +538,8 @@ namespace BACExperiment
         }
 
         private void Microphone_refresh_btn_Click(object sender, RoutedEventArgs e)
-        { /*
-            Microphone1_ComboBox.Items.Clear();
-            Microphone2_ComboBox.Items.Clear();
-            foreach (var mic in service.getMicrophoneList())
-            {
-                Microphone1_ComboBox.Items.Add(mic);
-                Microphone2_ComboBox.Items.Add(mic);
-            }
-            Microphone1_ComboBox.DisplayMemberPath = "ProductName";
-            Microphone2_ComboBox.DisplayMemberPath = "ProductName";
-         */
+        {
+
             service.getMicrophoneList();
         }
 
@@ -477,9 +552,497 @@ namespace BACExperiment
         private void VolumeSlider2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             service.setVolume((int)e.NewValue, 2);
+        }
+        #endregion
 
+        #region SequenceManagement
+  #region ComboBoxesSwitchFeature
+
+        private void MovementCombo_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            if (ReadingCombo.SelectedIndex != -1 && ((ComboBox)sender).SelectedIndex != -1)
+                if (MovementCombo.SelectedValue.ToString().Equals(ReadingCombo.SelectedValue.ToString()))
+                {
+                    System.Windows.MessageBox.Show("Movement and reading can not have the same values");
+                    MovementCombo.SelectedIndex = -1;
+                }
+        }
+
+        private void ReadingCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MovementCombo.SelectedIndex != -1 && ((ComboBox)sender).SelectedIndex != -1)
+                if (ReadingCombo.SelectedValue.ToString().Equals(MovementCombo.SelectedValue.ToString()))
+                {
+                    System.Windows.MessageBox.Show("Movement and reading can not have the same values");
+                    ReadingCombo.SelectedIndex = -1;
+                }
+
+        }
+
+        private void AsyncCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            if (((ComboBox)sender).SelectedIndex != -1)
+            {
+                if (SyncCombo.SelectedIndex != -1)
+                {
+                    if (AsyncCombo.SelectedValue.ToString().Equals(SyncCombo.SelectedValue.ToString()))
+                    {
+                        System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
+                        AsyncCombo.SelectedIndex = -1;
+                    }
+                }
+            }
+            if (((ComboBox)sender).SelectedIndex != -1)
+            {
+                if (SelfPacedCombo.SelectedIndex != -1)
+                {
+                    if (AsyncCombo.SelectedValue.ToString().Equals(SelfPacedCombo.SelectedValue.ToString()))
+                    {
+                        System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
+                        AsyncCombo.SelectedIndex = -1;
+                    }
+                }
+            }
+
+        }
+
+        private void SyncCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedIndex != -1)
+            {
+                if (AsyncCombo.SelectedIndex != -1)
+                {
+                    if (SyncCombo.SelectedValue.ToString().Equals(AsyncCombo.SelectedValue.ToString()))
+                    {
+                        System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
+                        SyncCombo.SelectedIndex = -1;
+                    }
+                }
+            }
+            if (((ComboBox)sender).SelectedIndex != -1)
+            {
+                if (SelfPacedCombo.SelectedIndex != -1)
+                {
+                    if (SyncCombo.SelectedValue.ToString().Equals(SelfPacedCombo.SelectedValue.ToString()))
+                    {
+                        System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
+                        SyncCombo.SelectedIndex = -1;
+                    }
+                }
+            }
+
+        }
+
+        private void SelfPacedCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedIndex != -1)
+            {
+                if (SyncCombo.SelectedIndex != -1)
+                {
+                    if (SelfPacedCombo.SelectedValue.ToString().Equals(SyncCombo.SelectedValue.ToString()))
+                    {
+                        System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
+                        SelfPacedCombo.SelectedIndex = -1;
+                    }
+                }
+                if (((ComboBox)sender).SelectedIndex != -1)
+                {
+                    if (AsyncCombo.SelectedIndex != -1)
+                    {
+                        if (SelfPacedCombo.SelectedValue.ToString().Equals(AsyncCombo.SelectedValue.ToString()))
+                        {
+                            System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
+                            SelfPacedCombo.SelectedIndex = -1;
+                        }
+                    }
+
+                }
+            }
+        }
+        #endregion
+      
+        #endregion     
+
+        private void Sequence_Start_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+
+                _mode = 0;
+                _window = 0;
+                sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
+                System.Timers.Timer t = new System.Timers.Timer();
+                t.Interval = 100;
+                t.Elapsed += Sequence_Timer_TickEvent;
+                
+                if (sequence != null)
+                {
+                    t.Start();
+                    StartFullRecording();
+                    service.PingExperimentStart();
+                }
+            }
+            catch(Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Sequence_Timer_TickEvent(object sender, ElapsedEventArgs args)
+        {
+            #region CloseWindows
+            if (stimulyWindow != null)
+            {
+                Action close_stimulyWindow_action = () =>
+                {
+                    stimulyWindow.Close();
+                };
+                this.Dispatcher.Invoke(close_stimulyWindow_action);
+                stimulyWindow = null;
+            }
+
+            if (prompter != null)
+            {
+                Action close_prompter_action = () =>
+                {
+                    prompter.Close();
+                };
+                this.Dispatcher.Invoke(close_prompter_action);
+                prompter = null;
+            }
             #endregion
+            if (_window == 2)
+            {
+                _window = 0;
+                ((Timer)sender).Dispose();
+            }
+            else
+            {
+                var t = (System.Timers.Timer)sender;
+                if (t.Interval <= 1000)
+                {
+                    Action action = () =>
+                    {
+                        t.Interval = 1000 * 60 * ((int)Sequence_Duration_Slider.Value + 1);
+                    };
+                    this.Dispatcher.Invoke(action);
+                }
+                Mode++;
+            }
+        }  
 
+        private void Sequence_next()
+        {
+            service.PingStartNewPhase();
+            if (sequence.mode[_mode] == "asynchronous")
+            {
+                if (sequence.window[_window] == "movement")
+                {
+                    AsyncMovement();
+                    Action action = () =>
+                    {
+                        stimulyWindow.Show();
+                        stimulyWindow.Focus();
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.ASYNCHRONOUS_MOVEMENT);
+                        w.Show();          
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60 ;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            stimulyWindow.startCourse();
+                            stimulyWindow.startRecording();
+                            t.Dispose();
+                        };
+                        t.Start();                   
+                    };
+
+                    if (stimulyWindow != null)
+                        this.Dispatcher.Invoke(action);
+                    else System.Windows.MessageBox.Show("Movement stimuly could not be generated");
+                }
+
+                else if (sequence.window[_window] == "reading")
+                {
+                    AsyncReading();
+                    Action action = () =>
+                    {
+                        prompter.Show();
+
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.ASYNCHRONOUS_READING);
+                        w.Show();
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            prompter.play();
+                            t.Dispose();
+                        };
+                        t.Start();
+                        
+                    };
+                    if (prompter != null)
+                        this.Dispatcher.Invoke(action);
+                    else System.Windows.MessageBox.Show("Reading stimuly could not be generated");
+                }
+            }
+
+            if (sequence.mode[_mode] == "synchronous")
+            {
+
+
+                if (sequence.window[_window] == "movement")
+                {
+                    SyncMovement();
+                    Action action = () =>
+                    {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SYNCHRONOUS_MOVEMENT);
+                        w.Show();
+                        stimulyWindow.Show();
+                        stimulyWindow.Focus();
+
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            stimulyWindow.startCourse();
+                            t.Dispose();
+                        };
+                    };
+                    this.Dispatcher.Invoke(action);
+                }
+
+                else if (sequence.window[_window] == "reading")
+                {
+                    SyncReading();
+                    Action action = () =>
+                    {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SYNCHRONOUS_READING);
+                        prompter.Show();
+                        w.Show();
+
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Close();
+                            prompter.play();
+                            t.Dispose();
+                        };
+                    };
+
+                    this.Dispatcher.Invoke(action);
+                }
+            }
+
+            if (sequence.mode[_mode] == "selfpaced")
+            {
+
+                if (sequence.window[_window] == "movement")
+                {
+
+                    SelfPacedMovement();
+                    Action action = () =>
+                    {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SELFPACED_MOVEMENT);
+                        stimulyWindow.Show();
+                        stimulyWindow.Focus();
+                        generateCourse();
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Show();
+                            stimulyWindow.startCourse();
+                            t.Dispose();
+                        };
+                    };
+                    this.Dispatcher.Invoke(action);
+                }
+                else if (sequence.window[_window] == "reading")
+                {
+                    SelfPacedReading();
+                    Action action = () =>
+                    {
+                        InstructionsPopUp w = new InstructionsPopUp(Instructions.SELFPACED_READING);
+                        w.Show();
+                        prompter.Show();
+
+
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 1000 * 60;
+                        t.Elapsed += (s, e) =>
+                        {
+                            w.Show();
+                            prompter.play();
+                            t.Dispose();
+                        };
+                    };
+                    this.Dispatcher.Invoke(action);
+
+                }
+            }
+        }
+
+        private void AsyncMovement()
+        {
+            Action action = () =>
+            {
+                System.Windows.Media.Color color1 = (System.Windows.Media.Color)Subject1.SelectedColor;
+                System.Windows.Media.Color color2 = (System.Windows.Media.Color)Subject2.SelectedColor;
+                System.Windows.Media.Color color3 = (System.Windows.Media.Color)CourseColorPicker.SelectedColor;
+                stimulyWindow = new MovementWindow(this, "Asynchronous", (int)complexitySlider2.Value, (int)SpeedSlider2.Value, color1, color2, color3);
+            };
+            this.Dispatcher.Invoke(action);
+            }
+
+        private void SyncMovement()
+        {
+            Action action = () =>
+            {
+            System.Windows.Media.Color color1 = (System.Windows.Media.Color)Subject1.SelectedColor;
+            System.Windows.Media.Color color2 = (System.Windows.Media.Color)Subject2.SelectedColor;
+            System.Windows.Media.Color color3 = (System.Windows.Media.Color)CourseColorPicker.SelectedColor;
+            stimulyWindow = new MovementWindow(this, "Synchronous", (int)complexitySlider.Value, (int)SpeedSlider.Value, color1, color2, color3);
+            };
+            this.Dispatcher.Invoke(action);
+        }
+    
+        private void SelfPacedMovement()
+        {
+            Action action = () =>
+            {
+            System.Windows.Media.Color color1 = (System.Windows.Media.Color)Subject1.SelectedColor;
+            System.Windows.Media.Color color2 = (System.Windows.Media.Color)Subject2.SelectedColor;
+            System.Windows.Media.Color color3 = (System.Windows.Media.Color)CourseColorPicker.SelectedColor;
+            stimulyWindow = new MovementWindow(this, color1, color2, color3, (int)LineThicknessPicker.Value);
+            };
+            this.Dispatcher.Invoke(action);
+        }
+
+        private void AsyncReading()
+        {
+            Action action = () =>
+            {
+                System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
+                System.Windows.Media.Color color2 = (System.Windows.Media.Color)Color2.SelectedColor;
+                System.Windows.Media.Color color3 = (System.Windows.Media.Color)Color3.SelectedColor;
+                prompter = new ReadingWIndow((int)TextSizeSlider.Value, pathTxt.Text, (int)AsyncTraversalSpeed_Slider.Value, (int)Turn_duration_Slider.Value, (int)Switch_Frequency_Slider.Value, color1, color2, color3);
+            };
+
+            this.Dispatcher.Invoke(action);
+            }
+
+        private void SyncReading()
+        {
+            Action action = () =>
+            {
+                System.Windows.Media.Color color1 = (System.Windows.Media.Color)Color1.SelectedColor;
+                prompter = new ReadingWIndow((int)TextSizeSlider.Value, pathTxt.Text, (int)SyncTraversalSpeed_Slider.Value, color1);
+
+            };
+            this.Dispatcher.Invoke(action);
+        }
+        private void SelfPacedReading()
+        {
+            Action action = () =>
+            {
+                prompter = new ReadingWIndow((int)TextSizeSlider.Value, pathTxt.Text, (int)prompterSpeed.Value);
+            };
+            this.Dispatcher.Invoke(action);
+            }
+
+        
+
+        private int _window = 0;
+        private int _mode = 0;
+
+        public int Window { get { return _window;} set { if (value == 2) _window = 0; else _window = value; } }
+        public int Mode
+        {
+            get { return _mode; }
+            set
+            {
+                Sequence_next();
+                _mode = value;
+                if (_mode == 3)
+                {
+                    _mode = 0;
+                    Window++;
+                }
+            }
+        }
+
+        internal class SequenceForm
+        {
+            public string[] window = new string[2];
+            public string[] mode = new string[3];
+
+            public SequenceForm(string movement, string reading, string asynchronous, string synchronous, string selfpaced)
+            {
+                if (movement == "First")
+                {
+                    window[0] = "movement";
+                    window[1] = "reading";
+                }
+                if (reading == "First")
+                {
+                    window[0] = "reading";
+                    window[1] = "movement";
+                }
+
+                if (asynchronous == "First")
+                {
+                    mode[0] = "asynchronous";
+                }
+                else if (asynchronous == "Second")
+                {
+                    mode[1] = "asynchronous";
+                }
+                else if (asynchronous == "Third")
+                {
+                    mode[2] = "asynchronous";
+                }
+
+                if (synchronous == "First")
+                {
+                    mode[0] = "synchronous";
+                }
+                else if (synchronous == "Second")
+                {
+                    mode[1] = "synchronous";
+                }
+                else if (synchronous == "Third")
+                {
+                    mode[2] = "synchronous";
+                }
+
+                if (selfpaced == "First")
+                {
+                    mode[0] = "selfpaced";
+                }
+                if (selfpaced == "Second")
+                {
+                    mode[1] = "selfpaced";
+                }
+                if (selfpaced == "Third")
+                {
+                    mode[2] = "selfpaced";
+                }
+
+            }
+
+        }
+
+        private void PrompterCloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Sequence_Stop_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }

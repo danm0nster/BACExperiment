@@ -90,13 +90,13 @@ namespace BACExperiment.GUI
 
         private int ScaleXToResolution(double x )
         {
-            int toReturn = (int)(x * RezolutionX);
+            int toReturn = (int)(x * (RezolutionX*1.5));
             return toReturn;
         }
 
         private int ScaleYToResolution(double y)
         {
-            int toReturn = (int)(y * RezolutionY);
+            int toReturn = (int)(y * (RezolutionY*1.5));
             return toReturn;
         }
 
@@ -110,6 +110,16 @@ namespace BACExperiment.GUI
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void End()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

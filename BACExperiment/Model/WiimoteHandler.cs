@@ -46,8 +46,11 @@ namespace BACExperiment.Model
             aggregators[i].Wiimote = mWiimotes[i];
             aggregators[i].Processed += SendToWiimoteCoordinate;
             mWiimotes[i].WiimoteChanged += wm_WiimoteChanged;
-        }
+            // Possibly find a way to set the sensitivity of the wii remote for the LEDs
 
+
+        }
+        
         public void Disconnect(int i)
         {
             aggregators[i] = null;

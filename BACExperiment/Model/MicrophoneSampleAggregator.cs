@@ -9,7 +9,7 @@ namespace BACExperiment.Model
 {
   
     
-        public class SampleAggregator
+        public class MicrophoneSampleAggregator
         {
             public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
             public event EventHandler Restart = delegate { };

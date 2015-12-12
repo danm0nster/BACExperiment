@@ -60,7 +60,7 @@ namespace BACExperiment.Model
             {
                 if (activeMicrophones[i] != null)
                 {
-                    if (activeMicrophones[i].aggregator.Equals((SampleAggregator)sender))
+                    if (activeMicrophones[i].aggregator.Equals((MicrophoneSampleAggregator)sender))
                     {
                         index = i + 1;
                     }

@@ -27,7 +27,7 @@ namespace BACExperiment
         private CoordinateHolder holder;
 
 
-        public static coordinateRecorder getInstance(StimulyWindow observee)
+        public static coordinateRecorder getInstance(MovementWindow observee)
         {
             if (instance == null)
                 instance = new coordinateRecorder();
@@ -73,18 +73,11 @@ namespace BACExperiment
             }
 
             return directoryPath + "\\Session Logs";
-
         }
 
 
         public void Record(object sender, ElapsedEventArgs args)
         {
-
-            // First attemtp always give exception that current file is being used . Look into that because you can not run 2 times for 1 file since the name is given by the time of the creation which is always different
-
-
-
-
             DateTime t = args.SignalTime; // Take the time the tick was done
             Point ellipseCoordiante = holder.GetEllipseCoordinates();  // Parse coordinates from StimulyWindow to service and then to thread where they will be recorded into the log file
             Point controller1 = holder.GetPointerCoordinates(0);
@@ -100,12 +93,6 @@ namespace BACExperiment
                 s.WriteLine(toWrite);
                 s.Close();
             }
-
-
-
-
-
-
         }
 
 

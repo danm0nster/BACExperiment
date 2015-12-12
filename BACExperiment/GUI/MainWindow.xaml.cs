@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using WiimoteLib;
-
+using Xceed.Wpf.Toolkit;
 
 namespace BACExperiment
 {
@@ -353,7 +353,7 @@ namespace BACExperiment
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message);
+                System.Windows.MessageBox.Show(Ex.Message);
                 Microphone1_ComboBox.SelectedIndex = -1;
             }
         }
@@ -373,7 +373,7 @@ namespace BACExperiment
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message);
+                System.Windows.MessageBox.Show(Ex.Message);
                 Microphone2_ComboBox.SelectedIndex = -1;
             }
         }

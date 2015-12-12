@@ -143,6 +143,14 @@ namespace BACExperiment.GUI
         {
             try
             {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            {
                 this.Dispatcher.Invoke((Action)(() =>
                 {
                     scroller.Focus();

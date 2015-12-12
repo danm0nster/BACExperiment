@@ -107,14 +107,11 @@ namespace BACExperiment.Model
         public void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
             active = true;
-            
             if (file != null)
             {
                 file.Write(e.Buffer, 0, e.BytesRecorded);
                 file.Flush();
             }
-
-
             for (int index = 0; index < e.BytesRecorded; index += 2)
             {
                 short sample = (short)((e.Buffer[index + 1] << 8) |

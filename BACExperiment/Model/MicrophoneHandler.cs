@@ -55,8 +55,6 @@ namespace BACExperiment.Model
 
         private void MaximimumCalculated(object sender, MaxSampleEventArgs e)
         {
-            //Figure ot to which structure the sending aggregator belongs to so that we can update the group box of that specific Micrcophone
-
             int index = 0;
             for ( int i = 0; i<=1; i++)
             {

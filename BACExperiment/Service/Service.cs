@@ -36,10 +36,10 @@ namespace BACExperiment
         #endregion
 
         #region Links
-        private StimulyWindowViewModel stimuly_data_context {get; set ;}
+        private MovementWindowViewModel stimuly_data_context {get; set ;}
         public WiimoteDataContext wm1_data_context;
         public WiimoteDataContext wm2_data_context;
-        public MicViewModel mic_data_context;
+        public MicrophoneViewModel mic_data_context;
         #endregion
 
 
@@ -67,11 +67,11 @@ namespace BACExperiment
             this.observer = observer;
             microphones = new MicrophoneHandler(this);
             WMHandler = new WiimoteHandler();
-            stimuly_data_context = StimulyWindowViewModel.GetInstance();
+            stimuly_data_context = MovementWindowViewModel.GetInstance();
             wm1_data_context = new WiimoteDataContext();
             wm2_data_context = new WiimoteDataContext();
-            mic_data_context = new MicViewModel();
-            port = PortAccessHandler.GetIntance();
+            mic_data_context = new MicrophoneViewModel();
+            // port = PortAccessHandler.GetIntance();
            
          
          

@@ -78,8 +78,7 @@
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WiimoteLib, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>resources\WiimotLib_1.7\WiimotLib_1.7\WiimoteLib.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>bin\Debug\WiimoteLib.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase">
       <Private>True</Private>
@@ -110,11 +109,11 @@
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Instructions.cs" />
-    <Compile Include="GUI\MicViewModel.cs" />
+    <Compile Include="GUI\MicrophoneViewModel.cs" />
+    <Compile Include="GUI\MovementWIndowViewModel.cs" />
     <Compile Include="GUI\ReadingWindow.xaml.cs">
       <DependentUpon>ReadingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\StimulyWIndowViewModel.cs" />
     <Compile Include="GUI\InstructionPopUp.xaml.cs">
       <DependentUpon>InstructionPopUp.xaml</DependentUpon>
     </Compile>

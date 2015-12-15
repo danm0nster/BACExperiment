@@ -39,7 +39,7 @@ namespace BACExperiment
         private System.Timers.Timer t;
         private System.Timers.Timer checkPointTimer;
         private MainWindow mainWindow;
-        private StimulyWindowViewModel model = StimulyWindowViewModel.GetInstance();
+        private MovementWindowViewModel model = MovementWindowViewModel.GetInstance();
         private System.Windows.Media.Brush lineBrush;
         
 
@@ -130,8 +130,6 @@ namespace BACExperiment
             lineBrush = new SolidColorBrush(color3);
             this.StrokeThickness = StrokeThickness;
 
-         
-            this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
             recorder = coordinateRecorder.getInstance(this);
             holder = CoordinateHolder.GetInstance();
@@ -295,7 +293,7 @@ namespace BACExperiment
                 i++;
             }
 
-            StimulyEllipse1.Visibility = Visibility.Hidden;
+            
         }
         private void Asynchronous()
         {
@@ -312,26 +310,6 @@ namespace BACExperiment
                     this.queue1.queueAnimation(new DoubleAnimation(coordinates[i].X - 50, new Duration(TimeSpan.FromMilliseconds(1000.00 / CourseSpeed))),
                                             new DoubleAnimation(coordinates[i].Y - 50, new Duration(TimeSpan.FromMilliseconds(1000.00 / CourseSpeed)))
                                             );
-                    Line l = new Line();
-                    l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-
-                    if (lastX == 0 || lastY == 0)
-                    {
-                        lastX = coordinates[i].X;
-                        lastY = coordinates[i].Y;
-                    }
-
-                    //Draw the line 
-                    l.X1 = lastX;
-                    l.X2 = coordinates[i].X;
-                    l.Y1 = lastY;
-                    l.Y2 = coordinates[i].Y;
-
-                    l.StrokeThickness = StrokeThickness;
-
-                    StimulyReferencePoint.Children.Add(l);
-
-
                     if (agregator == 50)
                     {
                         checkPoints.Add(new Point(coordinates[i].X - 50, coordinates[i].Y - 50));
@@ -363,7 +341,7 @@ namespace BACExperiment
             if (queue1.NotEmpty)
                 queue1.start();
             else
-                StimulyEllipse1.Visibility = System.Windows.Visibility.Visible;
+                StimulyEllipse1.Visibility = System.Windows.Visibility.Hidden;
 
             if (checkPointTimer != null && built)
             {
@@ -490,8 +468,9 @@ namespace BACExperiment
             mainWindow.SpeedSlider.IsEnabled = true;           
             mainWindow.StopFullRecording();
             recorder.Stop();
-
+            if(t.Enabled)
             t.Stop();
+            if(checkPointTimer.Enabled)
             checkPointTimer.Stop();
            
         }
@@ -518,29 +497,6 @@ namespace BACExperiment
             };
 
             Dispatcher.BeginInvoke(action);
-        }
-
-            public string toString()
-            {
-                string toReturn = "Movement ";
-                if (generate == Asynchronous)
-                    toReturn += "Asynchronous";
-                else if (generate == Synchronous)
-                    toReturn += "Synchronous";
-                else if (generate == Self_Paced)
-                    toReturn += "Self-Paced";
-
-                return toReturn;
-            }
-
-        public void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void End()
-        {
-            throw new NotImplementedException();
         }
 
         public void Reset()

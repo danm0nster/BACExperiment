@@ -107,15 +107,16 @@ namespace BACExperiment.Model
                 }
 
                 if (nResult == 0)
-                {
-                    throw new ArgumentException("Unable to open InpOut32 driver");
+                {               
                     MessageBox.Show("Unable to open InpOut32 driver");
+                    throw new ArgumentException("Unable to open InpOut32 driver");
                 }
             }
             catch (Exception ex )
             {
-                throw ex;
+                
                 MessageBox.Show(ex.Message);
+                throw ex;
             }
         }
 

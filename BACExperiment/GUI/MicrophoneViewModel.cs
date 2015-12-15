@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace BACExperiment
 {
-    public class MicViewModel : INotifyPropertyChanged
+    public class MicrophoneViewModel : INotifyPropertyChanged
     {
 
         #region INotifyPropertyChangedImplementation
@@ -37,7 +37,7 @@ namespace BACExperiment
         public float CurrentInputLevel1 { get { return _currentInputlevel1*100; } set { _currentInputlevel1 = value; if (PropertyChanged != null) { Notify("CurrentInputLevel1"); }; }  }
         public float CurrentInputLevel2 { get { return _currentInputlevel2*100; } set { _currentInputlevel2 = value; if (PropertyChanged != null) { Notify("CurrentInputLevel2"); }; }  }
 
-        public MicViewModel()
+        public MicrophoneViewModel()
         {
             _mics = new ObservableCollection<MicrophoneConstruct>();
         }

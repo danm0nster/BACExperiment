@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BACExperiment.Model
@@ -15,7 +11,7 @@ namespace BACExperiment.Model
 
         [DllImport("inpout32.dll")]
         private static extern UInt32 IsInpOutDriverOpen();
-
+        
         [DllImport("inpout32.dll")]
         private static extern void Out32(short PortAddress, short Data);
 
@@ -40,7 +36,7 @@ namespace BACExperiment.Model
         [DllImport("inpoutx64.dll")]
         private static extern bool SetPhysLong(ref int PortAddress, ref uint Data);
 
-        [DllImport("inpoutx64.dll", EntryPoint = "IsInpOutDriverOpen")]
+        [DllImport("inpoutx64.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern UInt32 IsInpOutDriverOpen_x64();
 
         [DllImport("inpoutx64.dll", EntryPoint = "Out32")]
@@ -89,8 +85,7 @@ namespace BACExperiment.Model
         private PortAccessHandler()
         {
             _X64 = false;
-          
-
+         
             try
             {
                 uint nResult = 0;
@@ -108,14 +103,14 @@ namespace BACExperiment.Model
 
                 if (nResult == 0)
                 {               
-                    MessageBox.Show("Unable to open InpOut32 driver");
+                    MessageBox.Show("Unable to open InpOut32 driver. Your computer might not have a paralel port.");
                     throw new ArgumentException("Unable to open InpOut32 driver");
                 }
             }
-            catch (Exception ex )
+            catch (DllNotFoundException ex )
             {
                 
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Unable to find inpout32.dll");
                 throw ex;
             }
         }

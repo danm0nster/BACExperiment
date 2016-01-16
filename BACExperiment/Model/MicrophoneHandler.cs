@@ -29,6 +29,7 @@ namespace BACExperiment.Model
 
         public List<MicrophoneConstruct> MicrophoneList()
         {
+            
             int WaveInDevices = WaveIn.DeviceCount;
             microphones = new List<MicrophoneConstruct>();
             for (int WaveInDevice = 0; WaveInDevice < WaveInDevices; WaveInDevice++)

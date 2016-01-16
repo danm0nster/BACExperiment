@@ -112,16 +112,7 @@ namespace BACExperiment.GUI
             }
         }
 
-        public void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void End()
-        {
-            throw new NotImplementedException();
-        }
-
+       
         #endregion
 
 

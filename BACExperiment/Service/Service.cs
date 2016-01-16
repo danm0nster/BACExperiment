@@ -71,8 +71,14 @@ namespace BACExperiment
             wm1_data_context = new WiimoteDataContext();
             wm2_data_context = new WiimoteDataContext();
             mic_data_context = new MicrophoneViewModel();
-            // port = PortAccessHandler.GetIntance();
-           
+            try {
+                port = PortAccessHandler.GetIntance();
+            }
+            catch (Exception ex)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                port = null;
+            }
          
          
         }
@@ -191,25 +197,33 @@ namespace BACExperiment
 
         public void WriteToPort(short Data)
         {
-            port.Write(Data);
+            if (port != null)
+            {
+                port.Write(Data);
+            }
         }
 
         public void PingExperimentStart()
         {
             for (int i = 0; i <= 2; i++)
             {
-                port.Write(255);
-                Thread.Sleep(1000);
-                port.Write(0);
-                Thread.Sleep(100);
+                if (port != null)
+                {
+                    port.Write(255);
+                    Thread.Sleep(1000);
+                    port.Write(0);
+                    Thread.Sleep(100);
+                }
             }
         }
 
         public void PingStartNewPhase()
         {
+            if( port !=null) { 
             port.Write(128);
             Thread.Sleep(1000);
             port.Write(0);
+                }
         }
         #endregion
 

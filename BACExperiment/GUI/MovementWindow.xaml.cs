@@ -117,6 +117,7 @@ namespace BACExperiment
                 generate = Synchronous;
                 StimulyEllipse1.Visibility = Visibility.Visible;
             }
+            CourseComplexity = complexity;
           
         }
 
@@ -133,7 +134,7 @@ namespace BACExperiment
             this.mainWindow = mainWindow;
             recorder = coordinateRecorder.getInstance(this);
             holder = CoordinateHolder.GetInstance();
-
+            this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             t = new System.Timers.Timer();
             t.Elapsed += new ElapsedEventHandler(SendInfo);
             t.Interval += 100;
@@ -337,9 +338,8 @@ namespace BACExperiment
         
         public void startCourse()
         {
-            buildCourse();
-            if (queue1.NotEmpty)
-                queue1.start();
+            if(course == null) buildCourse();
+            if (queue1.NotEmpty) queue1.start();
             else
                 StimulyEllipse1.Visibility = System.Windows.Visibility.Hidden;
 
@@ -470,7 +470,7 @@ namespace BACExperiment
             recorder.Stop();
             if(t.Enabled)
             t.Stop();
-            if(checkPointTimer.Enabled)
+            if(checkPointTimer != null )
             checkPointTimer.Stop();
            
         }

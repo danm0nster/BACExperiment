@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BACExperiment.GUI"
         mc:Ignorable="d"
-        Title="Instructions" Height="300" Width="300" ContentRendered="Window_ContentRendered">
+        Title="Instructions" Height="693.103" Width="946.552" ContentRendered="Window_ContentRendered">
     <Grid>
-        <RichTextBox x:Name="InstructionsLabel" FontSize="20" ></RichTextBox>
+        <RichTextBox x:Name="InstructionsLabel" FontSize="32" ></RichTextBox>
     </Grid>
 </Window>

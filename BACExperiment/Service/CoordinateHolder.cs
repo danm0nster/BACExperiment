@@ -37,10 +37,10 @@ namespace BACExperiment
 
         }
 
-        public void SetAccel(int remoteIndex, int AccelIndex, double value)
+        public void SetAccel(Double[,] accelValues)
         {
 
-            AccelValues[remoteIndex, AccelIndex] = value;
+            AccelValues = accelValues;
 
         }
 

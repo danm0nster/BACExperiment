@@ -27,6 +27,13 @@ namespace BACExperiment.GUI
         private double _pointer2z;
         private double _rezolutionX;
         private double _rezolutionY;
+        private Double[,] _accelValues = new Double[2, 3];
+
+        public Double[,] GetAccelValues()
+        {
+            return _accelValues;
+        }
+      
 
         public double  RezolutionX
         {
@@ -68,6 +75,13 @@ namespace BACExperiment.GUI
         {
             get { return _pointer2z; }
             set { _pointer2z = value; if (PropertyChanged != null) { Notify("Pointer2Z"); } }
+        }
+
+        public void SetAccel(int remote, Double[] values)
+        {
+            _accelValues[remote, 0] = values[0];
+            _accelValues[remote, 1] = values[1];
+            _accelValues[remote, 2] = values[2];
         }
 
         private static MovementWindowViewModel instance;

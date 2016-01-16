@@ -90,7 +90,7 @@ namespace BACExperiment
                 // Modify first ellipse 
                 stimuly_data_context.Pointer1X = ((WiimoteCoordinate)sender).MidPoint.X;
                 stimuly_data_context.Pointer1Y = ((WiimoteCoordinate)sender).MidPoint.Y;
-                    
+                stimuly_data_context.SetAccel(0, ((WiimoteCoordinate)sender).AccelValues);         
                 wm1_data_context.Update(sender , e);
 
             }
@@ -100,6 +100,7 @@ namespace BACExperiment
                 //Modify second ellipse;
                 stimuly_data_context.Pointer2X = ((WiimoteCoordinate)sender).MidPoint.X;
                 stimuly_data_context.Pointer2Y = ((WiimoteCoordinate)sender).MidPoint.Y;
+                stimuly_data_context.SetAccel(1, ((WiimoteCoordinate)sender).AccelValues);
                 wm2_data_context.Update(sender, e);
             }
         }

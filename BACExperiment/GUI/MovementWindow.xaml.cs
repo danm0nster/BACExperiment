@@ -41,7 +41,8 @@ namespace BACExperiment
         private MainWindow mainWindow;
         private MovementWindowViewModel model = MovementWindowViewModel.GetInstance();
         private System.Windows.Media.Brush lineBrush;
-        
+
+    
 
         //Variables
         private int CourseMode;
@@ -494,6 +495,7 @@ namespace BACExperiment
                 holder.SetEllipseCoordinates(Canvas.GetLeft(StimulyEllipse1), Canvas.GetTop(StimulyEllipse1));
                 holder.SetPointerCoordinates(0, new Point(Canvas.GetLeft(Pointer1), Canvas.GetTop(Pointer1)));
                 holder.SetPointerCoordinates(1, new Point(Canvas.GetLeft(Pointer2), Canvas.GetTop(Pointer2)));
+                holder.SetAccel(model.GetAccelValues());
             };
 
             Dispatcher.BeginInvoke(action);

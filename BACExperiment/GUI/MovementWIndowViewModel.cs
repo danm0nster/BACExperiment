@@ -12,7 +12,7 @@ using System.Windows.Media.Animation;
 
 namespace BACExperiment.GUI
 {
-    class StimulyWindowViewModel : INotifyPropertyChanged
+    class MovementWindowViewModel : INotifyPropertyChanged
     {
         //Links
         //Variables
@@ -27,6 +27,13 @@ namespace BACExperiment.GUI
         private double _pointer2z;
         private double _rezolutionX;
         private double _rezolutionY;
+        private Double[,] _accelValues = new Double[2, 3];
+
+        public Double[,] GetAccelValues()
+        {
+            return _accelValues;
+        }
+      
 
         public double  RezolutionX
         {
@@ -70,16 +77,23 @@ namespace BACExperiment.GUI
             set { _pointer2z = value; if (PropertyChanged != null) { Notify("Pointer2Z"); } }
         }
 
-        private static StimulyWindowViewModel instance;
+        public void SetAccel(int remote, Double[] values)
+        {
+            _accelValues[remote, 0] = values[0];
+            _accelValues[remote, 1] = values[1];
+            _accelValues[remote, 2] = values[2];
+        }
+
+        private static MovementWindowViewModel instance;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static StimulyWindowViewModel GetInstance() { if (instance == null) { instance = new StimulyWindowViewModel(); } return instance; }
+        public static MovementWindowViewModel GetInstance() { if (instance == null) { instance = new MovementWindowViewModel(); } return instance; }
 
 
 
 
-        private StimulyWindowViewModel()
+        private MovementWindowViewModel()
         {
             _pointer1x = 0;
             _pointer1y = 50;
@@ -112,16 +126,7 @@ namespace BACExperiment.GUI
             }
         }
 
-        public void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void End()
-        {
-            throw new NotImplementedException();
-        }
-
+       
         #endregion
 
 

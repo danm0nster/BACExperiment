@@ -36,10 +36,10 @@ namespace BACExperiment
         #endregion
 
         #region Links
-        private StimulyWindowViewModel stimuly_data_context {get; set ;}
+        private MovementWindowViewModel stimuly_data_context {get; set ;}
         public WiimoteDataContext wm1_data_context;
         public WiimoteDataContext wm2_data_context;
-        public MicViewModel mic_data_context;
+        public MicrophoneViewModel mic_data_context;
         #endregion
 
 
@@ -67,12 +67,18 @@ namespace BACExperiment
             this.observer = observer;
             microphones = new MicrophoneHandler(this);
             WMHandler = new WiimoteHandler();
-            stimuly_data_context = StimulyWindowViewModel.GetInstance();
+            stimuly_data_context = MovementWindowViewModel.GetInstance();
             wm1_data_context = new WiimoteDataContext();
             wm2_data_context = new WiimoteDataContext();
-            mic_data_context = new MicViewModel();
-            port = PortAccessHandler.GetIntance();
-           
+            mic_data_context = new MicrophoneViewModel();
+            try {
+                port = PortAccessHandler.GetIntance();
+            }
+            catch (Exception ex)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                port = null;
+            }
          
          
         }
@@ -84,7 +90,7 @@ namespace BACExperiment
                 // Modify first ellipse 
                 stimuly_data_context.Pointer1X = ((WiimoteCoordinate)sender).MidPoint.X;
                 stimuly_data_context.Pointer1Y = ((WiimoteCoordinate)sender).MidPoint.Y;
-                    
+                stimuly_data_context.SetAccel(0, ((WiimoteCoordinate)sender).AccelValues);         
                 wm1_data_context.Update(sender , e);
 
             }
@@ -94,6 +100,7 @@ namespace BACExperiment
                 //Modify second ellipse;
                 stimuly_data_context.Pointer2X = ((WiimoteCoordinate)sender).MidPoint.X;
                 stimuly_data_context.Pointer2Y = ((WiimoteCoordinate)sender).MidPoint.Y;
+                stimuly_data_context.SetAccel(1, ((WiimoteCoordinate)sender).AccelValues);
                 wm2_data_context.Update(sender, e);
             }
         }
@@ -191,25 +198,33 @@ namespace BACExperiment
 
         public void WriteToPort(short Data)
         {
-            port.Write(Data);
+            if (port != null)
+            {
+                port.Write(Data);
+            }
         }
 
         public void PingExperimentStart()
         {
             for (int i = 0; i <= 2; i++)
             {
-                port.Write(255);
-                Thread.Sleep(1000);
-                port.Write(0);
-                Thread.Sleep(100);
+                if (port != null)
+                {
+                    port.Write(255);
+                    Thread.Sleep(1000);
+                    port.Write(0);
+                    Thread.Sleep(100);
+                }
             }
         }
 
         public void PingStartNewPhase()
         {
+            if( port !=null) { 
             port.Write(128);
             Thread.Sleep(1000);
             port.Write(0);
+                }
         }
         #endregion
 

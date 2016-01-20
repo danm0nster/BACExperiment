@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,10 +20,30 @@ namespace BACExperiment.GUI
     /// </summary>
     public partial class InstructionsPopUp : Window
     {
+        private System.Timers.Timer t = new System.Timers.Timer();
         public InstructionsPopUp(string instructions)
         {
             InitializeComponent();
-            InstructionsLabel.Content = instructions;
+
+
+
+            InstructionsLabel.AppendText(instructions);
+           
+        }
+
+        void OnTimed(object sender, ElapsedEventArgs e)
+        {
+            t.Stop();
+
+            Action action = () => { this.Close(); };
+            Dispatcher.Invoke(action);
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            t.Interval = 1000 * 60;
+            t.Elapsed += new System.Timers.ElapsedEventHandler(OnTimed);
+            t.Start();
         }
     }
 }

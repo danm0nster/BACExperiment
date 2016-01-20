@@ -44,23 +44,6 @@ namespace BACExperiment.Model
 
         public WaveIn get_WaveIn(){ return this.waveIn; }
 
-        public MicrophoneConstruct(int selectedDevice, int groupBoxIndex)
-        {
-            this.groupBoxIndex = groupBoxIndex;
-            waveIn = new WaveIn();
-
-            if(WaveIn.DeviceCount >1)
-            waveIn.DeviceNumber = selectedDevice ;
-
-            waveIn.WaveFormat = new WaveFormat(44100, 2);
-
-            waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
-            waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStoped);
-
-            aggregator = new MicrophoneSampleAggregator();
-            aggregator.NotificationCount = 10; // How often we update the volume bar value;
-        }
-
         public MicrophoneConstruct(int selectedDevice)
         {
             waveIn = new WaveIn();
@@ -103,14 +86,11 @@ namespace BACExperiment.Model
         public void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
             active = true;
-            
             if (file != null)
             {
                 file.Write(e.Buffer, 0, e.BytesRecorded);
                 file.Flush();
             }
-
-
             for (int index = 0; index < e.BytesRecorded; index += 2)
             {
                 short sample = (short)((e.Buffer[index + 1] << 8) |

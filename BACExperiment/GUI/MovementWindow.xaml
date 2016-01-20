@@ -10,15 +10,15 @@
     <Grid>
         <Border x:Name="StimulyCanvas">
             <Canvas x:Name="StimulyReferencePoint" RenderTransformOrigin="0.5,0.5" Width="0" Height="0" RenderTransform="1 0 0 -1 0 0"  >
-                <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="-50" Canvas.Left="-50" Stroke="Salmon" StrokeThickness="3" ClipToBounds="True" Visibility="Hidden" ></Ellipse>
-                <Ellipse x:Name="CheckPointEllipse" Width="100" Height="100" Canvas.Top="-50" Canvas.Left="-50" Stroke="Blue" StrokeThickness="3" ClipToBounds="True" Visibility="Hidden" ></Ellipse>
-                <Ellipse x:Name="Pointer1" Width="15" Height="15" Canvas.Top="{Binding Path=Pointer1Y , Mode=TwoWay}" Canvas.Left="{Binding Path=Pointer1X , Mode=TwoWay}"  Stroke="CadetBlue" StrokeThickness="8" Visibility="Visible"/>
-                <Ellipse x:Name="Pointer2" Width="15" Height="15" Canvas.Top="{Binding Path=Pointer2Y , Mode=TwoWay}" Canvas.Left="{Binding Path=Pointer2X , Mode=TwoWay}"  Stroke="DarkBlue" StrokeThickness="8" Visibility="Visible"/>
+                <Ellipse x:Name="StimulyEllipse1" Width="100" Height="100" Canvas.Top="14" Canvas.Left="-40" Stroke="Salmon" StrokeThickness="3" ClipToBounds="True" Visibility="Visible" ></Ellipse>
+                <Ellipse x:Name="CheckPointEllipse" Width="100" Height="100" Canvas.Left="-140" Stroke="Blue" StrokeThickness="3" ClipToBounds="True" Visibility="Hidden" Canvas.Top="114" />
+                <Ellipse x:Name="Pointer1" Width="15" Height="15" Canvas.Top="{Binding Path=Pointer1Y}" Canvas.Left="{Binding Path=Pointer1X}"  Stroke="Salmon" StrokeThickness="8" Visibility="Visible"/>
+                <Ellipse x:Name="Pointer2" Width="15" Height="15" Canvas.Top="{Binding Path=Pointer2Y}" Canvas.Left="{Binding Path=Pointer2X}" Stroke="DarkBlue" StrokeThickness="8" Visibility="Visible"/>
             </Canvas>
         </Border>
-        
+
         <Ellipse Fill="Black" Stroke="Black" HorizontalAlignment="Center" Visibility="Hidden"/>
         <Ellipse Fill="Black" Stroke="Black" VerticalAlignment="Center" Visibility="Hidden" />
-     
+
     </Grid>
 </Window>

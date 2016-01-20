@@ -33,7 +33,14 @@ namespace BACExperiment.Model
 
         public void SearchForWiimotes()
         {
-            mWiimotes.FindAllWiimotes();
+            try {
+                mWiimotes.FindAllWiimotes();
+            }
+
+            catch(Exception ex)
+            {
+
+            }
         }
 
         public void Connect(int i)

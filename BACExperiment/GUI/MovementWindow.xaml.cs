@@ -70,7 +70,7 @@ namespace BACExperiment
         public bool isRandom() { return random; }
         public void setRandom(bool random) { this.random = random; }
       
-    
+        public MovementWindow instance { get; set; }
 
 
         public MovementWindow(MainWindow mainWindow , string mode , int complexity , int Speed, System.Windows.Media.Color color1 , System.Windows.Media.Color color2 , System.Windows.Media.Color color3 )

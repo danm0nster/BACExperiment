@@ -49,7 +49,7 @@ namespace BACExperiment
 
         public void Run()
         {
-            timer.Interval = 175; // setting the frequency at which the thread will register the current coordinates in the sessionLog
+            timer.Interval = 10; // setting the frequency at which the thread will register the current coordinates in the sessionLog
             timer.Elapsed += new ElapsedEventHandler(Record);
 
             timer.Enabled = true;

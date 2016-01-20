@@ -699,7 +699,7 @@ namespace BACExperiment
         {
             try
             {
-
+                Sequence_Stop.IsEnabled = true;
                 _mode = 0;
                 _window = 0;
                 sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
@@ -1084,7 +1084,7 @@ namespace BACExperiment
 
         private void PrompterCloseBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            //To-do
         }
 
         private void Sequence_Stop_Click(object sender, RoutedEventArgs e)

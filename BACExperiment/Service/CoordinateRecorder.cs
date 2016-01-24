@@ -49,18 +49,18 @@ namespace BACExperiment
 
         public void Run()
         {
-            timer.Interval = 175; // setting the frequency at which the thread will register the current coordinates in the sessionLog
+            timer.Interval = 1; // setting the frequency at which the thread will register the current coordinates in the sessionLog
             timer.Elapsed += new ElapsedEventHandler(Record);
 
             timer.Enabled = true;
             watch.Start();
+            Service.PingStartNewPhase();
         }
 
         public void Stop()
         {
             timer.Enabled = false;
             watch.Stop();
-
         }
 
 
@@ -78,6 +78,9 @@ namespace BACExperiment
 
         public void Record(object sender, ElapsedEventArgs args)
         {
+            if (timer.Interval <= 10)
+                timer.Interval = 10;
+
             DateTime t = args.SignalTime; // Take the time the tick was done
             Point ellipseCoordiante = holder.GetEllipseCoordinates();  // Parse coordinates from StimulyWindow to service and then to thread where they will be recorded into the log file
             Point controller1 = holder.GetPointerCoordinates(0);
@@ -90,9 +93,15 @@ namespace BACExperiment
 
             using (StreamWriter s = new StreamWriter(logPath, true))
             {
+               
                 s.WriteLine(toWrite);
                 s.Close();
             }
+        }
+
+        public void Clear()
+        {
+            instance = null;
         }
 
 

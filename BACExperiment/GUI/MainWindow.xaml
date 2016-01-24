@@ -62,35 +62,33 @@
                                     </WrapPanel>
                                 </GroupBox>
                                 <StackPanel>
-                                    <WrapPanel>
-                                        <Button x:Name="Microphone_refresh_btn" Content="Refresh" Click="Microphone_refresh_btn_Click" Width="45" Height="25"/>
-                                    </WrapPanel>
+                                    <WrapPanel/>
                                     <WrapPanel/>
                                     <WrapPanel/>
                                     <WrapPanel/>
                                 </StackPanel>
                             </WrapPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox"  Header="Stimuly" Margin="0,0,0,0" VerticalAlignment="Top">
+                        <GroupBox x:Name="groupBox"  Header="Stimuly" Margin="0,0,0,0" VerticalAlignment="Top" Height="411">
                             <WrapPanel Margin="0" >
 
-                                <GroupBox Header="Movement settings" Margin="0" Height="355" Width="310">
+                                <GroupBox Header="Movement settings" Margin="0" Padding="5" Height="387" Width="310">
                                     <StackPanel Orientation="Vertical" Width="250" Margin="0,0,0,0">
-                                        <WrapPanel Height="25" Margin="0,0,0,2">
-                                            <Label Content="Course mode :" Width="116" HorizontalContentAlignment="Right"/>
-                                            <ComboBox x:Name="CourseModeSelect" Width="134" IsEnabled="True" ItemsSource="{Binding Path=Modes}" SelectionChanged="CourseModeSelect_SelectionChanged"  />
+                                        <WrapPanel Height="25" Margin="5">
+                                            <Label Content="Course mode :" Width="115" HorizontalContentAlignment="Right"/>
+                                            <ComboBox x:Name="CourseModeSelect" Width="120" IsEnabled="True" ItemsSource="{Binding Path=Modes}" SelectionChanged="CourseModeSelect_SelectionChanged"  />
                                         </WrapPanel>
                                         <WrapPanel>
-                                            <StackPanel>
-                                                <Label Content="Participant 1" HorizontalContentAlignment="Center"></Label>
+                                            <StackPanel Margin="0">
+                                                <Label Content="Participant 1" HorizontalContentAlignment="Center" Width="124"></Label>
                                                 <xctk:ColorPicker  x:Name="Subject1" Width="90"  Margin="2,0" SelectedColor="Aquamarine"></xctk:ColorPicker>
                                             </StackPanel>
-                                            <StackPanel>
+                                            <StackPanel Margin="0" Width="118">
                                                 <Label Content="Participant 2" HorizontalContentAlignment="Center"></Label>
                                                 <xctk:ColorPicker  x:Name="Subject2" Width="90"  Margin="2,0" SelectedColor="Salmon" ></xctk:ColorPicker>
                                             </StackPanel>
                                         </WrapPanel>
-                                        <GroupBox x:Name="SynchronousGroupBox" Margin="0,10" IsEnabled="False">
+                                        <GroupBox x:Name="SynchronousGroupBox" Margin="0,5" IsEnabled="False">
                                             <StackPanel>
                                                 <WrapPanel Height="25" >
                                                     <Label Content="Complexity :" Height="25" Width="116" HorizontalContentAlignment="Right"/>
@@ -102,7 +100,7 @@
                                                 </WrapPanel>
                                             </StackPanel>
                                         </GroupBox>
-                                        <GroupBox x:Name="AsynchronousGroupBox" Margin="0,10" IsEnabled="False">
+                                        <GroupBox x:Name="AsynchronousGroupBox" Margin="0,5" IsEnabled="False">
                                             <StackPanel>
                                                 <WrapPanel Height="25" >
                                                     <Label Content="Complexity :" Height="25" Width="116" HorizontalContentAlignment="Right"/>
@@ -114,8 +112,8 @@
                                                 </WrapPanel>
                                             </StackPanel>
                                         </GroupBox>
-                                        <GroupBox x:Name="SelfpacedCombobox" IsEnabled="False">
-                                            <StackPanel>
+                                        <GroupBox x:Name="SelfpacedCombobox" IsEnabled="False" Margin="0,5">
+                                            <StackPanel Margin="5">
                                                 <WrapPanel HorizontalAlignment="Center">
                                                     <Label Content="Course color :" HorizontalContentAlignment="Center"></Label>
                                                     <xctk:ColorPicker x:Name="CourseColorPicker" Width="90" Margin="2,0" SelectedColor="Green"></xctk:ColorPicker>
@@ -126,7 +124,7 @@
                                                 </WrapPanel>
                                             </StackPanel>
                                         </GroupBox>
-                                        <WrapPanel  Margin="10,0" Height="46">
+                                        <WrapPanel  Margin="10,0" Height="46" HorizontalAlignment="Center">
                                             <Button x:Name="OpenBtn" Content="Open" Click="OpenBtn_Click" Margin="5" Height="25"/>
                                             <Button x:Name="GenerateCourseBtn" Content="Load" Click="GenerateCourse_Click" Margin="5" Height="25" IsEnabled="False"></Button>
                                             <Button x:Name="StartBtn" Content="Start " Click="StartBtn_Click" Margin="5" Height="25" IsEnabled="False"/>
@@ -135,30 +133,39 @@
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Reading settings " Margin="0,0,0,0" Width="310" Height="355">
+                                <GroupBox Header="Reading settings " Margin="0,0,0,0" Width="310" Height="387">
                                     <StackPanel Margin="2,0,2,-1" HorizontalAlignment="Center" >
-                                        <WrapPanel Height="25" Margin="0,0,0,2">
+                                        <WrapPanel Height="25" Margin="0,5">
                                             <Label Content="Prompter mode :" Width="116" HorizontalContentAlignment="Right"/>
                                             <ComboBox x:Name="PrompterModeSelect" Width="134" IsEnabled="True" ItemsSource="{Binding Path=Modes}" SelectionChanged="PrompterModeSelect_SelectionChanged"  />
                                         </WrapPanel>
-                                        <WrapPanel Height="30" Margin="0">
+                                        <WrapPanel Height="30" Margin="0,5">
                                             <Label Content="Text size :" HorizontalContentAlignment="Right" Width="101"></Label>
                                             <Slider x:Name="TextSizeSlider" Width="135" Minimum="1" Maximum="50" TickFrequency="3" Value="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" ValueChanged="TextSizeSlider_ValueChanged" ></Slider>
                                             <TextBox x:Name="TextSizeTxt" Text="{Binding ElementName=TextSizeSlider,Path=Value}" Width="40" HorizontalContentAlignment="Center" 
                                                  VerticalContentAlignment="Center" Margin="2" Height="25" ></TextBox>
                                         </WrapPanel>
-                                        <WrapPanel Height="30" Margin="0">
+                                        <WrapPanel Height="30" Margin="0,5">
                                             <Label Content="Path :" Width="101" HorizontalContentAlignment="Right"/>
                                             <TextBox x:Name="pathTxt" Text="{Binding Path=PathString}" Width="128" />
                                             <Button x:Name="BrowseBtn" Content="Browse" Margin="2"  Click="BrowseBtn_Click"/>
                                         </WrapPanel>
                                         <WrapPanel>
-                                            <xctk:ColorPicker Name="Color1" Width="90" Margin="2,0,2,0" SelectedColor="Aquamarine" IsEnabled="False"></xctk:ColorPicker>
-                                            <xctk:ColorPicker Name="Color2" Width="90" Margin="2,0,2,0" SelectedColor="Salmon" IsEnabled="False"></xctk:ColorPicker>
-                                            <xctk:ColorPicker Name="Color3" Width="90" Margin="2,0,2,0" SelectedColor="BurlyWood" IsEnabled="False"></xctk:ColorPicker>
+                                            <StackPanel Margin="0">
+                                                <Label Content="Participant 1" HorizontalContentAlignment="Center" Width="95"></Label>
+                                                <xctk:ColorPicker Name="Color1" Width="90" Margin="2,0,2,0" SelectedColor="Aquamarine" IsEnabled="False"></xctk:ColorPicker>
+                                            </StackPanel>
+                                            <StackPanel Margin="0" Width="95">
+                                                <Label Content="Participant 2" HorizontalContentAlignment="Center" Margin="0,0,3,0"/>
+                                                <xctk:ColorPicker Name="Color2" Width="90" Margin="2,0,2,0" SelectedColor="Salmon" IsEnabled="False"></xctk:ColorPicker>
+                                            </StackPanel>
+                                            <StackPanel Margin="0">
+                                                <Label Content="Participant 1" HorizontalContentAlignment="Center" Width="95"></Label>
+                                                <xctk:ColorPicker Name="Color3" Width="90" Margin="2,0,2,0" SelectedColor="BurlyWood" IsEnabled="False"></xctk:ColorPicker>
+                                            </StackPanel>
                                         </WrapPanel>
                                        
-                                        <GroupBox x:Name="Prompter_SelfPaced_GroupBox" IsEnabled="False">
+                                        <GroupBox x:Name="Prompter_SelfPaced_GroupBox" IsEnabled="False" Height="30">
                                             <WrapPanel Height="30" Margin="0" >
                                                 <Label Content="Scroll speed :" Width="100" HorizontalContentAlignment="Right" Margin="0"/>
                                                 <Slider x:Name="prompterSpeed" Width="135" Minimum="1" Maximum="30" TickFrequency="5" TickPlacement="BottomRight" Margin="0" IsSnapToTickEnabled="True"/>
@@ -218,7 +225,7 @@
                                     </StackPanel>
                                 </GroupBox>
                                                    
-                        <GroupBox Header="Sequence planing" Margin="0" Width="310" Height="350">
+                        <GroupBox Header="Sequence planing" Margin="0" Width="310" Height="390">
                                     <StackPanel Margin="0,0,3,0">
                                         <WrapPanel HorizontalAlignment="Center" Margin="5">
                                             <Label Content="Movement :" Width="95"></Label>

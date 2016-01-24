@@ -32,7 +32,7 @@ namespace BACExperiment
         #region Handlers
         private MicrophoneHandler microphones { get; set; }
         private WiimoteHandler WMHandler { get; set;}
-        private PortAccessHandler port { get; set; }
+        private static PortAccessHandler port { get; set; }
         #endregion
 
         #region Links
@@ -76,7 +76,9 @@ namespace BACExperiment
             }
             catch (Exception ex)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message);
+                Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "A paralel portcould not be detected on the given address. Please make sure you have a paralel port on the machine. \r\n"+
+                    ex.Message);
                 port = null;
             }
          
@@ -196,7 +198,7 @@ namespace BACExperiment
 
         #region Port
 
-        public void WriteToPort(short Data)
+        public static void WriteToPort(short Data)
         {
             if (port != null)
             {
@@ -204,7 +206,7 @@ namespace BACExperiment
             }
         }
 
-        public void PingExperimentStart()
+        public static void PingExperimentStart()
         {
             for (int i = 0; i <= 2; i++)
             {
@@ -218,7 +220,7 @@ namespace BACExperiment
             }
         }
 
-        public void PingStartNewPhase()
+        public static void PingStartNewPhase()
         {
             if( port !=null) { 
             port.Write(128);

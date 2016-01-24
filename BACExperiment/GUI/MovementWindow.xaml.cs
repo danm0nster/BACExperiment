@@ -473,7 +473,8 @@ namespace BACExperiment
             t.Stop();
             if(checkPointTimer != null )
             checkPointTimer.Stop();
-           
+            recorder.Clear();
+            holder.Clear();
         }
       
         public void startRecording()

@@ -374,7 +374,7 @@ namespace BACExperiment
             try
             {
                 service.DisconnectWiimoteFromInfo(0);
-                Console.WriteLine("Wiimote 1 has been disconected ;");
+                Console.WriteLine("Wiimote 1 has been disconected ; \r\n");
                 WM1_Detect.IsEnabled = true;
                 WM1_Disconect.IsEnabled = false;
             }
@@ -403,7 +403,7 @@ namespace BACExperiment
             try
             {
                 service.DisconnectWiimoteFromInfo(1);
-                Console.WriteLine("Wiimote 2 has been disconected ;");
+                Console.WriteLine("Wiimote 2 has been disconected ;  \r\n");
                 WM2_Detect.IsEnabled = true;
                 WM2_Disconect.IsEnabled = false;
             }
@@ -420,18 +420,18 @@ namespace BACExperiment
 
         private void SearchButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Console_TextBox.Inlines.Add("Searching for wii remotes.....");
+            Console_TextBox.Inlines.Add("Searching for wii remotes..... \r\n");
             service.DetectWiimotes();
             WM1_Detect.IsEnabled = true;
             WM2_Detect.IsEnabled = true;
-            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes", service.GetRemoteCount()));
+            Console_TextBox.Inlines.Add(string.Format("Found {0} wiimotes\r\n", service.GetRemoteCount()));
         }
 
         private void ClearButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Console_TextBox.Inlines.Add("Disconecting wii remotes .....");
+            Console_TextBox.Inlines.Add("Disconecting wii remotes .....\r\n");
             service.DisconnectAllWiimotes();
-            Console_TextBox.Inlines.Add("Wiiremotes disconected;");
+            Console_TextBox.Inlines.Add("Wiiremotes disconected;\r\n");
         }
 
         public void WriteToRemoteMenu(int index, string message)
@@ -594,7 +594,7 @@ namespace BACExperiment
             if (ReadingCombo.SelectedIndex != -1 && ((ComboBox)sender).SelectedIndex != -1)
                 if (MovementCombo.SelectedValue.ToString().Equals(ReadingCombo.SelectedValue.ToString()))
                 {
-                    System.Windows.MessageBox.Show("Movement and reading can not have the same values");
+                    System.Windows.MessageBox.Show("Movement and reading can not have the same values.");
                     MovementCombo.SelectedIndex = -1;
                 }
         }
@@ -686,7 +686,7 @@ namespace BACExperiment
                             System.Windows.MessageBox.Show("Asynchronous , Synchronous and Self-Paced can not have the same values");
                             SelfPacedCombo.SelectedIndex = -1;
                         }
-                    }
+                 }
 
                 }
             }
@@ -700,18 +700,33 @@ namespace BACExperiment
             try
             {
 
-                _mode = 0;
-                _window = 0;
-                sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
-                System.Timers.Timer t = new System.Timers.Timer();
-                t.Interval = 100;
-                t.Elapsed += Sequence_Timer_TickEvent;
-
-                if (sequence != null)
+                if (!System.IO.File.Exists(pathTxt.Text))
                 {
-                    t.Start();
-                    StartFullRecording();
-                    service.PingExperimentStart();
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Please select a valid text file in the prompter text path before atempting to run the experiment. ");
+                }
+                else {
+
+                    if (MessageBox.Show("You have not sellected a microphone. Continue?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                        //do no stuff
+                    }
+                    else
+                    {
+                        _mode = 0;
+                        _window = 0;
+                        sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
+                        System.Timers.Timer t = new System.Timers.Timer();
+                        t.Interval = 100;
+                        t.Elapsed += Sequence_Timer_TickEvent;
+
+                        if (sequence != null)
+                        {
+                            t.Start();
+                            StartFullRecording();
+                            Service.PingExperimentStart();
+                        }
+                    }
+               
                 }
             }
             catch (Exception ex)
@@ -768,7 +783,7 @@ namespace BACExperiment
             try
             {
 
-                service.PingStartNewPhase();
+                Service.PingStartNewPhase();
             }
 
             catch (Exception Ex)

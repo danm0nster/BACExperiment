@@ -65,5 +65,9 @@ namespace BACExperiment
             return PointerCoordinates[index];
         }
 
+        internal void Clear()
+        {
+            instance = null;
+        }
     }
 }

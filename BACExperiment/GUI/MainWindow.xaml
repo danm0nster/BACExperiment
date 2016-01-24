@@ -273,7 +273,7 @@
                                         </WrapPanel>
                                         <WrapPanel HorizontalAlignment="Center">
                                             <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click" Margin="5"></Button>
-                                            <Button x:Name="Sequence_Stop" Content="Stop" Width="75" Height="25" Click="Sequence_Stop_Click" Margin="5"></Button>
+                                            <Button x:Name="Sequence_Stop" Content="Stop" Width="75" Height="25" Click="Sequence_Stop_Click" Margin="5" IsEnabled="False"></Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </GroupBox>

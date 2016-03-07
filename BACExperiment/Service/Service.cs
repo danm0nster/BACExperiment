@@ -115,7 +115,7 @@ namespace BACExperiment
 
         public void DetectWiimotes()
         {
-            WMHandler.SearchForWiimotes();
+            WMHandler.retrieveWiimotesToMemory();
             Console.WriteLine("Searched for wiimotes;");
         }
 

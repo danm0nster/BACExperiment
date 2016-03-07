@@ -24,16 +24,20 @@ namespace BACExperiment.Model
         public Point MidPoint { get { return _MidPoint; } set { _MidPoint = value; if (PropertyChanged != null) Notify("MidPoint"); } }
         public int Battery { get { return _battery; } set { _battery = value; if (PropertyChanged != null) Notify("MidPoint"); } }
 
+
+        
         public WiimoteCoordinate()
         {
             _IRCoordinates = new Point[4];
             _AccelValues = new Double[3];
         }
 
+        /// <summary>
+        /// Saves the cooridantes into memory and passes them on to the WiimoteDataContext viewmodel.
+        /// </summary>
+        /// <param name="e"></param>
         public void setCoordinates(CoordinatesProcessedEventArgs e)
-        {
-            
-            
+        {            
             Point[] ir = new Point[4];
             for (int i = 0; i < 4 ;i++)
             {

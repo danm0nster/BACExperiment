@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BACExperiment"
         mc:Ignorable="d"
         Title="StimulyWindow" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None" 
-        Closed="Window_Closed"  >
+        Closing="Window_Closed"  >
     <Grid>
         <Border x:Name="StimulyCanvas">
             <Canvas x:Name="StimulyReferencePoint" RenderTransformOrigin="0.5,0.5" Width="0" Height="0" RenderTransform="1 0 0 -1 0 0"  >

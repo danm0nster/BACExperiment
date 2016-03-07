@@ -47,14 +47,11 @@ namespace BACExperiment.Model
         public async Task<String> ProcessSample(object sender, WiimoteChangedEventArgs e)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-
             if (ProcessCount >= Cap)
             {
                 EventHandler<CoordinatesProcessedEventArgs> handler = Processed;
                 if (handler != null)
                 {
-
-
                     try {
                         AccelState[0] = e.WiimoteState.AccelState.RawValues.X;
                         AccelState[1] = e.WiimoteState.AccelState.RawValues.Y;
@@ -62,7 +59,6 @@ namespace BACExperiment.Model
                         IRState = stabilizer.Update(e);
                         battery = (e.WiimoteState.Battery > 200f ? 200 : (int)e.WiimoteState.Battery);
                         
-
                         Notify(new CoordinatesProcessedEventArgs(((Wiimote)sender).HIDDevicePath, AccelState, IRState, battery, IRState[4]));
                         Reset();
                     }
@@ -70,8 +66,6 @@ namespace BACExperiment.Model
                     catch (Exception ex)
                     { Console.WriteLine(ex); }
                 }
-
-
             }
             ProcessCount++;
 
@@ -107,6 +101,12 @@ namespace BACExperiment.Model
         }
     }
 
+
+    /// <summary>
+    /// The stabilizer object is responsible with processing the coordinates recieved from the Wiimote class. 
+    /// It uses the coordinates recieved and intervenes if a coordinate set is found missing. This can occour when
+    /// the infra red camera has troubles detecting the IR-LED's.
+    /// </summary>
     public class Stabilizer
     {
         // Made the Point Array of 5 values so that the mid point is stored and returned with the point simultanousely 
@@ -120,11 +120,11 @@ namespace BACExperiment.Model
 
         }
 
+        /*
+        Processes data values and ads them to containing lists.
+        */
         public void Add(WiimoteChangedEventArgs e)
         {
-
-           
-
             if (e.WiimoteState.IRState.IRSensors[0].Found)
                 current_IRState[0] = e.WiimoteState.IRState.IRSensors[0].Position;
             else { current_IRState[0].X = float.NaN; current_IRState[0].Y = float.NaN; }
@@ -143,6 +143,12 @@ namespace BACExperiment.Model
 
         }
 
+        /// <summary>
+        /// Updates value lists with latest data recieved. If a data set is missing, the previouselly available data for that sesor is used together with a diferential calculation of
+        /// the latest recieved data. 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public PointF[] Update( WiimoteChangedEventArgs e)
         {
             Add(e);
@@ -215,6 +221,12 @@ namespace BACExperiment.Model
             return true;
         }
 
+
+        /// <summary>
+        /// Calculates difference between the curent coordinates and the previous coordinates recieved from the remote.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public PointF Stabilize(WiimoteState e)
         {
             PointF AvgDelta;

@@ -47,7 +47,7 @@ namespace BACExperiment.Model
         {
             MicrophoneConstruct mic = microphones[selectedDevice];
 
-            mic.Listen();
+            mic.startListening();
             activeMicrophones[groupBoxIndex-1] = mic;  
             
             TryGetVolumeControl(selectedDevice , groupBoxIndex);
@@ -91,12 +91,12 @@ namespace BACExperiment.Model
 
         internal void StartRecording(MicrophoneConstruct i)
         {
-            i.Record();
+            i.createAudioRecord();
         }
 
         internal void StopRecording(MicrophoneConstruct i)
         {
-            i.Stop();
+            i.stopListening();
         }
 
         private void TryGetVolumeControl(int deviceNumber , int i)

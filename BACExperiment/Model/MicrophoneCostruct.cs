@@ -14,6 +14,7 @@ namespace BACExperiment.Model
     {
         #region INotifyPropertyChangedImplementation
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void Notify(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -44,6 +45,12 @@ namespace BACExperiment.Model
 
         public WaveIn get_WaveIn(){ return this.waveIn; }
 
+
+        /// <summary>
+        /// Create MicrophoneConstruct object for the the audio device in memory with the "selectedDevice" index.
+        /// Wave format of 44.1 khz , stereo.
+        /// </summary>
+        /// <param ID="selectedDevice"></param>
         public MicrophoneConstruct(int selectedDevice)
         {
             waveIn = new WaveIn();
@@ -60,12 +67,18 @@ namespace BACExperiment.Model
             aggregator.NotificationCount = 10; // How often we update the volume bar value;
         }
 
-        public void Listen()
+        /// <summary>
+        /// Start recording audio from microphone. if "createAudioRecord" was not previouselly called the audio will not be saved. 
+        /// </summary>
+        public void startListening()
         {
             waveIn.StartRecording();
         }
 
-        public void Record()
+        /// <summary>
+        /// Creates the audio file for the microphone to save the audio.
+        /// </summary>
+        public void createAudioRecord()
         {
             string Path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string directoryName = "\\Audio recordings";
@@ -74,16 +87,23 @@ namespace BACExperiment.Model
             if (!Directory.Exists(string.Concat(Path , directoryName)))
                 Directory.CreateDirectory(string.Concat(Path, directoryName));
 
-
             file = new WaveFileWriter(Path+directoryName+"\\"+fileName, waveIn.WaveFormat);
         }
 
-        public void Stop()
+        /// <summary>
+        /// Stop listening. Closes audio file and disposes of it from memory.
+        /// </summary>
+        public void stopListening()
         {
             waveIn.StopRecording();
         }
 
-        public void waveIn_DataAvailable(object sender, WaveInEventArgs e)
+        /// <summary>
+        /// Processes the audio signal for the assigned microphone.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
             active = true;
             if (file != null)

@@ -17,6 +17,10 @@ namespace BACExperiment.Model
         }
 
 
+        /// <summary>
+        /// Provides a list of points describing the simples trajectory to be used.
+        /// </summary>
+        /// <returns>List<Point></returns>
         public List<Point> simpleFunction()
         {
             List<Point> coordinates = new List<Point>();
@@ -46,6 +50,10 @@ namespace BACExperiment.Model
             return coordinates;
         }
 
+        /// <summary>
+        /// Provides list of points describing low complexity trajectory.
+        /// </summary>
+        /// <returns>List<Point></returns>
         public List<Point> firstFunction()
         {
             List<Point> coordinates = new List<Point>();
@@ -75,8 +83,12 @@ namespace BACExperiment.Model
             }
             return coordinates;
            }
-        
 
+
+        /// <summary>
+        /// Provides list of points describing medium complexity trajectory.
+        /// </summary>
+        /// <returns>List<Point></returns>
         public List<Point> secondFunction()
         {
             List<Point> coordinates = new List<Point>();
@@ -107,6 +119,10 @@ namespace BACExperiment.Model
             return coordinates;
         }
 
+        /// <summary>
+        /// Provides list of points describing high complexity trajectory.
+        /// </summary>
+        /// <returns>List<Point></returns>
         public List<Point> thirdFunction()      
         {
             List<Point> coordinates = new List<Point>();

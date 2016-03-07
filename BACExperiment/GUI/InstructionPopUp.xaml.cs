@@ -41,7 +41,7 @@ namespace BACExperiment.GUI
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            t.Interval = 1000 * 60;
+            t.Interval = 1000 * 60 * 5;
             t.Elapsed += new System.Timers.ElapsedEventHandler(OnTimed);
             t.Start();
         }

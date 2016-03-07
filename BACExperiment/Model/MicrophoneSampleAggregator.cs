@@ -29,6 +29,10 @@ namespace BACExperiment.Model
                 maxValue = minValue = 0;
             }
 
+            /// <summary>
+            /// Adds value to be processed. Stores minValue and maxValue in aggregator.
+            /// </summary>
+            /// <param name="value"></param>
             public void Add(float value)
             {
                 maxValue = Math.Max(maxValue, value);

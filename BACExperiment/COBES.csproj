@@ -130,7 +130,7 @@
     <Compile Include="Model\WiimoteCoordinate.cs" />
     <Compile Include="Model\WiimoteHandler.cs" />
     <Compile Include="Model\WiimoteSampleAggregator.cs" />
-    <Compile Include="Service\CoordinateHolder.cs" />
+    <Compile Include="Service\CoordinateDataBuffer.cs" />
     <Compile Include="Service\CoordinateRecorder.cs" />
     <Compile Include="Service\Service.cs" />
     <Compile Include="GUI\MovementWindow.xaml.cs">

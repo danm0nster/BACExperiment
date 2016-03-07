@@ -10,6 +10,8 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Threading;
+
 namespace BACExperiment
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace BACExperiment
         private Course course;
         private AnimationQueue queue1;
         private coordinateRecorder recorder;
-        private CoordinateHolder holder;
+        private CoordinateDataBuffer holder;
         private System.Timers.Timer t;
         private System.Timers.Timer checkPointTimer;
         private MainWindow mainWindow;
@@ -93,7 +95,7 @@ namespace BACExperiment
             this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
             recorder = coordinateRecorder.getInstance(this);
-            holder = CoordinateHolder.GetInstance();
+            holder = CoordinateDataBuffer.GetInstance();
 
             t = new System.Timers.Timer();
             t.Elapsed += new ElapsedEventHandler(SendInfo);
@@ -102,6 +104,11 @@ namespace BACExperiment
 
             this.SetBinding(Window.WidthProperty, new Binding("RezolutionX") { Source = model, Mode = BindingMode.OneWayToSource });
             this.SetBinding(Window.HeightProperty, new Binding("RezolutionY") { Source = model, Mode = BindingMode.OneWayToSource });
+
+            if (complexity == 0)
+            {
+                CourseSpeed += 4; // Lowest complexity trajectory has too many coordinates and the animation moves to slow. For this increment the course speed more .
+            }
 
             if (mode == "Asynchronous")
             {
@@ -113,6 +120,7 @@ namespace BACExperiment
                 StimulyEllipse1.Visibility = Visibility.Visible;
                 CheckPointEllipse.Visibility = Visibility.Visible;
             }
+
             if (mode == "Synchronous")
             {
                 generate = Synchronous;
@@ -134,7 +142,7 @@ namespace BACExperiment
 
             this.mainWindow = mainWindow;
             recorder = coordinateRecorder.getInstance(this);
-            holder = CoordinateHolder.GetInstance();
+            holder = CoordinateDataBuffer.GetInstance();
             this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             t = new System.Timers.Timer();
             t.Elapsed += new ElapsedEventHandler(SendInfo);
@@ -209,11 +217,15 @@ namespace BACExperiment
             }
 
             if (generate == null)
-            { MessageBox.Show(" Please select a course setting from the main window before attempting to run ."); }
+            {
+                MessageBox.Show(" Please select a course setting from the main window before attempting to run .");
+            }
             else
             {
                 if(CourseComplexity == -1 )
-                { MessageBox.Show(" Please select a course complexity . If the problem persists please contact our developer team of one."); }
+                {
+                    MessageBox.Show(" Please select a course complexity . If the problem persists please contact our developer team of one.");
+                }
                 else
                 {
                     generate();
@@ -221,6 +233,11 @@ namespace BACExperiment
                 }
             }
         }
+
+
+/// <summary>
+/// Assistant method for the buildCourse methods
+/// </summary>
 
         private void Synchronous()
         {

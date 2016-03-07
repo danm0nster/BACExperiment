@@ -7,11 +7,17 @@ using System.Windows;
 
 namespace BACExperiment
 {
-    class CoordinateHolder
+
+    /// <summary>
+    /// The CoordinateHolder object is used to contain coordinates recieved from the MovementWindow with the purpose of recording them with the CoordinateRecorder class.
+    /// It serves as a small buffer between the MovementWIndow and the CoordinateRecorder class. If we were to store the coordinates directly into the CoordinateRecorder object,
+    /// we would have problems with thread concurency over the same resources.
+    /// </summary>
+    class CoordinateDataBuffer
     {
 
 
-        private static CoordinateHolder instance;
+        private static CoordinateDataBuffer instance;
 
         private Point _ellipseCoordinates;
         private Point[] PointerCoordinates;
@@ -21,9 +27,9 @@ namespace BACExperiment
 
 
 
-        public static CoordinateHolder GetInstance() => instance ?? (instance = new CoordinateHolder());
+        public static CoordinateDataBuffer GetInstance() => instance ?? (instance = new CoordinateDataBuffer());
 
-        private CoordinateHolder()
+        private CoordinateDataBuffer()
         {
             _ellipseCoordinates = new Point();
             PointerCoordinates = new Point[2];

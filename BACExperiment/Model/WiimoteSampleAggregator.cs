@@ -57,7 +57,7 @@ namespace BACExperiment.Model
                         AccelState[1] = e.WiimoteState.AccelState.RawValues.Y;
                         AccelState[2] = e.WiimoteState.AccelState.RawValues.Z;
                         IRState = stabilizer.Update(e);
-                        battery = (e.WiimoteState.Battery > 200f ? 200 : (int)e.WiimoteState.Battery);
+                        battery = (e.WiimoteState.Battery > 100f ? 100 : (int)e.WiimoteState.Battery);
                         
                         Notify(new CoordinatesProcessedEventArgs(((Wiimote)sender).HIDDevicePath, AccelState, IRState, battery, IRState[4]));
                         Reset();

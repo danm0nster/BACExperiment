@@ -718,18 +718,28 @@ namespace BACExperiment
                 {
                     Xceed.Wpf.Toolkit.MessageBox.Show("Please select a valid text file in the prompter text path before atempting to run the experiment. ");
                 }
-                else {
+                else
+                {
 
-                    if (MessageBox.Show("You have not sellected a microphone. Continue?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    if (Microphone1_ComboBox.SelectedIndex == -1 || Microphone2_ComboBox.SelectedIndex == -1)
                     {
-                        //do no stuff
-                    }
-                    else
-                    {
-                        _mode = 0;
-                        _window = 0;
-                        sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
-                        StartFullRecording();
+                        if (MessageBox.Show("You have not sellected a microphone. Continue?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        {
+                            //do the NO things
+                         
+                        }
+                        else
+                        {
+                            //do the YES things
+                            _mode = 0;
+                            _window = 0;
+                            sequence = new SequenceForm(MovementCombo.SelectedValue.ToString(), ReadingCombo.SelectedValue.ToString(), AsyncCombo.SelectedValue.ToString(), SyncCombo.SelectedValue.ToString(), SelfPacedCombo.SelectedValue.ToString());
+                            StartFullRecording();
+                            Sequence_Start.IsEnabled = true;
+                            Sequence_next();
+
+                        }
+                        
                     }
                 }
             }

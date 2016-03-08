@@ -278,8 +278,8 @@
                                             <TextBox Text="{Binding ElementName=Sequence_Duration_Slider, Path=Value}"></TextBox>
                                         </WrapPanel>
                                         <WrapPanel HorizontalAlignment="Center">
-                                            <Button x:Name="Sequence_Open" Content="Open" Width="75" Height="25" Click="Sequence_Open_Click" Margin="5" ></Button>
-                                            <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click" Margin="5"></Button>
+                                            <Button x:Name="Sequence_Open" Content="Open" Width="75" Height="25" Click="Sequence_Open_Click" Margin="5" IsEnabled="True" ></Button>
+                                            <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click" Margin="5" IsEnabled="False"></Button>
                                             <Button x:Name="Sequence_Stop" Content="Stop" Width="75" Height="25" Click="Sequence_Stop_Click" Margin="5" IsEnabled="False"></Button>
                                             <Button x:Name="RandomizeBtn" Content="Randomize" Height="25" Width="75" Click="RandomizeBtn_Click" Margin="5"></Button>
                                         </WrapPanel>
@@ -316,7 +316,7 @@
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Label Content="Batterie :" Width="92"/>
-                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="{Binding Path=Battery , Mode=TwoWay}"/>
+                                    <ProgressBar x:Name="wm1_progressbar" Width="320" Value="{Binding Path=Battery , Mode=TwoWay}" Minimum="0" Maximum="100"/>
                                 </WrapPanel>
                                 <WrapPanel Height="135">
                                     <GroupBox Header="Accelerometer" Height="114" Margin="10,10,10,10" Width="200">
@@ -386,7 +386,7 @@
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Label Content="Batterie :" Width="92"/>
-                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="{Binding Path=Battery , Mode=TwoWay}"/>
+                                    <ProgressBar x:Name="wm2_progressbar" Width="320" Value="{Binding Path=Battery , Mode=TwoWay}" Minimum="0" Maximum="100"/>
                                 </WrapPanel>
 
                                 <WrapPanel Height="135">

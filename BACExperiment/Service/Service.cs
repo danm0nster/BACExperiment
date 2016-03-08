@@ -77,7 +77,7 @@ namespace BACExperiment
             catch (Exception ex)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show(
-                    "A paralel portcould not be detected on the given address. Please make sure you have a paralel port on the machine. \r\n"+
+                    "A paralel port could not be detected on the given address. Please make sure you have a paralel port on the machine. \r\n"+
                     ex.Message);
                 port = null;
             }
@@ -85,7 +85,13 @@ namespace BACExperiment
          
         }
 
-        public void TellStimulyWindow(object sender , PropertyChangedEventArgs e)
+
+        /// <summary>
+        /// Sends info to movement window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void SendToMovementWindow(object sender , PropertyChangedEventArgs e)
         {
             if (((WiimoteCoordinate)sender).Equals(WMHandler.coordinateSet[0]))
             {
@@ -108,11 +114,7 @@ namespace BACExperiment
         }
 
 
-        /// <summary>
-        /// WIIMOTE Handling
-        /// </summary>
-
-
+       
         public void DetectWiimotes()
         {
             WMHandler.retrieveWiimotesToMemory();
@@ -122,7 +124,7 @@ namespace BACExperiment
         public void ConnectWiimoteToInfo(int i)
         {
             WMHandler.Connect(i);
-            WMHandler.coordinateSet[i].PropertyChanged += TellStimulyWindow;
+            WMHandler.coordinateSet[i].PropertyChanged += SendToMovementWindow;
             Console.WriteLine(string.Concat("Wiimote ", i, " has been connected"));
         }
 

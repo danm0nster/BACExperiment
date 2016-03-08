@@ -95,7 +95,7 @@ namespace BACExperiment
             this.queue1 = new AnimationQueue(StimulyEllipse1, Canvas.LeftProperty, Canvas.TopProperty);
             this.mainWindow = mainWindow;
             recorder = coordinateRecorder.getInstance(this);
-            holder = CoordinateDataBuffer.GetInstance();
+            holder =    CoordinateDataBuffer.GetInstance();
 
             t = new System.Timers.Timer();
             t.Elapsed += new ElapsedEventHandler(SendInfo);

@@ -64,8 +64,7 @@ namespace BACExperiment
         {
 
             timer.Enabled = true;
-            watch.Start();
-            Service.PingStartNewPhase();
+            watch.Start();           
         }
 
         public void Stop()
@@ -104,8 +103,10 @@ namespace BACExperiment
             double[,] accel = buffer.getAccelValues();
             string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString(),
                 accel[0, 0], accel[0, 1], accel[0, 2], accel[1, 0], accel[1, 1], accel[1, 2]);
- 
+
             using (StreamWriter s = new StreamWriter(logPath, true))
+
+                //TO-DO runtime error when attempting to write to file on Synchronous mode. 
             {
                 s.WriteLine(toWrite);
                 s.Close();

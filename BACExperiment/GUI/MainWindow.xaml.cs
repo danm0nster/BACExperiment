@@ -185,8 +185,9 @@ namespace BACExperiment
             SpeedSlider.IsEnabled = false;
             ReqFrequencySlider.IsEnabled = false;
             startCourse();
+            Service.PingExperimentStart();
 
-
+            Service.PingExperimentStart();
         }
 
         private void startCourse()
@@ -543,6 +544,7 @@ namespace BACExperiment
             {
                 MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone1_ComboBox.SelectedItem);
                 service.startRecording(mic);
+                //To-Do PIng AUdio start
                 Mic1_Rec.IsEnabled = false;
                 Mic1_Stop.IsEnabled = true;
             }
@@ -550,6 +552,7 @@ namespace BACExperiment
             {
                 MicrophoneConstruct mic = (MicrophoneConstruct)(Microphone2_ComboBox.SelectedItem);
                 service.startRecording(mic);
+                //To-Do PIng AUdio start
                 Mic2_Rec.IsEnabled = false;
                 Mic2_Stop.IsEnabled = true;
             }
@@ -738,6 +741,7 @@ namespace BACExperiment
                             Sequence_Start.IsEnabled = true;
                             Sequence_next();
 
+                            //TODO Broken sequence start. Tryes to skip over one phase and ends up with null reference.
                         }
                         
                     }
@@ -1132,7 +1136,7 @@ namespace BACExperiment
         private void Window_Closed(object sender, EventArgs e)
         {
 
-            //TODO:
+          //TODO Close all threads before exiting application;
         
         }
     }

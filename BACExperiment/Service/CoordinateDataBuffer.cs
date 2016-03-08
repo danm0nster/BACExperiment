@@ -16,7 +16,6 @@ namespace BACExperiment
     class CoordinateDataBuffer
     {
 
-
         private static CoordinateDataBuffer instance;
 
         private Point _ellipseCoordinates;

@@ -13,7 +13,7 @@ using System.Windows.Controls;
 namespace BACExperiment
 {
     /// <summary>
-    /// 
+    /// The coordinateRecorder object handles the data saved into the CoordinateDataBuffer and saves it into session files.
     /// </summary>
     class coordinateRecorder
     {

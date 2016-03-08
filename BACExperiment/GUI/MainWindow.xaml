@@ -61,7 +61,7 @@
 
                                 </WrapPanel>
                             </GroupBox>
-                            <GroupBox Header="Paralel port" Width="437">
+                            <GroupBox Header="Paralel port" Width="437" IsEnabled="False">
                                 <CheckBox x:Name="ParalelPort"  Margin="10" Content="Allow application to send signals via paralel port."></CheckBox>
                                 
                             </GroupBox>

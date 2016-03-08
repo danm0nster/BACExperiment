@@ -77,6 +77,9 @@ namespace BACExperiment.Model
             return instance;
         }
         
+        /// <summary>
+        /// Ping through the paralel port the value 255 in the form of 1 byte.
+        /// </summary>
         public void PingBiopac()
         {
             Out32_x64(888, 255);
@@ -116,6 +119,11 @@ namespace BACExperiment.Model
         }
 
         //Public Methods
+
+            /// <summary>
+            /// Ping through the paralel port the inputet data in the form of 1 byte which is transfered to the paralel port in the form of binary.
+            /// </summary>
+            /// <param name="Data"></param>
         public void Write(short Data)
         {
             if (_X64)

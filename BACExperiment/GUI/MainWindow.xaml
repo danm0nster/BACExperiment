@@ -221,9 +221,9 @@
                                             </StackPanel>
                                         </GroupBox>
                                         <WrapPanel HorizontalAlignment="Center">
-                                            <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="5" IsEnabled="False" />
-                                            <Button x:Name="prompterPlay" Height="25" Width="75" Content="Play" Click="prompterPlay_Click" Margin="5" IsEnabled="False"/>
-                                            <Button x:Name="PrompterCloseBtn" Content="Close" Height="25" Width="75" Click="PrompterCloseBtn_Click" Margin="5" IsEnabled="False"></Button>
+                                            <Button x:Name="prompterOpen" Height="25" Width="75" Content="Open" Click="prompterOpen_Click" Margin="5" IsEnabled="True" />
+                                            <Button x:Name="prompterPlay" Height="25" Width="75" Content="Play" Click="prompterPlay_Click" Margin="5" IsEnabled="True"/>
+                                            <Button x:Name="PrompterCloseBtn" Content="Close" Height="25" Width="75" Click="PrompterCloseBtn_Click" Margin="5" IsEnabled="True"></Button>
 
                                         </WrapPanel>
 
@@ -278,7 +278,7 @@
                                             <TextBox Text="{Binding ElementName=Sequence_Duration_Slider, Path=Value}"></TextBox>
                                         </WrapPanel>
                                         <WrapPanel HorizontalAlignment="Center">
-                                            <Button x:Name="Sequence_Open" Content="Open" Width="75" Height="25" Click="Sequence_Open_Click" Margin="5" IsEnabled="True" ></Button>
+                                            <Button x:Name="Sequence_Open" Content="Open" Width="75" Height="25" Click="Sequence_Open_Click" Margin="5" IsEnabled="False" ></Button>
                                             <Button x:Name="Sequence_Start" Content="Start" Width="75" Height="25" Click="Sequence_Start_Click" Margin="5" IsEnabled="False"></Button>
                                             <Button x:Name="Sequence_Stop" Content="Stop" Width="75" Height="25" Click="Sequence_Stop_Click" Margin="5" IsEnabled="False"></Button>
                                             <Button x:Name="RandomizeBtn" Content="Randomize" Height="25" Width="75" Click="RandomizeBtn_Click" Margin="5"></Button>

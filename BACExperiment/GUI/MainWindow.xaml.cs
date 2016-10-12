@@ -138,7 +138,7 @@ namespace BACExperiment
                     {
                         SelfPacedMovement();
                     }
-
+                    // TODO: Add code to ensure the stimulus windows appears on the secondary monitor if there is one
                     stimulyWindow.Show();
 
                     
@@ -161,6 +161,7 @@ namespace BACExperiment
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
             stimulyWindow.Close();
+            Service.PingMovementStop();
             CloseBtn.IsEnabled = false;
         }
 
@@ -185,9 +186,8 @@ namespace BACExperiment
             SpeedSlider.IsEnabled = false;
             ReqFrequencySlider.IsEnabled = false;
             startCourse();
-            Service.PingExperimentStart();
-
-            Service.PingExperimentStart();
+            Service.PingMovementStart();
+            // Service.PingExperimentStart();
         }
 
         private void startCourse()
@@ -293,6 +293,7 @@ namespace BACExperiment
         private void prompterPlay_Click(object sender, RoutedEventArgs e)
         {
             prompter.play();
+            Service.PingReadingStart();
         }
 
         private void RandomizeBtn_Click(object sender, RoutedEventArgs e)
@@ -719,14 +720,14 @@ namespace BACExperiment
 
                 if (!System.IO.File.Exists(pathTxt.Text))
                 {
-                    Xceed.Wpf.Toolkit.MessageBox.Show("Please select a valid text file in the prompter text path before atempting to run the experiment. ");
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Please select a valid text file in the prompter text path before attempting to run the experiment. ");
                 }
                 else
                 {
 
                     if (Microphone1_ComboBox.SelectedIndex == -1 || Microphone2_ComboBox.SelectedIndex == -1)
                     {
-                        if (MessageBox.Show("You have not sellected a microphone. Continue?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        if (MessageBox.Show("You have not selected a microphone. Continue?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                         {
                             //do the NO things
                          
@@ -1083,7 +1084,8 @@ namespace BACExperiment
 
         private void PrompterCloseBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            Service.PingReadingStop();
+            prompter.Close();
         }
 
         private void Sequence_Stop_Click(object sender, RoutedEventArgs e)

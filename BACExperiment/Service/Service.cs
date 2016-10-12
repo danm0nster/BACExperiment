@@ -186,7 +186,7 @@ namespace BACExperiment
         {
             //try {
                 microphones.StartRecording(i);
-                port.PingBiopac();
+                //port.PingBiopac();
             //}
             //catch (Exception ex)
             //{
@@ -207,12 +207,38 @@ namespace BACExperiment
 
         #region Port
 
-        public static void WriteToPort(short Data)
+       public static void WriteToPort(short Data)
+        //public async Task WriteToPort(short Data)
         {
             if (port != null)
             {
                 port.Write(Data);
+                // TODO: Fix this, so that it is non-blocking (i.e. no Thread.Sleep).
+                // Use, e.g.:
+                // await Task.Delay(1000);
+                Thread.Sleep(1000);
+                port.Write(0);
             }
+        }
+
+        public static void PingReadingStart()
+        {
+            WriteToPort(1);
+        }
+
+        public static void PingReadingStop()
+        {
+            WriteToPort(2);
+        }
+
+        public static void PingMovementStart()
+        {
+            WriteToPort(4);
+        }
+
+        public static void PingMovementStop()
+        {
+            WriteToPort(8);
         }
 
         public static void PingExperimentStart()

@@ -82,8 +82,14 @@ namespace BACExperiment.Model
         /// </summary>
         public void PingBiopac()
         {
-            // Out32_x64(888, 255);
-            Out32(888, 255);
+            if (_X64)
+            {
+                Out32_x64(888, 255);
+            }
+            else
+            {
+                Out32(888, 255);
+            }
         }
 
         private PortAccessHandler()

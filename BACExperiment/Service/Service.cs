@@ -184,14 +184,14 @@ namespace BACExperiment
 
         public void startRecording(MicrophoneConstruct i)
         {
-            try {
+            //try {
                 microphones.StartRecording(i);
                 port.PingBiopac();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
         }
 
         public void stopRecording(MicrophoneConstruct i)

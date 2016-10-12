@@ -25,7 +25,6 @@ namespace BACExperiment
 
 
 
-
         public static CoordinateDataBuffer GetInstance() => instance ?? (instance = new CoordinateDataBuffer());
 
         private CoordinateDataBuffer()

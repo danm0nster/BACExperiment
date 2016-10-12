@@ -22,6 +22,7 @@ namespace BACExperiment
         private System.Timers.Timer timer;
         private String directoryPath;// file path for the current sessionLogs
         private String logPath;
+        private StreamWriter logstream;
         private Stopwatch watch;
 
         private static coordinateRecorder instance;
@@ -42,15 +43,16 @@ namespace BACExperiment
         {
             buffer = CoordinateDataBuffer.GetInstance();
 
-            timer = new System.Timers.Timer();
-            timer.Interval = 1;
-            timer.Elapsed += new ElapsedEventHandler(Record);
-
             directoryPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             watch = new Stopwatch();
 
             string fileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt";
             logPath = System.IO.Path.Combine(SessionLogDirectoryPresent(), fileName);
+            logstream = new StreamWriter(logPath, true);
+
+            timer = new System.Timers.Timer();
+            timer.Interval = 1;
+            timer.Elapsed += new ElapsedEventHandler(Record);
         }
 
         /// <summary>
@@ -101,16 +103,11 @@ namespace BACExperiment
             Point controller1 = buffer.GetPointerCoordinates(0);
             Point controller2 = buffer.GetPointerCoordinates(1);
             double[,] accel = buffer.getAccelValues();
-            string toWrite = string.Concat(watch.Elapsed.ToString(), " ", ellipseCoordiante.ToString(), " ", controller1.ToString(), " ", controller2.ToString(),
-                accel[0, 0], accel[0, 1], accel[0, 2], accel[1, 0], accel[1, 1], accel[1, 2]);
+            string toWrite = string.Concat(watch.Elapsed.ToString(), ";", ellipseCoordiante.ToString(), ";", controller1.ToString(), ";", controller2.ToString(), ";",
+                accel[0, 0], ";", accel[0, 1], ";", accel[0, 2], ";", accel[1, 0], ";", accel[1, 1], ";", accel[1, 2]);
 
-            using (StreamWriter s = new StreamWriter(logPath, true))
-
-                //TO-DO runtime error when attempting to write to file on Synchronous mode. 
-            {
-                s.WriteLine(toWrite);
-                s.Close();
-            }
+            //TO-DO runtime error when attempting to write to file on Synchronous mode. 
+                logstream.WriteLine(toWrite);
         }
 
 
